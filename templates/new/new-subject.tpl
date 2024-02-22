@@ -3,7 +3,7 @@
         <i class="fas fa-bookmark"></i> Agregar Instancias de Curricula
     </div>
     <div class="card-body">
-        <form id="form_subject" class="form" method="POST" action="{$WEB_ROOT}/ajax/new/subject">
+        <form id="form_subject" class="form" method="POST" action="{$WEB_ROOT}/ajax/new/subject.php">
             <input type="hidden" name="opcion" value="addSubject">
             <div class="row">
                 <div class="form-group col-md-4">

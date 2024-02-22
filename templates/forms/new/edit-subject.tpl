@@ -1,5 +1,5 @@
 <div class="card-body">
-    <form id="form_subject" class="form" method="POST" action="{$WEB_ROOT}/ajax/new/subject">
+    <form id="form_subject" class="form" method="POST" action="{$WEB_ROOT}/ajax/new/subject.php">
         <input type="hidden" name="opcion" value="editSubject">
         <input type="hidden" name="subject" value="{$post.subjectId}">
         <div class="row">
