@@ -757,9 +757,7 @@ class Course extends Subject
 						major.name AS majorName, 
 						subject.name AS name,
 						course.tipo as tipoCuatri,
-						subject.totalPeriods,
-						(SELECT IF((course.modality = 'Online'), subject.crm_id_online, subject.crm_id_local)) AS crm_id,
-						(SELECT IF((course.modality = 'Online'), subject.crm_name_online, subject.crm_name_local)) AS crm_name
+						subject.totalPeriods
 					FROM
 						course
 					LEFT JOIN subject ON subject.subjectId = course.subjectId
@@ -803,7 +801,7 @@ class Course extends Subject
 		//TODO porque tenia IN(0) no logro recordar -> Para mostrar solo los cursos en donde si se pueden inscribir
 		//				WHERE course.active = 'si' AND courseId IN (0)
 		$sql = "
-		SELECT *, major.name AS majorName, subject.name AS name, subject.rvoe FROM course
+		SELECT *, major.name AS majorName, subject.name AS name  FROM course
 		LEFT JOIN subject ON course.subjectId = subject.subjectId 
 		LEFT JOIN major ON major.majorId = subject.tipo
 		WHERE course.active = 'si' AND listar = 'si' {$where}

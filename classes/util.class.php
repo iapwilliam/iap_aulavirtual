@@ -1199,46 +1199,7 @@ class Util extends ErrorLms
 
 		return $generation;
 	}
-
-	function versionHorario()
-	{
-
-		$sql = 'SELECT valor FROM configuracion WHERE configId = 2';
-		$this->Util()->DB()->setQuery($sql);
-		$valor = $this->Util()->DB()->GetSingle();
-
-		return $valor;
-	}
-
-	function getNoCbta()
-	{
-
-		$sql = 'SELECT valor FROM configuracion WHERE configId = 3';
-		$this->Util()->DB()->setQuery($sql);
-		$valor = $this->Util()->DB()->GetSingle();
-
-		return $valor;
-	}
-
-	function getSubDirEnlaceOp()
-	{
-
-		$sql = 'SELECT valor FROM configuracion WHERE configId = 4';
-		$this->Util()->DB()->setQuery($sql);
-		$valor = $this->Util()->DB()->GetSingle();
-
-		return $valor;
-	}
-
-	function getDirTecnico()
-	{
-
-		$sql = 'SELECT valor FROM configuracion WHERE configId = 5';
-		$this->Util()->DB()->setQuery($sql);
-		$valor = $this->Util()->DB()->GetSingle();
-
-		return $valor;
-	}
+  
 
 	function NormalizeMark($mark)
 	{
@@ -1657,40 +1618,5 @@ class Util extends ErrorLms
 		$result = str_replace($search, '******', $card_number);
 		return $result;
 	}
-
-	
-	function callAPI($method, $url, $data)
-	{
-		$curl = curl_init();
-		switch ($method) {
-			case "POST":
-				curl_setopt($curl, CURLOPT_POST, 1);
-				if ($data)
-					curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-				break;
-			case "PUT":
-				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-				if ($data)
-					curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-				break;
-			default:
-				if ($data)
-					$url = sprintf("%s?%s", $url, http_build_query($data));
-		}
-		// OPTIONS:
-		curl_setopt($curl, CURLOPT_URL, $url);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-			'Authorization: Bearer '.BEARERTOKEN,
-			'Content-Type: application/json',
-		));
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		// EXECUTE:
-		$result = curl_exec($curl);
-		if (!$result) {
-			$result['estatus'] = "error";
-		}
-		curl_close($curl);
-		return $result;
-	}
+ 
 }

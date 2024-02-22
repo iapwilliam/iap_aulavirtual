@@ -412,45 +412,6 @@ class Ficha extends User
 		return $result;	
 		
 	}
-	
-	public function UpdateActivate(){
-		
-		if($this->Util()->PrintErrors()){ 
-			return false; 
-		}
-		
-		$sql = "UPDATE 
-					configuracion 
-				SET 
-					valor = '" . $this->activate . "'
-				WHERE 
-					configId = 1";
-						
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->ExecuteQuery();
-		
-		$this->Util()->setError(10072, "complete");
-		$this->Util()->PrintErrors();
-		
-		return true;
-				
-	}
-	
-	public function IsActivated(){
-			
-		$sql = "SELECT
-					valor
-				FROM 
-					configuracion
-				WHERE 
-					configId = 1";
-						
-		$this->Util()->DB()->setQuery($sql);
-		$activate = $this->Util()->DB()->GetSingle();
-				
-		return $activate;
-				
-	}
 
 }
 

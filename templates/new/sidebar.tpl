@@ -47,63 +47,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link {if $page == "student"}active{/if}" href="{$WEB_ROOT}/student">Alumnos</a>
                                 </li>
-                                {if in_array($User.userId, [1, 142, 177])}
-                                    <li class="nav-item">
-                                        <a class="nav-link {if $page == "credenciales"}active{/if}"
-                                            href="{$WEB_ROOT}/credenciales">Credenciales</a>
-                                    </li>
-                                {/if}
-                                {if in_array($User.userId, [1, 142])}
-                                    <li class="nav-item">
-                                        <a class="nav-link {if $page == "position"}active{/if}" href="{$WEB_ROOT}/position">Puestos</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link {if $page == "role"}active{/if}" href="{$WEB_ROOT}/role">Roles</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link {if $page == "profesion"}active{/if}"
-                                            href="{$WEB_ROOT}/profesion">Profesiones</a>
-                                    </li>
-                                {/if}
-                                {if in_array($User.userId, [1, 142, 177])}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/cat-doc-alumno">Documentos Alumnos</a>
-                                    </li>
-                                {/if}
-                                {if in_array($User.userId, [1, 142])}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/conceptos">Conceptos de pago</a>
-                                    </li>
-                                {/if}
                             </ul>
                         </div>
                     </li>
                 {/if}
             {/if}
-        {/if}
-        {if in_array($User.positionId,[1, 3, 24])}
-            <li class="nav-item {if $page == "configurar-calendario" or $page == "cobranza-calendario"}active{/if}">
-                <a class="nav-link" data-toggle="collapse" href="#m-cobranza"
-                    aria-expanded="{if $page == "configurar-calendario" or $page == "cobranza-calendario"}true{else}false{/if}"
-                    aria-controls="m-cobranza">
-                    <span class="menu-title">Finanzas</span>
-                    <i class="menu-arrow"></i>
-                    <i class="mdi mdi-cash-usd menu-icon"></i>
-                </a>
-                <div class="collapse {if $page == "configurar-calendario" or $page == "cobranza-calendario"}show{/if}"
-                    id="m-cobranza">
-                    <ul class="nav flex-column sub-menu">
-                        <li class="nav-item">
-                            {if in_array($User.positionId,[1, 24])}
-                                <a class="nav-link {if $page == "cobranza-calendario"}active{/if}"
-                                    href="{$WEB_ROOT}/cobranza-calendario">Calendario de Pagos</a>
-                            {/if}
-                            <a class="nav-link {if $page == "cobranza-calendario"}active{/if}"
-                                href="{$WEB_ROOT}/solicitudes-pagos">Solicitud de Pagos</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
         {/if}
         {if $AccessMod[11] == 1 || $User.positionId == 1 || $AccessMod[31] == 1 || $AccessMod[8] == 1 || $AccessMod[39] == 1}
             {if !$docente}
@@ -144,131 +92,37 @@
         {/if}
 
         {if $User.positionId == 1 || $User.positionId == 10 || $AccessMod[40] == 1 || $AccessMod[1] == 1 || $AccessMod[2] == 1 || $AccessMod[3] == 1 || $AccessMod[4] == 1 || $AccessMod[5] == 1 || $AccessMod[6] == 1 || $AccessMod[7] == 1 || $AccessMod[9] == 1 || $AccessMod[10] == 1}
-            {if $vistaPrevia ne 1}
-            {*if !$docente}
+            {if $vistaPrevia ne 1} 
+                {if $User.positionId != 10}
+                   
                     <li class="nav-item">
-                        <a class="nav-link" href="{$WEB_ROOT}/solicitud">
-                            <span class="menu-title">Solicitudes</span>
-                            <i class="mdi mdi-file-document menu-icon"></i>
+                        <a class="nav-link" data-toggle="collapse" href="#m-docente" aria-expanded="false"
+                            aria-controls="m-docente">
+                            <span class="menu-title">Docente</span>
+                            <i class="menu-arrow"></i>
+                            <i class="mdi mdi-ruler menu-icon"></i>
                         </a>
+                        <div class="collapse" id="m-docente">
+                            <ul class="nav flex-column sub-menu">
+                                {if $docente}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{$WEB_ROOT}/info-docente">Información Personal</a>
+                                    </li> 
+                                {/if}
+                                {if !$docente}
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{$WEB_ROOT}/lst-docentes">Lista de Docentes</a>
+                                    </li>
+                                {/if}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{$WEB_ROOT}/repositorio">Repositorio Docente</a>
+                                </li>
+                            </ul>
+                        </div>
                     </li>
-                {/if*}
-            {if $User.positionId != 10}
-                <li class="nav-item">
-                    <a class="nav-link" href="{$WEB_ROOT}/inbox/or/h">
-                        <span class="menu-title">Inbox</span>
-                        <i class="mdi mdi-email menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#m-docente" aria-expanded="false"
-                        aria-controls="m-docente">
-                        <span class="menu-title">Docente</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-ruler menu-icon"></i>
-                    </a>
-                    <div class="collapse" id="m-docente">
-                        <ul class="nav flex-column sub-menu">
-                            {if $docente}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/info-docente">Información Personal</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/doc-docente">Documentos Docente</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/repositorio">Repositorio Docente</a>
-                                </li>
-                            {/if}
-                            {if !$docente}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/lst-docentes">Lista de Docentes</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/msj">Mensajes</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/cat-doc-docente">Documentos Docente</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/tabla-costo">Tabla de Costos</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/prog-academico">Programas Académicos</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/repositorio">Repositorio Docente</a>
-                                </li>
-                            {/if}
-                        </ul>
-                    </div>
-                </li>
+                {/if} 
             {/if}
-            {if !$docente}
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#m-reportes" aria-expanded="false"
-                        aria-controls="m-reportes">
-                        <span class="menu-title">Reportes</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-chart-bar menu-icon"></i>
-                    </a>
-                    <div class="collapse" id="m-reportes">
-                        <ul class="nav flex-column sub-menu">
-                            {if !$docente}
-                                {if in_array($User.positionId,[1,3,24])}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/report-materia">Materias</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/reporte-indicadores">Indicadores</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/reporte-becas">Becas</a>
-                                    </li>
-                                {/if}
-                                {if in_array($User.positionId,[1,24])}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/reporte-pagos">Pagos</a>
-                                    </li>
-                                {/if}
-                                {if in_array($User.positionId,[1,10])}
-                                    <li class="nav-item">
-                                        <a class="nav-link" target="_blank"
-                                            href="{$WEB_ROOT}/ajax/new/reportes.php?opcion=diplomados&page=export-excel">Diplomados</a>
-                                    </li>
-                                {/if}
-                            {/if}
-                        </ul>
-                    </div>
-                </li>
-            {/if}
-        {/if}
-        {/if}
-
-        {if $User.positionId == 1 || $AccessMod[13] == 1 || $AccessMod[14] == 1 || $AccessMod[15] == 1 || $AccessMod[16] == 1 || $AccessMod[38] == 1}
-            {if $vistaPrevia ne 1}
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#m-configuraciones" aria-expanded="false"
-                        aria-controls="m-configuraciones">
-                        <span class="menu-title">Configuraciones</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-settings menu-icon"></i>
-                    </a>
-                    <div class="collapse" id="m-configuraciones">
-                        <ul class="nav flex-column sub-menu">
-                            {if $AccessMod[38] != 1}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/institution"> Institución </a>
-                                </li>
-                            {/if}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{$WEB_ROOT}/configuracion-certificados"> Certificados </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            {/if}
-        {/if}
+        {/if} 
 
         {if $mnuMain == "modulo1" || $mnuMain == "modulo"}
             <li class="nav-item">

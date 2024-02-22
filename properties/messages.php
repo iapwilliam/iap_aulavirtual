@@ -1,33 +1,29 @@
 <?php
 
-$message[1]["subject"] = "Estas oficialmente pre-inscrito al Programa de Alta Dirección del Instituto de Administración Pública del Estado de Chiapas";
+$message[1]["subject"] = "Confirmación de inscripción al aula virtual del Instituto de Administración Pública del Estado de Chiapas, A. C.";
 $message[1]["body"] = "
-	¡Bienvenido/a a nuestro programa de estudios! 
+¡Bienvenido/a al |major|: |course|
 
-	Estamos muy contentos de tenerte como estudiante en nuestro programa y esperamos que esta experiencia sea enriquecedora y satisfactoria para ti. Queremos que sepas que estamos comprometidos a brindarte el mejor servicio y apoyo para que puedas alcanzar tus metas académicas.
-
-	En este programa tendrás acceso a recursos y herramientas que te ayudarán a desarrollar tus habilidades y conocimientos, así como a una comunidad de compañeros y profesores dispuestos a ayudarte en todo lo que necesites. No dudes en comunicarte con nosotros si tienes preguntas o inquietudes sobre el programa.
+Nos complace confirmar que hemos recibido con éxito tu inscripción. Estamos emocionados de tenerte como parte de nuestra comunidad educativa y esperamos proporcionarte una experiencia de aprendizaje enriquecedora y satisfactoria.
 
 	El(la) |major| de tu elección es:
 	<b>|course|</b>
 	
 	Tus datos para ingresar al sistema son los siguientes
-	https://app.iapchiapas.edu.mx/
-
+	https://aulavirtual.iapchiapas.edu.mx/
 	<b>Usuario:</b> |email|
 	<b>Contrase&ntilde;a del Sistema:</b>	|password|
-	
-	Tu solicitud de pre-inscripción está siendo revisada por nuestro personal, por lo que en breve recibirás un correo con la confirmación de tu inscripción, esto te dará acceso total a la currícula elegida
 
-	¡Te deseamos éxito en tu camino de aprendizaje!
-	
-	Nota:
-	Ingresa al Sistema de Educación en Línea para completar tus datos y generar la cédula de inscripción.
-	
-	Para mejor la experiencia de navegación en nuestro Sistema de Educación en Línea, te recomendamos utilizar el navegador Chrome así como también consultar el manual del alumno que se encuentra disponible en el siguiente enlace:
-	<a href='https://iapchiapas.edu.mx/manual_alumno.pdf'>www.iapchiapas.edu.mx/manual_alumno.pdf</a>
+Si tienes alguna pregunta o necesitas asistencia adicional antes del inicio del curso, no dudes en ponerte en contacto con nuestro equipo al correo enlinea@iapchiapas.edu.mx o al teléfono 961 1251508
 
-	";
+Gracias por inscribirte con nosotros. Estamos ansiosos por ayudarte a alcanzar tus objetivos de aprendizaje y brindarte una experiencia educativa excepcional.
+
+¡Nos vemos en clase!
+
+Atentamente,
+IAP Chiapas
+
+Nota: Ingresa al Sistema de Educación en Línea para completar tus datos y generar la cédula de inscripción.";
 
 $message[2]["subject"] = "Pago autorizado";
 $message[2]["body"] = "
@@ -117,4 +113,3 @@ Favor de realizar de nueva cuenta el proceso para generar tu credencial digital.
 
 $message[10]['subject'] = "Actualización de documentación | Instituto de Administración Pública del Estado de Chiapas";
 $message[10]['body'] = "El docente |docente| ha actualizado el siguiente documento: \"|documento|\"";
-?>

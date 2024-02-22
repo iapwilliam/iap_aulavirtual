@@ -43,11 +43,6 @@
 		exit;
 	}
 
-	$smarty->assign('mnuMain','cursos');
-	$smarty->assign('id',$_GET["id"]);
-
-	$subject->setSubjectId($_GET["id"]);
-	$mySubject = $subject->Info($_GET["id"]);
-	$smarty->assign('subject',$mySubject);
+	
 
 	//$smarty->assign('major',$major->Enumerate());

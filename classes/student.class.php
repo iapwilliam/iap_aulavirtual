@@ -3474,16 +3474,26 @@ class Student extends User
 	}
 
 	function saveCOBACH() {
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, academicDegree, plantel, actualizado, type, estado, ciudad) VALUES('".$this->getControlNumber()."', '".$this->name."', '".$this->lastNamePaterno."', '".$this->lastNameMaterno."', '".$this->email."', '".$this->phone."', '".$this->password."', 'COBACH', 'OTROS', '".$this->workplacePosition."', 1, 7, '".$this->getCiudadT()."', '".$this->getAcademicDegree()."', '".$this->schoolNumber."', 'si', 'student', 7, '".$this->getCiudadT()."')";
+		$sql = "SELECT * FROM user WHERE email = '".$this->email."'";
 		$this->Util()->DB()->setQuery($sql);
-		$resultado = $this->Util()->DB()->InsertData();
+		$existe = $this->Util()->DB()->getRow();
+		if($existe){
+			$resultado['status'] = 0;
+			$resultado['message'] = "Ya existe un registro con este correo.";
+			return $resultado;
+		}
+		$controlNumber = $this->getControlNumber();
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, academicDegree, plantel, actualizado, type, estado, ciudad) VALUES('".$controlNumber."', '".$this->name."', '".$this->lastNamePaterno."', '".$this->lastNameMaterno."', '".$this->email."', '".$this->phone."', '".$this->password."', 'COBACH', 'OTROS', '".$this->workplacePosition."', 1, 7, '".$this->getCiudadT()."', '".$this->getAcademicDegree()."', '".$this->schoolNumber."', 'si', 'student', 7, '".$this->getCiudadT()."')";
+		$this->Util()->DB()->setQuery($sql);
+		$resultado['status'] = $this->Util()->DB()->InsertData();
+		$resultado['usuario'] = $controlNumber; 
 
-		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado . "', 'activo' , '".$this->courseId."')";
+		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '".$this->courseId."')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 
 		$date = date('Y-m-d');
-		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('".$this->subjectId."', '".$this->courseId."', '".$resultado."', 1, '".$date."', 'alta', 'A')";
+		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('".$this->subjectId."', '".$this->courseId."', '".$resultado['status']."', 1, '".$date."', 'alta', 'A')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 		return $resultado;

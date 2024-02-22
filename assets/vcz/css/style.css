@@ -20052,3 +20052,8 @@ dl li {
 #credencial_frontal .vigencia span {
   font-weight: 800;
 }
+
+.compact{
+    max-width: 200px;
+    white-space: normal !important;
+} 
