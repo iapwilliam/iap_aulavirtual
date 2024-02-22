@@ -6908,11 +6908,11 @@ input[type="button"].btn-block {
   font-size: 0.8125rem;
   font-weight: 400;
   line-height: 1;
-  color: #495057;
+  color: #fff;
   text-align: center;
   white-space: nowrap;
-  background-color: #e9ecef;
-  border: 1px solid #ced4da;
+  background-color: #73b760;
+  border: 1px solid #73b760;
   border-radius: 2px;
 }
 
@@ -18019,7 +18019,7 @@ code {
 .input-group-prepend .input-group-text {
   border-color: #9d9fa3;
   padding: 0.8rem 0.75rem;
-  color: #9d9fa3;
+  color: #fff;
 }
 
 .form-control {

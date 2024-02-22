@@ -1618,5 +1618,12 @@ class Util extends ErrorLms
 		$result = str_replace($search, '******', $card_number);
 		return $result;
 	}
+
+	function coordinaciones() {
+		$sql = "SELECT * FROM cobach_coordinaciones";
+		$this->DB()->setQuery($sql);
+		$resultado = $this->DB()->GetResult();
+		return $resultado;
+	}
  
 }

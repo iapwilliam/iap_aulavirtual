@@ -1,4 +1,11 @@
 <form id="form_student" action="{$WEB_ROOT}/ajax/new/student.php" method="POST" class="form">
+    <div class="alert alert-danger">
+        IMPORTANTE: Es necesario que verifique que indique correctamente su dirección de
+        correo electrónico institucional, ya que con ésta se realizará el registro correspondiente y le
+        enviaremos los datos correspondientes para el acceso al curso. Es necesario que nos
+        proporcione también un número telefónico para poder contactarlo y brindarle asistencia
+        durante el proceso.
+    </div>
     <input type="hidden" name="opcion" value="registro-cobach" />
     <span class="badge badge-dark"><i class="fas fa-user"></i> Información Personal</span>
     <hr />
@@ -17,10 +24,20 @@
             <label for="secondSurname">Apellido Materno:</label>
             <input type="text" name="secondSurname" id="secondSurname" class="form-control" />
             <span class="invalid-feedback"></span>
+        </div> 
+        <div class="col-md-4">
+            <label class="w-100">Correo electrónico</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Correo electrónico" aria-label="Correo electrónico"
+                    aria-describedby="basic-addon2" name="email">
+                <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">@cobach.edu.mx</span>
+                </div>
+            </div>
         </div>
         <div class="form-group col-md-4">
-            <label for="email">Correo Electrónico:</label>
-            <input type="email" name="email" id="email" class="form-control" />
+            <label for="rfc">RFC: (<small>Indique su RFC con homoclave</small>)</label>
+            <input type="text" name="rfc" id="rfc" class="form-control" />
             <span class="invalid-feedback"></span>
         </div>
         <div class="form-group col-md-4">
@@ -37,6 +54,26 @@
     <span class="badge badge-dark"><i class="fas fa-user"></i> Información Laboral y Académica</span>
     <hr />
     <div class="row">
+        <div class="form-group col-md-4">
+            <label>Indique su número de plaza</label>
+            <input type="number" name="plaza" class="form-control" id="plaza">
+        </div> 
+        
+        <div class="form-group col-md-4">
+            <label>Coordinación</label>
+            <select class="form-control" id="coordination" name="coordination">
+                <option value="">--Selecciona la coordinación adscrita--</option>
+                <option value="Altos">Altos</option>
+                <option value="">--Selecciona la coordinación adscrita--</option>
+                <option value="">--Selecciona la coordinación adscrita--</option>
+                <option value="">--Selecciona la coordinación adscrita--</option>
+                <option value="">--Selecciona la coordinación adscrita--</option>
+                <option value="">--Selecciona la coordinación adscrita--</option>
+                <option value="">--Selecciona la coordinación adscrita--</option>
+                <option value="">--Selecciona la coordinación adscrita--</option>
+            </select>
+        </div> 
+
         <div class="form-group col-md-4">
             <label for="ciudad"> Ciudad:</label>
             <select id="ciudad" name="ciudad" class="form-control">
