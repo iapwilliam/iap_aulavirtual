@@ -200,6 +200,19 @@ class Student extends User
 		$this->schoolNumber = $value;
 	}
 
+	private $coordination;
+	function setCoordination($value){
+		$this->coordination = $value;
+	}
+	private $adscripcion;
+	function setAdscripcion($value){
+		$this->adscripcion = $value;
+	}
+	private $rfc;
+	function setRFC($value){
+		$this->rfc = $value;
+	}
+
 	public function AddAcademicHistory($type, $situation, $semesterId = 1)
 	{
 		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(" . $this->subjectId . ", " . $this->courseId . ", " . $this->userId . ", " . $semesterId . ", CURDATE(), '" . $type . "', '" . $situation . "')";
@@ -3483,7 +3496,7 @@ class Student extends User
 			return $resultado;
 		}
 		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, academicDegree, plantel, actualizado, type, estado, ciudad) VALUES('".$controlNumber."', '".$this->name."', '".$this->lastNamePaterno."', '".$this->lastNameMaterno."', '".$this->email."', '".$this->phone."', '".$this->password."', 'COBACH', 'OTROS', '".$this->workplacePosition."', 1, 7, '".$this->getCiudadT()."', '".$this->getAcademicDegree()."', '".$this->schoolNumber."', 'si', 'student', 7, '".$this->getCiudadT()."')";
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad,coordination, adscripcion, rfc, funcion) VALUES('".$controlNumber."', '".$this->name."', '".$this->lastNamePaterno."', '".$this->lastNameMaterno."', '".$this->email."', '".$this->phone."', '".$this->password."', 'COBACH', 'OTROS', 'OTROS', 1, 7, 1, '".$this->schoolNumber."', 'si', 'student', 7, '1','".$this->coordination."', '".$this->adscripcion."', '".$this->rfc."', '".$this->funcion."')";
 		$this->Util()->DB()->setQuery($sql);
 		$resultado['status'] = $this->Util()->DB()->InsertData();
 		$resultado['usuario'] = $controlNumber; 

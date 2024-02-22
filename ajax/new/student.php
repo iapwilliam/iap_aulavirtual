@@ -9,13 +9,14 @@ switch ($_POST['opcion']) {
 		$name = trim(strip_tags($_POST['name']));
 		$firstSurname = trim(strip_tags($_POST['firstSurname']));
 		$secondSurname = trim(strip_tags($_POST['secondSurname']));
+		$rfc = trim(strip_tags($_POST['rfc']));
 		$email = trim(strip_tags($_POST['email']));
 		$phone = str_replace(' ', '', strip_tags($_POST['phone']));
 		$password = trim($_POST['password']);
-		$workplacePosition = strip_tags($_POST['workplacePosition']);
-		$schoolNumber = intval($_POST['schoolNumber']);
-		$academicDegree = strip_tags($_POST['academicDegree']);
-		$city = intval($_POST['ciudad']);
+		$coordination = intval($_POST['coordination']);
+		$schoolNumber = intval($_POST['schoolNumber']); 
+		$adscripcion = intval($_POST['adscripcion']); 
+		$function = intval($_POST['functionWork']);
 		$errors = [];
 		if ($name == '') {
 			$errors['name'] = "Por favor, no se olvide de poner el nombre.";
@@ -34,16 +35,17 @@ switch ($_POST['opcion']) {
 		}
 		if ($phone == '') {
 			$errors['phone'] = "Por favor, no se olvide de el número de celular.";
-		}
-		if ($workplacePosition == '') {
-			$errors['workplacePosition'] = "Por favor, no se olvide de poner el puesto.";
-		}
-		if ($schoolNumber == '') {
-			$errors['schoolNumber'] = "Por favor, no se olvide de poner el puesto.";
-		}
-		if (empty($city)) {
-			$errors['ciudad'] = "Por favor, no se olvide de seleccionar la ciudad.";
-		}
+		}  
+		if ($coordination == '') {
+			$errors['coordination'] = "Por favor, no se olvide de seleccionar la coordinación.";
+		}  
+		if ($adscripcion == '') {
+			$errors['adscripcion'] = "Por favor, no se olvide de seleccionar la adscripción.";
+		}  
+		if ($function == '') {
+			$errors['functionWork'] = "Por favor, no se olvide de seleccionar la función que realiza.";
+		}  
+		 
 
 		if (!empty($errors)) {
 			header('HTTP/1.1 422 Unprocessable Entity');
@@ -56,25 +58,28 @@ switch ($_POST['opcion']) {
 		$student->setName($name);
 		$student->setLastNamePaterno($firstSurname);
 		$student->setLastNameMaterno($secondSurname);
-		$student->setEmail($email);
+		$student->setEmail($email."@cobach.edu.mx");
 		$student->setPhone($phone);
-		$student->setPassword($password);
-		$student->setWorkplacePosition($workplacePosition);
-		$student->setCiudadT($city);
-		$student->setAcademicDegree($academicDegree);
+		$student->setRFC($rfc);
+		$student->setPassword($password);  
 		$student->setSchoolNumber($schoolNumber);
 		$student->setControlNumber();
-		$student->setCourseId(1);
-		$student->setSubjectId(1);
+		$student->setFuncion($function);
+		$student->setAdscripcion($adscripcion);
+		$student->setCoordination($coordination);
+		$student->setCourseId(2);
+		$student->setSubjectId(2);
 		$response = $student->saveCOBACH();
 		if ($response['status']) {
 			$sendmail = new SendMail;
             $details_body = array(
 				'email'	=> $response['usuario'],
-				'password'	=> $password
+				'password'	=> $password,
+				'major'		=> "CURSO",
+				'course'	=> 'FORMACIÓN ACADÉMICA CONTINUA'
 			);
             $details_subject = array();
-            $sendmail->Prepare($message[3]["subject"], $message[3]["body"], $details_body, $details_subject, $email, $name." ".$firstSurname." ". $secondSurname);
+            $sendmail->Prepare($message[1]["subject"], $message[1]["body"], $details_body, $details_subject, $email."@cobach.edu.mx", $name." ".$firstSurname." ". $secondSurname);
 
 			echo json_encode([
 				'growl'		=> true, 

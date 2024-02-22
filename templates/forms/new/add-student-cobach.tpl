@@ -24,9 +24,9 @@
             <label for="secondSurname">Apellido Materno:</label>
             <input type="text" name="secondSurname" id="secondSurname" class="form-control" />
             <span class="invalid-feedback"></span>
-        </div> 
+        </div>
         <div class="col-md-4">
-            <label class="w-100">Correo electrónico</label>
+            <label class="w-100">Correo electrónico institucional</label>
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="Correo electrónico" aria-label="Correo electrónico"
                     aria-describedby="basic-addon2" name="email">
@@ -41,7 +41,7 @@
             <span class="invalid-feedback"></span>
         </div>
         <div class="form-group col-md-4">
-            <label for="phone">Celular:</label>
+            <label for="phone">Teléfono de contacto:</label>
             <input type="text" name="phone" id="phone" class="form-control" />
             <span class="invalid-feedback"></span>
         </div>
@@ -56,53 +56,36 @@
     <div class="row">
         <div class="form-group col-md-4">
             <label>Indique su número de plaza</label>
-            <input type="number" name="plaza" class="form-control" id="plaza">
-        </div> 
-        
+            <input type="number" name="schoolNumber" class="form-control" id="schoolNumber">
+        </div>
+
         <div class="form-group col-md-4">
             <label>Coordinación</label>
             <select class="form-control" id="coordination" name="coordination">
                 <option value="">--Selecciona la coordinación adscrita--</option>
-                <option value="Altos">Altos</option>
-                <option value="">--Selecciona la coordinación adscrita--</option>
-                <option value="">--Selecciona la coordinación adscrita--</option>
-                <option value="">--Selecciona la coordinación adscrita--</option>
-                <option value="">--Selecciona la coordinación adscrita--</option>
-                <option value="">--Selecciona la coordinación adscrita--</option>
-                <option value="">--Selecciona la coordinación adscrita--</option>
-                <option value="">--Selecciona la coordinación adscrita--</option>
-            </select>
-        </div> 
-
-        <div class="form-group col-md-4">
-            <label for="ciudad"> Ciudad:</label>
-            <select id="ciudad" name="ciudad" class="form-control">
-                <option value="0">Selecciona tu Ciudad</option>
-                {foreach from=$ciudades item=item}
-                    <option value="{$item.municipioId}">{$item.nombre}</option>
+                {foreach from=$coordinaciones item=item}
+                    <option value="{$item.id}">{$item.name}</option>
                 {/foreach}
             </select>
         </div>
+
         <div class="form-group col-md-4">
-            <label for="workplacePosition">Puesto:</label>
-            <input type="text" name="workplacePosition" id="workplacePosition" class="form-control" />
+            <label>Adscripción</label>
+            <select class="form-control" id="adscripcion" name="adscripcion">
+                <option value="">--Indique su lugar de adscripción--</option>
+                {foreach from=$adscripciones item=item}
+                    <option value="{$item.id}">{$item.name}</option>
+                {/foreach}
+            </select>
         </div>
+
         <div class="form-group col-md-4">
-            <label for="schoolNumber">Número de Plantel:</label>
-            <input type="number" name="schoolNumber" id="schoolNumber" class="form-control" />
-        </div>
-        <div class="form-group col-md-4">
-            <label for="academicDegree">Grado Académico:</label>
-            <select name="academicDegree" id="academicDegree" class="form-control">
-                <option value="UNIVERSITARIO" {if $info.academicDegree == "UNIVERSITARIO"} selected="selected" {/if}>
-                    UNIVERSITARIO</option>
-                <option value="LICENCIATURA" {if $info.academicDegree == "LICENCIATURA"} selected="selected" {/if}>
-                    LICENCIATURA</option>
-                <option value="MAESTRIA" {if $info.academicDegree == "MAESTRIA"} selected="selected" {/if}>MAESTRIA
-                </option>
-                <option value="DOCTORADO" {if $info.academicDegree == "DOCTORADO"} selected="selected" {/if}>DOCTORADO
-                </option>
-                <option value="OTROS" {if $info.academicDegree == "OTROS"} selected="selected" {/if}>OTROS</option>
+            <label>Función</label>
+            <select class="form-control" id="functionWork" name="functionWork">
+                <option value="">--Indique la función que realiza en su centro de trabajo--</option>
+                {foreach from=$funciones item=item}
+                    <option value="{$item.id}">{$item.name}</option>
+                {/foreach}
             </select>
         </div>
     </div>

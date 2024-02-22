@@ -1619,8 +1619,22 @@ class Util extends ErrorLms
 		return $result;
 	}
 
-	function coordinaciones() {
-		$sql = "SELECT * FROM cobach_coordinaciones";
+	function cobach_coordinaciones() {
+		$sql = "SELECT * FROM cobach_coordinacion";
+		$this->DB()->setQuery($sql);
+		$resultado = $this->DB()->GetResult();
+		return $resultado;
+	}
+
+	function cobach_adscripciones() {
+		$sql = "SELECT * FROM cobach_adscripcion";
+		$this->DB()->setQuery($sql);
+		$resultado = $this->DB()->GetResult();
+		return $resultado;
+	}
+
+	function cobach_funciones() {
+		$sql = "SELECT * FROM cobach_funciones";
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;
