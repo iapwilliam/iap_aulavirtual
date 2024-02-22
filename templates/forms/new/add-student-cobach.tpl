@@ -94,13 +94,13 @@
             <button class="btn btn-success" type="submit">Guardar</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row mt-3">
+        <div class="col-md-3">
             <a href="https://iapchiapas.edu.mx/aviso_privacidad" target="_blank" title="Aviso de Privacidad">
                 Aviso de Privacidad
             </a>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <a href="https://www.cobach.edu.mx/avisos-de-privacidad.html" target="_blank" title="Aviso de Privacidad">
                 Aviso de Privacidad COBACH
             </a>
