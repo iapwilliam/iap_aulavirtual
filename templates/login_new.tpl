@@ -53,9 +53,6 @@
                                     <div class="my-2 d-flex justify-content-center align-items-center">
                                         <a href="recuperacion" class="auth-link text-black">¿Olvidaste tu contraseña?</a>
                                     </div>
-                                    <div class="text-center mt-4 font-weight-light">
-                                        ¿Estás interesado en cursar un programa en línea? <a href="{$WEB_ROOT}/register" class="text-primary">Regístrate aquí</a>
-                                    </div>
                                 </form>
                             </div>
                         </div>

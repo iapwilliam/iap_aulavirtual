@@ -95,9 +95,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <a href="https://iapchiapas.edu.mx/aviso_privacidad" target="_blank" title="Aviso de Privacidad">
                 Aviso de Privacidad
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="https://www.cobach.edu.mx/avisos-de-privacidad.html" target="_blank" title="Aviso de Privacidad">
+                Aviso de Privacidad COBACH
             </a>
         </div>
     </div>
