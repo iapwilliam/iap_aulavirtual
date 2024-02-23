@@ -92,20 +92,7 @@
                     </li>
                 {/if}
                 <li class="nav-item nav-profile dropdown">
-                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-                        <div class="nav-profile-img">
-                            {if $User.photo}
-                                {if $User.type eq 'student'}
-                                    <img src="{$WEB_ROOT}/alumnos/{$User.photo}" alt="Profile">
-                                {/if}
-                                {if $User.type eq 'Docente'}
-                                    <img src="{$WEB_ROOT}/{$User.photo}" alt="Profile">
-                                {/if}
-                            {else}
-                                <i class="fas fa-user-circle fa-3x text-white"></i>
-                            {/if}
-                            <span class="availability-status online"></span>             
-                        </div>
+                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false"> 
                         <div class="nav-profile-text">
                             <p class="mb-1 text-black">{if $User.username}Bienvenido {$User.username} {/if}<span class="badge badge-dark rounded">{$fechaHoy}</span></p>
                         </div>
@@ -141,38 +128,6 @@
                             <a class="dropdown-item" href="{$WEB_ROOT}">
                                 <i class="mdi mdi-view-dashboard mr-2 text-success"></i>
                                 Menú Principal
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/perfil">
-                                <i class="mdi mdi-account mr-2 text-primary"></i>
-                                Perfil
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/alumn-services">
-                                <i class="mdi mdi-information mr-2 text-primary"></i>
-                                Actualizar Información
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/datos-fiscales">
-                                <i class="mdi mdi-clipboard-text mr-2 text-primary"></i>
-                                Datos Fiscales
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/graybox.php?page=contra" data-target="#ajax" data-toggle="modal" data-width="1000px">
-                                <i class="mdi mdi-key mr-2 text-primary"></i>
-                                Cambiar Contraseña
-                            </a>
-                            {* <a class="dropdown-item" href="{$WEB_ROOT}">
-                                <i class="mdi mdi-play-circle mr-2 text-success"></i>
-                                Currícula Activa
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/homepage/cur/2">
-                                <i class="mdi mdi-close-circle mr-2 text-danger"></i>
-                                Currícula Inactiva
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/homepage/cur/3">
-                                <i class="mdi mdi-checkbox-marked-circle mr-2 text-info"></i>
-                                Currícula Finalizada
-                            </a> *}
-                            <a class="dropdown-item" href="https://youtu.be/oiaW2gl57Fk" data-fancybox="Tutorial">
-                                <i class="mdi mdi-comment-account-outline mr-2 text-info"></i>
-                                Tutorial
                             </a>
                         {/if}
                         <div class="dropdown-divider"></div>
