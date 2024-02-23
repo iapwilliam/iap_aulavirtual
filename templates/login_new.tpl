@@ -50,9 +50,9 @@
                                             Ingresar
                                         </button>
                                     </div>
-                                    <div class="my-2 d-flex justify-content-center align-items-center">
+                                    {* <div class="my-2 d-flex justify-content-center align-items-center">
                                         <a href="recuperacion" class="auth-link text-black">¿Olvidaste tu contraseña?</a>
-                                    </div>
+                                    </div> *}
                                 </form>
                             </div>
                         </div>
