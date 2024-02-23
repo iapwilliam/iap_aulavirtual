@@ -21,9 +21,7 @@ Gracias por inscribirte con nosotros. Estamos ansiosos por ayudarte a alcanzar t
 ¡Nos vemos en clase!
 
 Atentamente,
-IAP Chiapas
-
-Nota: Ingresa al Sistema de Educación en Línea para completar tus datos y generar la cédula de inscripción.";
+IAP Chiapas";
 
 $message[2]["subject"] = "Pago autorizado";
 $message[2]["body"] = "

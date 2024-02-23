@@ -1,8 +1,8 @@
 <?php
 include_once('../../init.php');
 include_once('../../config.php');
-include_once(DOC_ROOT . '/libraries.php');
-
+include_once(DOC_ROOT . '/libraries.php'); 
+include_once(DOC_ROOT . "/properties/messages.php"); 
 session_start();
 switch ($_POST['opcion']) {
 	case 'registro-cobach':
@@ -52,9 +52,11 @@ switch ($_POST['opcion']) {
 		}  
 		
 		$regex = '/^([A-ZÑ&]{3,4})(\d{2})(\d{2})(\d{2})([0-9a-z]{3})$/i';
-		if (!empty($rfc) && strlen($rfc) != 13){
+		if(empty($rfc)){
+			$errors['rfc'] = "Por favor, no se olvide de poner el RFC";
+		}elseif (!empty($rfc) && strlen($rfc) != 13){
 		    $errors['rfc'] = "El RFC debe tener 13 caracteres.";
-		}elseif(!preg_match($regex, $rfc)){
+		}elseif(!empty($rfc) && !preg_match($regex, $rfc)){
 		    $errors['rfc'] = "No contiene un formato válido, revise por favor.";
 		}
 
@@ -81,8 +83,7 @@ switch ($_POST['opcion']) {
 		$student->setCourseId(2);
 		$student->setSubjectId(2);
 		$response = $student->saveCOBACH();
-		if ($response['status']) {
-			$sendmail = new SendMail;
+		if ($response['status']) { 
             $details_body = array(
 				'email'	=> $response['usuario'],
 				'password'	=> $password,
