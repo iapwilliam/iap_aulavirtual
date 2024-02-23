@@ -12,7 +12,7 @@ switch ($_POST['opcion']) {
 		$rfc = trim(strip_tags($_POST['rfc']));
 		$email = trim(strip_tags($_POST['email']));
 		$phone = str_replace(' ', '', strip_tags($_POST['phone']));
-		$password = trim($_POST['password']);
+		$password = "iap_2024".rand(1000,9999);
 		$coordination = intval($_POST['coordination']);
 		$schoolNumber = intval($_POST['schoolNumber']); 
 		$adscripcion = intval($_POST['adscripcion']); 
@@ -32,6 +32,11 @@ switch ($_POST['opcion']) {
 		}
 		if ($email == '') {
 			$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
+		}else{
+		    $partes = explode("@", $email);
+		    if(count($partes)>1){
+		        $errors['email'] = "Por favor, no se olvide de solo poner el usuario del correo, no es necesario agregar @cobach.edu.mx";
+		    }
 		}
 		if ($phone == '') {
 			$errors['phone'] = "Por favor, no se olvide de el número de celular.";
@@ -45,7 +50,13 @@ switch ($_POST['opcion']) {
 		if ($function == '') {
 			$errors['functionWork'] = "Por favor, no se olvide de seleccionar la función que realiza.";
 		}  
-		 
+		
+		$regex = '/^([A-ZÑ&]{3,4})(\d{2})(\d{2})(\d{2})([0-9a-z]{3})$/i';
+		if (!empty($rfc) && strlen($rfc) != 13){
+		    $errors['rfc'] = "El RFC debe tener 13 caracteres.";
+		}elseif(!preg_match($regex, $rfc)){
+		    $errors['rfc'] = "No contiene un formato válido, revise por favor.";
+		}
 
 		if (!empty($errors)) {
 			header('HTTP/1.1 422 Unprocessable Entity');

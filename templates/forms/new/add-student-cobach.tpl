@@ -45,20 +45,10 @@
             <input type="text" name="phone" id="phone" class="form-control" />
             <span class="invalid-feedback"></span>
         </div>
-        <div class="form-group col-md-4">
-            <label for="password">Contraseña del Sistema (Mínimo 6 caracteres):</label>
-            <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" />
-            <span class="invalid-feedback"></span>
-        </div>
     </div>
     <span class="badge badge-dark"><i class="fas fa-user"></i> Información Laboral y Académica</span>
     <hr />
-    <div class="row">
-        <div class="form-group col-md-4">
-            <label>Indique su número de plaza</label>
-            <input type="number" name="schoolNumber" class="form-control" id="schoolNumber">
-        </div>
-
+    <div class="row"> 
         <div class="form-group col-md-4">
             <label>Coordinación</label>
             <select class="form-control" id="coordination" name="coordination">
@@ -107,8 +97,3 @@
         </div>
     </div>
 </form>
-<script>
-    flatpickr('.i-calendar', {
-        dateFormat: "Y-m-d"
-    });
-</script>
