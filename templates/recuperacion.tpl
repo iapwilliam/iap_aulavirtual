@@ -24,7 +24,7 @@
                                         <img src="{$WEB_ROOT}/images/logos/Logo_3.png" width="200px">
                                     </div>
                                     <h4>Recuperación de Datos de Acceso</h4>
-                                    <h6 class="font-weight-light text-center">Ingresa el correo electrónico con el que te diste de alta en nuestro Sistema de Educación en Línea, por ese medio te enviaremos tus datos de acceso.</h6>
+                                    <h6 class="font-weight-light text-center">Ingresa el correo electrónico con el que te diste de alta, por ese medio te enviaremos tus datos de acceso.</h6>
                                 </div>
                                 <form class="pt-3 form" method="POST" id="form_recuperacion" action="{$WEB_ROOT}/ajax/new/recuperacion.php">
                                     <input type="hidden" name="type" value="recupera" />

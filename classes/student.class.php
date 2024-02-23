@@ -196,20 +196,24 @@ class Student extends User
 	}
 
 	private $schoolNumber;
-	function setSchoolNumber($value){
+	function setSchoolNumber($value)
+	{
 		$this->schoolNumber = $value;
 	}
 
 	private $coordination;
-	function setCoordination($value){
+	function setCoordination($value)
+	{
 		$this->coordination = $value;
 	}
 	private $adscripcion;
-	function setAdscripcion($value){
+	function setAdscripcion($value)
+	{
 		$this->adscripcion = $value;
 	}
 	private $rfc;
-	function setRFC($value){
+	function setRFC($value)
+	{
 		$this->rfc = $value;
 	}
 
@@ -457,10 +461,10 @@ class Student extends User
 						'" . $courseData['crm_name'] . "',
 						'" . $courseData['crm_id'] . "'
 						)";
-	
+
 			$this->Util()->DBCrm()->setQuery($sql);
 			$this->Util()->DBCrm()->InsertData();
-	
+
 			$sql = "SELECT uuid()";
 			$this->Util()->DBCrm()->setQuery($sql);
 			$emailId = $this->Util()->DBCrm()->GetSingle();
@@ -488,7 +492,7 @@ class Student extends User
 				)";
 			$this->Util()->DBCrm()->setQuery($sql);
 			$this->Util()->DBCrm()->InsertData();
-	
+
 			$sql = "SELECT uuid()";
 			$this->Util()->DBCrm()->setQuery($sql);
 			$uuId = $this->Util()->DBCrm()->GetSingle();
@@ -1120,9 +1124,9 @@ class Student extends User
 							masters = '" . $this->getMasters() . "', 
 							mastersSchool = '" . $this->getMastersSchool() . "', 
 							highSchool = '" . $this->getHighSchool() . "',
-							curpDrive = ".$this->curpDrive.",
-							foto = ".$this->foto.",
-							funcion = ".$this->funcion."
+							curpDrive = " . $this->curpDrive . ",
+							foto = " . $this->foto . ",
+							funcion = " . $this->funcion . "
 						WHERE 
 							userId = " . $this->getUserId();
 		$this->Util()->DB()->setQuery($sqlQuery);
@@ -1715,7 +1719,7 @@ class Student extends User
 		$activity->setCourseModuleId($id);
 		if ($alumnoId)
 			$activity->setUserId($alumnoId);
-		$actividades = $activity->Enumerate(); 
+		$actividades = $activity->Enumerate();
 		$totalScore = 0;
 		foreach ($actividades as $res)
 			$totalScore += $res["realScore"];
@@ -1733,15 +1737,15 @@ class Student extends User
 		}
 		$msj = "Instituto de Administración Publica del Estado de Chiapas, A. C.
 				<br><br>
-				Sus datos de acceso para nuestro Sistema de Educación en Línea son:<br>
+				Sus datos de acceso para nuestra aula virtual son:<br>
 				Usuario: " . $infoDu["controlNumber"] . "<br>
 				Contraseña: " . $infoDu["password"] . "<br>
 				<br><br>
-				Para una correcta navegación en nuestro Sistema, puede consultar el manual del alumno en:<br>
-				<a href=https://app.iapchiapas.edu.mx/manual_alumno.pdf>https://app.iapchiapas.edu.mx/manual_alumno.pdf</a><br>
+
 				Cualquier duda, favor de contactarnos:<br>
-				Teléfonos: (961) 125-15-08 Ext. 106 o 114<br>
+				Teléfonos: 961 1251508
 				Correo: enlinea@iapchiapas.edu.mx<br>
+
 				Saludos.<br>
 				IAP-Chiapas<br>
 				<img src='" . WEB_ROOT . "/images/logo_correo.jpg'>
@@ -3438,7 +3442,7 @@ class Student extends User
 		$result = $this->Util()->DB()->GetRow();
 		if ($result) {
 			$result['files'] = [
-				"photo" => json_decode($result['photo'],true),
+				"photo" => json_decode($result['photo'], true),
 				"credential" => json_decode($result['credential'], true),
 				"token"	=> json_decode($result['token'], true)
 			];
@@ -3465,48 +3469,52 @@ class Student extends User
 		$this->Util()->DB()->UpdateData();
 	}
 
-	public function UpdateAvatarCredential($userId, $photoCredential) {
+	public function UpdateAvatarCredential($userId, $photoCredential)
+	{
 		$sql = "UPDATE user SET avatar_credential = {$photoCredential} WHERE userId = {$userId}";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData($sql);
 	}
 
 	//Actualiza el bloqueo para privilegios de pagos
-	function actualizarBloqueo($userId, $bloqueo) {
+	function actualizarBloqueo($userId, $bloqueo)
+	{
 		$sql = "UPDATE user SET bloqueado = {$bloqueo} WHERE userId = {$userId}";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 	}
 
 	//Retorna el alumno inscrito en el curso Gestión Documental y Administración de Archivos y, si tiene, la curricula adicional activa. 
-	function alumnoConDiplomado($alumnoId) {
+	function alumnoConDiplomado($alumnoId)
+	{
 		$sql = "SELECT * FROM `user_subject` B WHERE alumnoId = {$alumnoId} AND status = 'activo' AND EXISTS(SELECT * FROM user_subject A WHERE A.alumnoId = B.alumnoId AND A.courseId = 162);";
 		$this->Util()->DB()->setQuery($sql);
 		$resultado = $this->Util()->DB()->GetTotalRows();
 		return $resultado;
 	}
 
-	function saveCOBACH() {
-		$sql = "SELECT * FROM user WHERE email = '".$this->email."'";
+	function saveCOBACH()
+	{
+		$sql = "SELECT * FROM user WHERE email = '" . $this->email . "'";
 		$this->Util()->DB()->setQuery($sql);
 		$existe = $this->Util()->DB()->getRow();
-		if($existe){
+		if ($existe) {
 			$resultado['status'] = 0;
 			$resultado['message'] = "Ya existe un registro con este correo.";
 			return $resultado;
 		}
 		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad,coordination, adscripcion, rfc, funcion) VALUES('".$controlNumber."', '".$this->name."', '".$this->lastNamePaterno."', '".$this->lastNameMaterno."', '".$this->email."', '".$this->phone."', '".$this->password."', 'COBACH', 'OTROS', 'OTROS', 1, 7, 1, '".$this->schoolNumber."', 'si', 'student', 7, '1','".$this->coordination."', '".$this->adscripcion."', '".$this->rfc."', '".$this->funcion."')";
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad,coordination, adscripcion, rfc, funcion) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', 'COBACH', 'OTROS', 'OTROS', 1, 7, 1, '" . $this->schoolNumber . "', 'si', 'student', 7, '1','" . $this->coordination . "', '" . $this->adscripcion . "', '" . $this->rfc . "', '" . $this->funcion . "')";
 		$this->Util()->DB()->setQuery($sql);
 		$resultado['status'] = $this->Util()->DB()->InsertData();
-		$resultado['usuario'] = $controlNumber; 
+		$resultado['usuario'] = $controlNumber;
 
-		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '".$this->courseId."')";
+		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '" . $this->courseId . "')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 
 		$date = date('Y-m-d');
-		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('".$this->subjectId."', '".$this->courseId."', '".$resultado['status']."', 1, '".$date."', 'alta', 'A')";
+		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 		return $resultado;
