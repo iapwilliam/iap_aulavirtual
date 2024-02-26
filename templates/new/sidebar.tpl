@@ -19,110 +19,104 @@
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
         </li>
-        {if in_array($User.positionId,[1,2,3,5])}
-            {if !$docente}
-                {if $vistaPrevia ne 1}
-                    <li
-                        class="nav-item {if in_array($page,["major", "personal1", "student", "position", "role", "profesion", "recording"])}active{/if}">
-                        <a class="nav-link" data-toggle="collapse" href="#m-catalogos"
-                            aria-expanded="{if in_array($page, ["major", "personal1", "student", "position", "role", "profesion", "recording"])}true{else}false{/if}"
-                            aria-controls="m-catalogos">
-                            <span class="menu-title">Catálogos</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-library-books menu-icon"></i>
-                        </a>
-                        <div class="collapse {if in_array($page, ["major", "personal1", "student", "position", "role", "profesion", "recording"])}show{/if}"
-                            id="m-catalogos">
-                            <ul class="nav flex-column sub-menu">
-                                {if in_array($User.userId, [1, 142])}
-                                    <li class="nav-item">
-                                        <a class="nav-link {if $page == "major"}active{/if}" href="{$WEB_ROOT}/major">Programas
-                                            Académicos</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link {if $page == "personal1"}active{/if}"
-                                            href="{$WEB_ROOT}/personal1">Personal</a>
-                                    </li>
-                                {/if}
-                                <li class="nav-item">
-                                    <a class="nav-link {if $page == "student"}active{/if}" href="{$WEB_ROOT}/student">Alumnos</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                {/if}
-            {/if}
-        {/if}
-        {if $AccessMod[11] == 1 || $User.positionId == 1 || $AccessMod[31] == 1 || $AccessMod[8] == 1 || $AccessMod[39] == 1}
-            {if !$docente}
-                {if $vistaPrevia ne 1}
-                    <li class="nav-item {if $page == "subject" or $page == "history-subject" or $page == "edit-module"}active{/if}">
-                        <a class="nav-link" data-toggle="collapse" href="#m-curricula"
-                            aria-expanded="{if $page == "subject" or $page == "history-subject"}true{else}false{/if}"
-                            aria-controls="m-curricula">
-                            <span class="menu-title">Currícula</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-school menu-icon"></i>
-                        </a>
-                        <div class="collapse {if $page == "subject" or $page == "history-subject" or $page == "edit-module"}show{/if}"
-                            id="m-curricula">
-                            <ul class="nav flex-column sub-menu">
-                                {if $AccessMod[39] != 1}
-                                    <li class="nav-item">
-                                        <a class="nav-link {if $page == "subject" or $page == "edit-module"}active{/if}"
-                                            href="{$WEB_ROOT}/subject">Currícula</a>
-                                    </li>
-                                {/if}
-                                <li class="nav-item">
-                                    <a class="nav-link {if $page == "history-subject"}active{/if}"
-                                        href="{$WEB_ROOT}/history-subject">Historial</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                {else}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{$WEB_ROOT}/history-subject">
-                            <span class="menu-title">Currícula</span>
-                            <i class="mdi mdi-school menu-icon"></i>
-                        </a>
-                    </li>
-                {/if}
-            {/if}
+        {if in_array($User.perfil,["Administrador"])}
+            <li
+                class="nav-item {if in_array($page,["major", "personal1", "student", "position", "role", "profesion", "recording"])}active{/if}">
+                <a class="nav-link" data-toggle="collapse" href="#m-catalogos"
+                    aria-expanded="{if in_array($page, ["major", "personal1", "student", "position", "role", "profesion", "recording"])}true{else}false{/if}"
+                    aria-controls="m-catalogos">
+                    <span class="menu-title">Catálogos</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-library-books menu-icon"></i>
+                </a>
+                <div class="collapse {if in_array($page, ["major", "personal1", "student", "position", "role", "profesion", "recording"])}show{/if}"
+                    id="m-catalogos">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link {if $page == "major"}active{/if}" href="{$WEB_ROOT}/major">Programas
+                                Académicos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {if $page == "personal1"}active{/if}"
+                                href="{$WEB_ROOT}/personal1">Personal</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {if $page == "student"}active{/if}" href="{$WEB_ROOT}/student">Alumnos</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item {if $page == "subject" or $page == "history-subject" or $page == "edit-module"}active{/if}">
+                <a class="nav-link" data-toggle="collapse" href="#m-curricula"
+                    aria-expanded="{if $page == "subject" or $page == "history-subject"}true{else}false{/if}"
+                    aria-controls="m-curricula">
+                    <span class="menu-title">Currícula</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-school menu-icon"></i>
+                </a>
+                <div class="collapse {if $page == "subject" or $page == "history-subject" or $page == "edit-module"}show{/if}"
+                    id="m-curricula">
+                    <ul class="nav flex-column sub-menu">
+                        {if $AccessMod[39] != 1}
+                            <li class="nav-item">
+                                <a class="nav-link {if $page == "subject" or $page == "edit-module"}active{/if}"
+                                    href="{$WEB_ROOT}/subject">Currícula</a>
+                            </li>
+                        {/if}
+                        <li class="nav-item">
+                            <a class="nav-link {if $page == "history-subject"}active{/if}"
+                                href="{$WEB_ROOT}/history-subject">Historial</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#m-docente" aria-expanded="false"
+                    aria-controls="m-docente">
+                    <span class="menu-title">Docente</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-ruler menu-icon"></i>
+                </a>
+                <div class="collapse" id="m-docente">
+                    <ul class="nav flex-column sub-menu">
+                        {if $User.perfil eq "Docente"}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{$WEB_ROOT}/info-docente">Información Personal</a>
+                            </li>
+                        {/if}
+                        {if $User.perfil ne "Docente"}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{$WEB_ROOT}/lst-docentes">Lista de Docentes</a>
+                            </li>
+                        {/if}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{$WEB_ROOT}/repositorio">Repositorio Docente</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
         {/if}
 
-        {if $User.positionId == 1 || $User.positionId == 10 || $AccessMod[40] == 1 || $AccessMod[1] == 1 || $AccessMod[2] == 1 || $AccessMod[3] == 1 || $AccessMod[4] == 1 || $AccessMod[5] == 1 || $AccessMod[6] == 1 || $AccessMod[7] == 1 || $AccessMod[9] == 1 || $AccessMod[10] == 1}
-            {if $vistaPrevia ne 1} 
-                {if $User.positionId != 10}
-                   
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="collapse" href="#m-docente" aria-expanded="false"
-                            aria-controls="m-docente">
-                            <span class="menu-title">Docente</span>
-                            <i class="menu-arrow"></i>
-                            <i class="mdi mdi-ruler menu-icon"></i>
-                        </a>
-                        <div class="collapse" id="m-docente">
-                            <ul class="nav flex-column sub-menu">
-                                {if $docente}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/info-docente">Información Personal</a>
-                                    </li> 
-                                {/if}
-                                {if !$docente}
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{$WEB_ROOT}/lst-docentes">Lista de Docentes</a>
-                                    </li>
-                                {/if}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{$WEB_ROOT}/repositorio">Repositorio Docente</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                {/if} 
-            {/if}
-        {/if} 
+        {if in_array($User.perfil, ["Administrador", "Conocer"])}
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#menuReportes" aria-expanded="false"
+                    aria-controls="menuReportes">
+                    <span class="menu-title">Reportes</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-ruler menu-icon"></i>
+                </a>
+                <div class="collapse" id="menuReportes">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" target="_blank"
+                                href="{$WEB_ROOT}/ajax/new/reportes.php?opcion=cobach&page=export-excel">COBACH</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        {/if}
 
         {if $mnuMain == "modulo1" || $mnuMain == "modulo"}
             <li class="nav-item">

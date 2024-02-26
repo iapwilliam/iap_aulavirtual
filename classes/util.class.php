@@ -1619,22 +1619,22 @@ class Util extends ErrorLms
 		return $result;
 	}
 
-	function cobach_coordinaciones() {
-		$sql = "SELECT * FROM cobach_coordinacion";
+	function cobach_coordinaciones($where = "1") {
+		$sql = "SELECT * FROM cobach_coordinacion WHERE $where";
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;
 	}
 
-	function cobach_adscripciones() {
-		$sql = "SELECT * FROM cobach_adscripcion";
+	function cobach_adscripciones($where = "1") {
+		$sql = "SELECT * FROM cobach_adscripcion WHERE $where";
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;
 	}
 
-	function cobach_funciones() {
-		$sql = "SELECT * FROM cobach_funciones";
+	function cobach_funciones($where = "1") {
+		$sql = "SELECT * FROM cobach_funciones WHERE $where";
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;

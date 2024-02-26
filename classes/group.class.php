@@ -495,82 +495,12 @@ class Group extends Module
 	}
 
 	public function DefaultGroup()
-	{
-		$students_repeat = "";
-		if ($this->coursemoduleId > 0) {
-			$students_repeat = "UNION
-						SELECT 
-							u.*,
-							u.controlNumber AS matricula,
-							usr.alumnoId,
-							usr.status,
-							cd.discount,
-							'Recursador' AS situation,
-							(SELECT cs.status FROM certificate_subject cs WHERE cs.userId = usr.alumnoId AND cs.courseId = usr.courseId) AS certificateStatus
-						FROM user_subject_repeat usr 
-							LEFT JOIN user u 
-								ON usr.alumnoId = u.userId 
-							LEFT JOIN calendar_discounts cd 
-								ON (usr.alumnoId = cd.userId AND usr.courseId = cd.courseId)
-						WHERE usr.courseId = " . $this->getCourseId() . " AND u.activo = '1' AND usr.status = 'activo' AND usr.courseModuleId = " . $this->coursemoduleId;
-		}
-		$sql = "SELECT 
-					u.*, 
-					us.matricula,
-					us.alumnoId,
-					us.status AS status,
-					cd.discount,
-					'Ordinario' AS situation,
-					(SELECT cs.status FROM certificate_subject cs WHERE cs.userId = us.alumnoId AND cs.courseId = us.courseId) AS certificateStatus
-				FROM user_subject us
-					LEFT JOIN user u 
-						ON us.alumnoId = u.userId
-					LEFT JOIN calendar_discounts cd 
-						ON (us.alumnoId = cd.userId AND us.courseId = cd.courseId)
-				WHERE us.courseId = " . $this->getCourseId() . " AND u.activo = '1' AND us.status = 'activo'
-				" . $students_repeat . "
-				ORDER BY lastNamePaterno ASC, lastNameMaterno ASC, names ASC";
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetResult();
-
-
-		foreach ($result as $key => $res) {
-			$activity = new Activity;
-			$activity->setCourseModuleId($this->coursemoduleId);
-			$actividades = $activity->Enumerate();
-			$result[$key]["names"] = $this->Util()->DecodeTiny($result[$key]["names"]);
-			$result[$key]["lastNamePaterno"] = $this->Util()->DecodeTiny($result[$key]["lastNamePaterno"]);
-			$result[$key]["lastNameMaterno"] = $this->Util()->DecodeTiny($result[$key]["lastNameMaterno"]);
-
-			$sql = "SELECT teamNumber
-						FROM team
-					WHERE courseModuleId = '" . $this->coursemoduleId . "' AND userId = '" . $res["alumnoId"] . "'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["equipo"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT *, SUM(IF(type = 'alta', 1, 0)) as altas, SUM(IF(type = 'baja', 1, 0)) as bajas, 'revisar' FROM `academic_history` WHERE userId = {$res['alumnoId']}  GROUP BY userId, courseId HAVING altas > 1 OR bajas > 1;";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["historial"] = $this->Util()->DB()->GetRow();
-
-			$result[$key]["addepUp"] = 0;
-			foreach ($actividades as $activity) {
-				if ($activity["score"] <= 0)
-					continue;
-				// Revisar calificacion
-
-				$sql = "SELECT ponderation
-							FROM activity_score
-						WHERE activityId = '" . $activity["activityId"] . "' AND userId = '" . $res["alumnoId"] . "'";
-				$this->Util()->DB()->setQuery($sql);
-				$score = $this->Util()->DB()->GetSingle();
-
-				$result[$key]["score"][] = $score;
-				$realScore = $score * $activity["score"] / 100;
-				$result[$key]["realScore"][] = $realScore;
-				$result[$key]["addepUp"] += $realScore;
-			}
-			$result[$key]["addepUp"] = round($result[$key]["addepUp"], 0, PHP_ROUND_HALF_DOWN);;
-		}
+	{ 
+		$sql = "SELECT user.userId, user.controlNumber, user.names, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.password, user.adscripcion, user.coordination, user.funcion, user.rfc FROM user 
+		INNER JOIN user_subject ON user_subject.alumnoId = user.userId
+		AND user_subject.courseId = {$this->getCourseId()}";
+		$this->Util()->DB()->setQuery($sql); 
+		$result = $this->Util()->DB()->getResult();
 		return $result;
 	}
 

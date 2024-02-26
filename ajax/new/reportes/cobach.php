@@ -5,32 +5,29 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-$group->setCourseId(162);
+$group->setCourseId(1);
 $students = $group->DefaultGroup();
-// echo "<pre>";
-// print_r($students);
-// Create new Spreadsheet object
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(30);
 // Set document properties
 $spreadsheet->getProperties()->setCreator('William Ramírez')
     ->setLastModifiedBy('William Ramírez')
-    ->setTitle('Registros Diplomado')
+    ->setTitle('Registros Curso Cobach')
     ->setSubject('Alumnos')
-    ->setDescription('Registro del Diplomado Gestión Documental y Administración de Archivos')
+    ->setDescription('Registro del Curso Formación Académica Continua')
     ->setKeywords('Alumnos')
-    ->setCategory('Diplomados');
+    ->setCategory('Cursos');
 $sheet = $spreadsheet->getActiveSheet();
 
-$sheet->setCellValue('A1', 'Numero de Control');
-$sheet->setCellValue('B1', 'Nombre');
-$sheet->setCellValue('C1', 'Correo');
-$sheet->setCellValue('D1', 'Telefono');
-$sheet->setCellValue('E1', 'Lugar de Trabajo');
-$sheet->setCellValue('F1', 'Funcion');
-$sheet->setCellValue('G1', 'Foto');
-$sheet->setCellValue('H1', 'Curp');
-$sheet->setCellValue('I1', 'Curp Archivo');
+$sheet->setCellValue('A1', 'Usuario');
+$sheet->setCellValue('B1', 'Contraseña');
+$sheet->setCellValue('C1', 'Nombre');
+$sheet->setCellValue('D1', 'Correo');
+$sheet->setCellValue('E1', 'Telefono');
+$sheet->setCellValue('F1', 'RFC');
+$sheet->setCellValue('G1', 'Coordinación');
+$sheet->setCellValue('H1', 'Adscripción');
+$sheet->setCellValue('I1', 'Funcion');
 
 $sheet->getStyle('A')->getAlignment()->setHorizontal('center')->setVertical('center');
 $sheet->getStyle('A')->getFont()->setSize(14)->setBold(true);
@@ -51,30 +48,21 @@ $sheet->getStyle('H')->getFont()->setSize(14)->setBold(true);
 $sheet->getStyle('I')->getAlignment()->setHorizontal('center')->setVertical('center');
 $sheet->getStyle('I')->getFont()->setSize(14)->setBold(true);
 
-$funciones = [
-    0 => "",
-    1 => "Coordinador de archivos",
-    2 => "Correspondencia",
-    3 => "Archivo de trámite",
-    4 => "Archivo de concentración",
-    5 => "Archivo histórico",
-    6 => "Grupo interdisciplinario",
-    7 => "Ninguna de las anteriores",
-];
+
 for ($i = 0; $i < (count($students)); $i++) {
-    $foto = json_decode($students[$i]['foto'], true);
-    $curp = json_decode($students[$i]['curpDrive'], true);
-    $sheet->setCellValue('A' . ($i + 2), $students[$i]['controlNumber']);
-    $sheet->setCellValue('B' . ($i + 2), mb_strtoupper($students[$i]['names']) . " " . mb_strtoupper($students[$i]['lastNamePaterno']) . " " . mb_strtoupper($students[$i]['lastNameMaterno']));
-    $sheet->setCellValue("C" . ($i + 2), $students[$i]['email']);
-    $sheet->setCellValue("D" . ($i + 2), $students[$i]['mobile']);
-    $sheet->setCellValue("E" . ($i + 2), $students[$i]['workplace']);
-    $sheet->setCellValue("F" . ($i + 2), $funciones[$students[$i]["funcion"]]);
-    $sheet->setCellValue("G" . ($i + 2), $foto['urlBlank']);
-    $sheet->getCell('G' . ($i + 2))->getHyperlink()->setUrl($foto['urlBlank']);
-    $sheet->setCellValue("H" . ($i + 2), $students[$i]['curp']);
-    $sheet->setCellValue("I" . ($i + 2), $curp['urlBlank']);
-    $sheet->getCell('I' . ($i + 2))->getHyperlink()->setUrl($curp['urlBlank']);
+
+    $coordination = $util->cobach_coordinaciones("cobach_coordinacion.id = {$students[$i]['coordination']}")[0]['name'];
+    $adscripcion = $util->cobach_adscripciones("cobach_adscripcion.id = {$students[$i]['adscripcion']}")[0]['name'];
+    $funcion = $util->cobach_funciones("cobach_funciones.id = {$students[$i]['funcion']}")[0]['name'];
+    $sheet->setCellValue("A" . ($i + 2), $students[$i]['controlNumber']);
+    $sheet->setCellValue("B" . ($i + 2), $students[$i]['password']);
+    $sheet->setCellValue("C" . ($i + 2), mb_strtoupper($students[$i]['names']) . " " . mb_strtoupper($students[$i]['lastNamePaterno']) . " " . mb_strtoupper($students[$i]['lastNameMaterno']));
+    $sheet->setCellValue("D" . ($i + 2), $students[$i]['email']);
+    $sheet->setCellValue("E" . ($i + 2), $students[$i]['phone']);
+    $sheet->setCellValue("F" . ($i + 2), $students[$i]['rfc']);
+    $sheet->setCellValue("G" . ($i + 2), $coordination);
+    $sheet->setCellValue("H" . ($i + 2), $adscripcion);  
+    $sheet->setCellValue("I" . ($i + 2), $funcion);  
 }
 
 $sheet->getStyle("A2:I" . (count($students) + 1))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
@@ -82,7 +70,7 @@ $sheet->getStyle("A2:I" . (count($students) + 1))->getAlignment()->setHorizontal
 $fileName = bin2hex(random_bytes(4));
 // Redirect output to a client’s web browser (Xls)
 header('Content-Type: application/vnd.ms-excel; charset=utf-8');
-header('Content-Disposition: attachment;filename="registros_diplomado_' . $fileName . '.xls"');
+header('Content-Disposition: attachment;filename="registros_cobach_' . $fileName . '.xls"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');
