@@ -5,7 +5,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-$group->setCourseId(1);
+$group->setCourseId(2);
 $students = $group->DefaultGroup();
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(30);
