@@ -15,8 +15,9 @@ $smarty->assign('date', $date);
 $smarty->assign('myModule', $myModule);
 //actividades
 $activity->setCourseModuleId($_GET["id"]);
-//$smarty->assign('id_act',$_GET["id"] );
-$actividades = $activity->Enumerate("Tarea");
+
+$activity->setVerponderation("no");
+$actividades = $activity->Enumerate("Tarea", 'no'); 
 $smarty->assign('actividades', $actividades);
 // echo "<pre>"; print_r($actividades);
 // exit;
@@ -48,10 +49,7 @@ foreach ($examenes as $key => $res) {
 	}
 	$totalScore += $res["realScore"];
 }
-$smarty->assign('examenes', $examenes);
-// echo "<pre>";
-// print_r($examenes);
-// exit;
+$smarty->assign('examenes', $examenes); 
 if (isset($_SESSION["exito"])) {
 	$smarty->assign('exito', $_SESSION["exito"]);
 	unset($_SESSION["exito"]);
@@ -63,19 +61,9 @@ if (isset($_SESSION["exito"])) {
 
 $consecutive = 1;
 $smarty->assign('totalScore', $totalScore);
-$smarty->assign('consecutive', $consecutive);
-
+$smarty->assign('consecutive', $consecutive); 
 $totalPonderation = $activity->TotalPonderation();
-$smarty->assign('totalPonderation', $totalPonderation);
-
-$majorModality = $activity->GetMajorModality();
-// echo "<pre>"; print_r($majorModality);
-// exit;
-$smarty->assign('majorModality', $majorModality);
-
+$smarty->assign('totalPonderation', $totalPonderation); 
+$majorModality = $activity->GetMajorModality(); 
+$smarty->assign('majorModality', $majorModality); 
 $smarty->assign('id', $_GET["id"]);
-
-$smarty->assign('mnuMain', "modulo");
-/* echo "<pre>";
-	print_r($actividades);
-	exit; */

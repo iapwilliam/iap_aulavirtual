@@ -979,28 +979,6 @@ class User extends Main
 		$sql = "SELECT * FROM user WHERE userId = '" . $this->userId . "'";
 		$this->Util()->DB()->setQuery($sql);
 		$row = $this->Util()->DB()->GetRow();
-		if ($row['avatar_credential'] == 1) {
-			$sql = "SELECT * FROM user_credentials WHERE user_id = {$row['userId']} ORDER BY id DESC LIMIT 1";
-			// echo $sql;
-			$this->Util()->DB()->setQuery($sql);
-			$credencial = $this->Util()->DB()->GetRow();
-			$json = json_decode($credencial['photo']);
-			// print_r($json);
-			$row["foto"] = '
-				<img src="' . $json->urlEmbed . '" width="110" height="110"/>';
-			$row["imagen"] = $json->urlEmbed;
-		} else {
-			if (file_exists(DOC_ROOT . "/alumnos/" . $row["rutaFoto"] . "")) {
-				// echo DOC_ROOT."/alumnos/".$row["rutaFoto"]."";
-				// exit; 
-				$row["foto"] = '
-							<img src="' . WEB_ROOT . '/alumnos/' . $row["rutaFoto"] . '" width="110" height="110"/>';
-				$row["imagen"] = WEB_ROOT . '/alumnos/' . $row["rutaFoto"] . '';
-			} else {
-				$row["foto"] = '<img src="' . WEB_ROOT . '/alumnos/no_foto.JPG" width="110" height="110"/>';
-				$row["imagen"] = WEB_ROOT . '/alumnos/no_foto.JPG';
-			}
-		}
 		return $row;
 	}
 

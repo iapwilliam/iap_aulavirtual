@@ -16,8 +16,7 @@ class Activity extends Module
 	private $verponderation;
 	private $respuesta;
 	public function setVerponderation($value)
-	{
-		// $this->Util()->ValidateInteger($value);
+	{ 
 		$this->verponderation = $value;
 	}
 

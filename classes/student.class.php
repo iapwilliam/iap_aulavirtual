@@ -23,20 +23,11 @@ class Student extends User
 	private $repite;
 	private $documentoId;
 	private $tipoMajor;
-	private $tipo_beca;
-	private $por_beca;
 	private $validar = true;
 	private $periodo;
 	private $correoInstitucional;
-	private $foto;
-	private $curpDrive;
 	private $funcion;
-	private $actualizado;
 
-	public function setActualizado($value)
-	{
-		$this->actualizado = $value;
-	}
 	public function setValidar($value)
 	{
 		$this->validar = $value;
@@ -148,17 +139,6 @@ class Student extends User
 		$this->estatus = $value;
 	}
 
-
-	public function setTipoBeca($value)
-	{
-		$this->tipo_beca = $value;
-	}
-
-	public function setPorBeca($value)
-	{
-		$this->por_beca = $value;
-	}
-
 	public function setDocumentoId($value)
 	{
 		$this->Util()->ValidateInteger($value);
@@ -175,19 +155,9 @@ class Student extends User
 		$this->correoInstitucional = $value;
 	}
 
-	public function setCurpDrive($value)
-	{
-		$this->curpDrive = $value;
-	}
-
 	public function setCurp($value)
 	{
 		$this->curp = $value;
-	}
-
-	public function setFoto($value)
-	{
-		$this->foto = $value;
 	}
 
 	function setFuncion($value)
@@ -301,19 +271,11 @@ class Student extends User
 
 	public function GetInfo()
 	{
-		$sql = "SELECT u.*, 
-						m.nombre AS nombreciudad 
-				FROM user AS u 
-					LEFT JOIN municipio AS m 
-						ON m.municipioId = u.ciudadt
+		$sql = "SELECT * 
+				FROM user  
 		WHERE userId = '" . $this->userId . "'";
 		$this->Util()->DB()->setQuery($sql);
 		$row = $this->Util()->DB()->GetRow();
-		$row["names"] = $this->Util()->DecodeTiny($row["names"]);
-		$row["curpDrive"] = json_decode($this->Util()->DecodeTiny($row['curpDrive']));
-		$row["foto"] = json_decode($this->Util()->DecodeTiny($row['foto']));
-		$row["lastNamePaterno"] = $this->Util()->DecodeTiny($row["lastNamePaterno"]);
-		$row["lastNameMaterno"] = $this->Util()->DecodeTiny($row["lastNameMaterno"]);
 		return $row;
 	}
 
@@ -384,284 +346,6 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		$total = $this->Util()->DB()->GetSingle();
 		return $total;
-	}
-
-	public function Save($option = "")
-	{
-		if ($this->Util()->PrintErrors())
-			return false;
-
-		if ($this->curpDrive == "") {
-			$this->curpDrive = 'NULL';
-		}
-		if ($this->foto == "") {
-			$this->foto = 'NULL';
-		}
-		if ($this->actualizado == "") {
-			$this->actualizado = 'no';
-		}
-		$sql = "SELECT COUNT(*) FROM user WHERE email = '" . $this->getEmail() . "'";
-		// Verificando que no se duplique el correo electronico
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-		if ($total > 0) {
-			$this->Util()->setError(10028, "error", "Este e-mail ya ha sido registrado previamente");
-			$this->Util()->PrintErrors();
-			return false;
-		}
-		// Validando contraseña de minimo 6 caracteres
-		if (strlen($this->getPassword()) < 6) {
-			$this->Util()->setError(10028, "error", "El password debe de contener al menos 6 caracteres.");
-			$this->Util()->PrintErrors();
-			return false;
-		}
-
-		$course = new Course();
-		$course->setCourseId($_POST["curricula"]);
-		$courseData = $course->Info();
-		if ($_POST['curricula'] != 162) {
-			// CRM
-			$sql = "SELECT uuid()";
-			$this->Util()->DBCrm()->setQuery($sql);
-			$leadId = $this->Util()->DBCrm()->GetSingle();
-			$sql = "INSERT INTO leads(
-						id, 
-						date_entered, 
-						date_modified, 
-						modified_user_id, 
-						created_by, 
-						deleted, 
-						assigned_user_id, 
-						first_name, 
-						last_name, 
-						do_not_call, 
-						phone_mobile, 
-						phone_work, 
-						converted, 
-						lead_source, 
-						status, 
-						account_name, 
-						account_id) 
-					VALUES(
-						'" . $leadId . "',
-						NOW(),
-						NOW(),
-						1,
-						1,
-						0,
-						1,
-						'" . ucfirst(mb_strtolower($this->getNames())) . "',
-						'" . ucfirst(mb_strtolower($this->getLastNamePaterno())) . " " . ucfirst(mb_strtolower($this->getLastNameMaterno())) . "',
-						0,
-						'" . $this->getMobile() . "',
-						'" . $this->getMobile() . "',
-						0,
-						'Education System',
-						'New',
-						'" . $courseData['crm_name'] . "',
-						'" . $courseData['crm_id'] . "'
-						)";
-
-			$this->Util()->DBCrm()->setQuery($sql);
-			$this->Util()->DBCrm()->InsertData();
-
-			$sql = "SELECT uuid()";
-			$this->Util()->DBCrm()->setQuery($sql);
-			$emailId = $this->Util()->DBCrm()->GetSingle();
-			$sql = "INSERT INTO email_addresses(
-					id,
-					email_address,
-					email_address_caps,
-					invalid_email,
-					opt_out,
-					confirm_opt_in,
-					date_created,
-					date_modified,
-					deleted
-				) 
-				VALUES(
-					'" . $emailId . "',
-					'" . mb_strtolower($this->getEmail()) . "',
-					'" . mb_strtoupper($this->getEmail()) . "',
-					0,
-					0,
-					'not-opt-in',
-					NOW(),
-					NOW(),
-					0
-				)";
-			$this->Util()->DBCrm()->setQuery($sql);
-			$this->Util()->DBCrm()->InsertData();
-
-			$sql = "SELECT uuid()";
-			$this->Util()->DBCrm()->setQuery($sql);
-			$uuId = $this->Util()->DBCrm()->GetSingle();
-			$sql = "INSERT INTO email_addr_bean_rel(
-					id,
-					email_address_id,
-					bean_id,
-					bean_module,
-					primary_address, 
-					reply_to_address,
-					date_created, 
-					date_modified,
-					deleted
-				) 
-				VALUES(
-					'" . $uuId . "',
-					'" . $emailId . "',
-					'" . $leadId . "',
-					'Leads',
-					1,
-					0,
-					NOW(),
-					NOW(),
-					0
-				)";
-			$this->Util()->DBCrm()->setQuery($sql);
-			$this->Util()->DBCrm()->InsertData();
-		}
-
-		$sqlQuery = "INSERT INTO 
-						user 
-						(
-							type,
-							names, 
-							lastNamePaterno, 
-							lastNameMaterno,
-							controlNumber,
-							birthdate,							
-							email, 
-							phone, 
-							password,
-							street, 
-							number, 
-							colony, 
-							ciudad, 
-							estado, 
-							pais, 
-							postalCode, 
-							sexo, 
-							maritalStatus, 
-							fax,
-							mobile,
-							workplace,
-							workplaceOcupation,
-							workplaceAddress,
-							workplaceArea,
-							workplacePosition,
-							workplaceCity,
-							paist,
-							estadot,
-							ciudadt,
-							workplacePhone,
-							workplaceEmail,
-							academicDegree,
-							profesion,
-							school,
-							masters,
-							mastersSchool,
-							highSchool,
-							actualizado,
-							curpDrive,
-							curp,
-							foto,
-							funcion
-						)
-							VALUES
-						(
-							'student',
-							'" . $this->getNames() . "', 
-							'" . $this->getLastNamePaterno() . "', 
-							'" . $this->getLastNameMaterno() . "',
-							'" . $this->getControlNumber() . "',
-							'" . $this->getBirthdate() . "',							
-							'" . $this->getEmail() . "', 
-							'" . $this->getPhone() . "', 
-							'" . $this->getPassword() . "',
-							'" . $this->getStreet() . "', 
-							'" . $this->getNumer() . "', 
-							'" . $this->getColony() . "', 
-							'" . $this->getCity() . "', 
-							'" . $this->getState() . "', 
-							'" . $this->getCountry() . "', 
-							'" . $this->getPostalCode() . "', 
-							'" . $this->getSexo() . "', 
-							'" . $this->getMaritalStatus() . "', 
-							'" . $this->getFax() . "', 
-							'" . $this->getMobile() . "', 
-							'" . $this->getWorkplace() . "', 
-							'" . $this->getWorkplaceOcupation() . "', 
-							'" . $this->getWorkplaceAddress() . "', 
-							'" . $this->getWorkplaceArea() . "', 
-							'" . $this->getWorkplacePosition() . "', 
-							'" . $this->getCiudadT() . "', 
-							'" . $this->getPaisT() . "', 
-							'" . $this->getEstadoT() . "', 
-							'" . $this->getCiudadT() . "',
-							'" . $this->getWorkplacePhone() . "', 
-							'" . $this->getWorkplaceEmail() . "', 
-							'" . $this->getAcademicDegree() . "', 
-							'" . $this->getProfesion() . "', 
-							'" . $this->getSchool() . "', 
-							'" . $this->getMasters() . "', 
-							'" . $this->getMastersSchool() . "', 
-							'" . $this->getHighSchool() . "',
-							'" . $this->actualizado . "',
-							{$this->curpDrive},
-							'{$this->curp}',
-							{$this->foto},
-							'{$this->funcion}'
-						)";
-		// echo $sqlQuery;
-		$this->Util()->DB()->setQuery($sqlQuery);
-
-		if ($id = $this->Util()->DB()->InsertData()) {
-			$fecha_aplicacion = date("Y-m-d H:i:s");
-			$enlace = "/student";
-
-			if ($this->getRegister() == 0) {
-				$hecho = $id . "u";
-				$actividad = "Se ha Registrado un nuevo Alumno";
-				$visto = $id . "u,1p";
-			} else {
-				$hecho = $_SESSION['User']['userId'] . "p";
-				$actividad = "Se ha registrado un Alumno(" . $this->getNames() . " " . $this->getLastNamePaterno() . " " . $this->getLastNameMaterno() . ") desde el panel de Administración ";
-				$visto = "1p," . $_SESSION['User']['userId'] . "p";
-			}
-
-			$sqlNot = "INSERT INTO notificacion(notificacionId,actividad,vista,hecho,fecha_aplicacion,tablas,enlace)
-			   		VALUES('', '" . $actividad . "', '" . $visto . "', '" . $hecho . "', '" . $fecha_aplicacion . "', 'reply', '" . $enlace . "')";
-			$this->Util()->DB()->setQuery($sqlNot);
-			// Ejecutamos la consulta y guardamos el resultado, que sera el ultimo positionId generado
-			$this->Util()->DB()->InsertData();
-		}
-
-		if ($option == "createCurricula") {
-			$course = new Course();
-			$course->setCourseId($_POST["curricula"]);
-			$courseInfo = $course->Info();
-			if ($this->tipo_beca == "Ninguno")
-				$this->por_beca = 0;
-
-			$this->AddUserToCurriculaRegister($id, $_POST["curricula"], $this->getNames(), $this->getEmail(), $this->getPassword(), $courseInfo["majorName"], $courseInfo["name"], $this->tipo_beca, $this->por_beca, "");
-
-			if ($this->getRegister() == 0) {
-				$complete1 = "Te has registrado exitosamente. Te hemos enviado un correo electronico con los datos de ingreso al sistema";
-				$this->Util()->setError(10028, "complete", $complete1);
-				$complete2 = "En caso de no estar en tu bandeja de entrada, verifica en correos no deseados";
-				$this->Util()->setError(10028, "complete", $complete2);
-				$complete4 = "Cualquier problema que llegaras a tener, escribenos a enlinea@iapchiapas.org.mx";
-				$this->Util()->setError(10028, "complete", $complete4);
-				$complete3 = "Bienvenido";
-				$this->Util()->setError(10028, "complete", $complete3);
-			} else {
-				$complete = "Has ingresado al Alumno exitosamente, Se ha enviado un correo electronico para continuar con su proceso de inscripción";
-				$this->Util()->setError(10028, "complete", $complete);
-			}
-		}
-		$this->Util()->PrintErrors();
-		return true;
 	}
 
 	public function AddUserToCurriculaRegister($id, $curricula, $nombre, $email, $password, $major, $course, $tipo_beca, $por_beca, $matricula)
@@ -1036,188 +720,6 @@ class Student extends User
 		return $complete;
 	}
 
-
-	public function Update()
-	{
-		if ($this->Util()->PrintErrors())
-			return false;
-
-		$sqlQuery = "UPDATE user				
-						SET 
-							names = '" . $this->getNames() . "', 
-							lastNamePaterno = '" . $this->getLastNamePaterno() . "', 
-							lastNameMaterno = '" . $this->getLastNameMaterno() . "', 
-							birthdate = '" . $this->getBirthdate() . "', 
-							email = '" . $this->getEmail() . "', 
-							phone = '" . $this->getPhone() . "', 
-							password = '" . $this->getPassword() . "', 
-							street = '" . $this->getStreet() . "', 
-							number = '" . $this->getNumer() . "', 
-							colony = '" . $this->getColony() . "', 
-							ciudad = '" . $this->getCity() . "', 
-							estado = '" . $this->getState() . "', 
-							pais =  '" . $this->getCountry() . "', 
-							postalCode = '" . $this->getPostalCode() . "', 
-							sexo = '" . $this->getSexo() . "', 
-							maritalStatus = '" . $this->getMaritalStatus() . "', 
-							fax = '" . $this->getFax() . "', 
-							mobile = '" . $this->getMobile() . "', 
-							workplace = '" . $this->getWorkplace() . "', 
-							workplaceOcupation = '" . $this->getWorkplaceOcupation() . "', 
-							workplaceAddress = '" . $this->getWorkplaceAddress() . "', 
-							workplaceArea = '" . $this->getWorkplaceArea() . "', 
-							workplacePosition = '" . $this->getWorkplacePosition() . "', 
-							paist='" . $this->getPaisT() . "',
-							estadot='" . $this->getEstadoT() . "',
-							ciudadt='" . $this->getCiudadT() . "',
-						    workplacePhone = '" . $this->getWorkplacePhone() . "', 
-							workplaceEmail = '" . $this->getWorkplaceEmail() . "', 
-							academicDegree = '" . $this->getAcademicDegree() . "', 
-							profesion = '" . $this->getProfesion() . "', 
-							school = '" . $this->getSchool() . "', 
-							masters = '" . $this->getMasters() . "', 
-							mastersSchool = '" . $this->getMastersSchool() . "', 
-							highSchool = '" . $this->getHighSchool() . "'						
-						WHERE 
-							userId = " . $this->getUserId();
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-		$this->Util()->setError(10030, "complete");
-		$this->Util()->PrintErrors();
-		return true;
-	}
-
-	public function UpdateAlumn()
-	{
-		$sqlQuery = "UPDATE user				
-						SET  
-							names = '" . $this->getNames() . "', 
-							lastNamePaterno = '" . $this->getLastNamePaterno() . "', 
-							lastNameMaterno = '" . $this->getLastNameMaterno() . "', 
-							birthdate = '" . $this->getBirthdate() . "', 
-							email = '" . $this->getEmail() . "', 
-							phone = '" . $this->getPhone() . "', 
-							password = '" . $this->getPassword() . "', 
-							street = '" . $this->getStreet() . "', 
-							number = '" . $this->getNumer() . "', 
-							colony = '" . $this->getColony() . "', 
-							ciudad = '" . $this->getCity() . "', 
-							estado = '" . $this->getState() . "', 
-							pais =  '" . $this->getCountry() . "', 
-							postalCode = '" . $this->getPostalCode() . "', 
-							sexo = '" . $this->getSexo() . "', 
-							maritalStatus = '" . $this->getMaritalStatus() . "', 
-							fax = '" . $this->getFax() . "', 
-							mobile = '" . $this->getMobile() . "', 
-							workplace = '" . $this->getWorkplace() . "', 
-							workplaceAddress = '" . $this->getWorkplaceAddress() . "', 
-							workplaceArea = '" . $this->getWorkplaceArea() . "', 
-							workplaceOcupation = '" . $this->getWorkplaceOcupation() . "', 
-						    paist='" . $this->getPaisT() . "',
-							estadot='" . $this->getEstadoT() . "',
-							ciudadt='" . $this->getCiudadT() . "',
-							workplacePhone = '" . $this->getWorkplacePhone() . "', 
-							workplaceEmail = '" . $this->getWorkplaceEmail() . "', 
-							profesion = '" . $this->getProfesion() . "', 
-							academicDegree = '" . $this->getAcademicDegree() . "', 
-							school = '" . $this->getSchool() . "', 
-							masters = '" . $this->getMasters() . "', 
-							mastersSchool = '" . $this->getMastersSchool() . "', 
-							highSchool = '" . $this->getHighSchool() . "',
-							curpDrive = " . $this->curpDrive . ",
-							foto = " . $this->foto . ",
-							funcion = " . $this->funcion . "
-						WHERE 
-							userId = " . $this->getUserId();
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-		return true;
-	}
-
-	public function UpdateFicha()
-	{
-		if ($this->Util()->PrintErrors())
-			return false;
-
-		$sqlQuery = "UPDATE user				
-				SET
-					mainMajor = " . $this->getMainMajor() . ", 
-					secondMajor = " . $this->getSecondMajor() . ", 
-					thirdMajor = " . $this->getThirdMajor() . ", 
-					mode = " . $this->getMode() . ",
-					names = '" . $this->getNames() . "', 
-					lastNamePaterno = '" . $this->getLastNamePaterno() . "', 
-					lastNameMaterno = '" . $this->getLastNameMaterno() . "', 
-					sexo = '" . $this->getSexo() . "',													
-					birthdate = '" . $this->getBirthdate() . "', 
-					
-					cityBorn = '" . $this->getCityBorn() . "', 
-					stateBorn = '" . $this->getStateBorn() . "', 
-					countryBorn = '" . $this->getCountryBorn() . "',
-					
-					street = '" . $this->getStreet() . "', 
-					number = '" . $this->getNumer() . "', 
-					colony = '" . $this->getColony() . "', 
-					city = '" . $this->getCity() . "', 
-					state = '" . $this->getState() . "', 
-					country =  '" . $this->getCountry() . "', 
-					postalCode = '" . $this->getPostalCode() . "',
-					phone = '" . $this->getPhone() . "', 
-					curp = '" . $this->getCurp() . "',
-												
-					tutorNames = '" . $this->getTutorNames() . "', 
-					tutorLastNamePaterno = '" . $this->getTutorLastNamePaterno() . "', 
-					tutorLastNameMaterno = '" . $this->getTutorLastNameMaterno() . "', 
-					tutorAddress = '" . $this->getTutorAddress() . "', 
-					tutorPhone = '" . $this->getTutorPhone() . "', 
-					
-					prevSchNames = '" . $this->getPrevSchNames() . "', 
-					prevSchType = " . $this->getPrevSchType() . ", 
-					prevSchKey = '" . $this->getPrevSchKey() . "', 
-					prevSchMode = " . $this->getPrevSchMode() . ", 
-					prevSchCity = '" . $this->getPrevSchCity() . "', 
-					prevSchState = '" . $this->getPrevSchState() . "', 
-					prevSchAverage = " . $this->getPrevSchAverage() . ", 
-					prevSchCertified = " . $this->getPrevSchCertified() . ",
-					
-					average = '" . $this->getAverage() . "'					
-				WHERE 
-					userId = " . $this->getUserId();
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-		$this->Util()->setError(10030, "complete");
-		$this->Util()->PrintErrors();
-		return true;
-	}
-
-	public function DeleteLimpia()
-	{
-		$sqlQuery = "DELETE FROM user_subject WHERE alumnoId ='$this->alumnoId'";
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-		return true;
-	}
-
-	public function Delete()
-	{
-		if ($this->Util()->PrintErrors())
-			return false;
-
-		$sqlQuery = "DELETE FROM user WHERE userId = " . $this->getUserId();
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-
-		$sqlQuery = "DELETE FROM invoice WHERE userId ='" . $this->getUserId() . "'  ";
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-
-		$sqlQuery = "DELETE FROM user_subject WHERE alumnoId ='" . $this->getUserId() . "'";
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-		$this->Util()->setError(10029, "complete");
-		$this->Util()->PrintErrors();
-		return true;
-	}
 
 	public function EnumerateByPage($currentPage, $rowsPerPage, $pageVar, $pageLink, &$arrPages, $orderSemester = '')
 	{
@@ -3518,5 +3020,22 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 		return $resultado;
+	}
+
+	function update()
+	{
+		$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', email = '{$this->email}', phone = '{$this->phone}', coordination = '{$this->coordination}', adscripcion ='{$this->adscripcion}', rfc = '{$this->rfc}', funcion = '{$this->funcion}' WHERE userId = {$this->getUserId()}";
+
+		$this->Util()->DB()->setQuery($sql);
+		$resultado = $this->Util()->DB()->UpdateData();
+		return $resultado;
+	}
+
+	function updateAvatar()
+	{
+		$sql = "UPDATE user SET avatar = '{$this->perfil}' WHERE userId = {$this->getUserId()}";
+		$this->Util()->DB()->setQuery($sql);
+		$response = $this->Util()->DB()->UpdateData();
+		return $response;
 	}
 }

@@ -1,14 +1,22 @@
-<div class="card"> 
-    {if $infoStudent.imagen ne ''}
-        <img class="card-img-top" src="{$infoStudent.imagen}" alt="" />
-    {else}
-        <div class="text-center mt-3">
-            <i class="fas fa-user-circle fa-6x"></i>
+<div class="card">
+    <div class="card-header position-relative p-0 card-avatar">
+        {if $infoStudent.avatar ne ''}
+            <img class="card-img-top" src="{$WEB_ROOT}/alumnos/avatar/{$infoStudent.avatar}" alt="" />
+        {else}
+            <img class="card-img-top" src="{$WEB_ROOT}/images/logos/iap_logo.JPG">
+        {/if}
+        <div class="overlay-avatar" id="changeAvatar">
+            <i class="mdi mdi-file-find"></i> 
         </div>
-    {/if}
+    </div>
     <div class="card-body">
-        <h5 class="card-title text-center">{$User['nombreCompleto']}</h5>
-        <p class="card-text">El <b>Instituto de Administración Pública del Estado de Chiapas, A. C.</b> te da la más cordial bienvenida a nuestro Sistema de Educación en Línea.</p>
+        <h5 class="card-title text-center">{$User['nombreCompleto']}
+            <a href="{$WEB_ROOT}/alumn-services" class="btn btn-info btn-xs" type="submit">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+            </a>
+        </h5>
+        <p class="card-text">El <b>Instituto de Administración Pública del Estado de Chiapas, A. C.</b> te da la más
+            cordial bienvenida a nuestro Sistema de Educación en Línea.</p>
     </div>
     <div class="card-footer text-center">
         <a href="https://www.iapchiapas.edu.mx" target="_blank" class="text-primary">

@@ -28,11 +28,7 @@
     {* BEGIN Portlet PORTLET *}
     <div class="card mb-4">
         <div class="card-header bg-primary text-white">
-            {if $User.type == "student"}
-                <img alt="" width="32px" class="img-circle" src="{$infoStudent.imagen}">
-            {else}
-                <i class="fa fa-gift"></i>
-            {/if}
+            <i class="fa fa-gift"></i>
             Bienvenido(a) {$User.username}
         </div>
         <div class="card-body">
@@ -47,96 +43,19 @@
             </p>
         </div>
     </div>
-    {* END Portlet PORTLET *}
-
-    {if $User.type != "student"}
-        <div id="ac1" class="mb-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <i class="fas fa-bell"></i> Notificaciones
-                    <a class="card-link text-white float-right" data-toggle="collapse" href="#collapseOne">
-                        <i class="fas fa-caret-down fa-lg"></i>
-                    </a>
-                </div>
-                <div id="collapseOne" class="card-body collapse show" data-parent="#ac1">
-                    <div class="table-responsive">
-                        {include file="{$DOC_ROOT}/templates/lists/notificacionesadmin.tpl"}
-                    </div>
-                </div>
-            </div>
-        </div>
-    {/if}
-
-    {*<div id="ac2" class="mb-4">
+    <div id="ac1" class="mb-4">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <i class="far fa-newspaper"></i> Noticias
-                {if $User.positionId == "1"}
-                    | <a href="{$WEB_ROOT}/add-noticia/id/0" class="btn btn-light btn-sm" onclick="return parent.GB_show('Agregar Noticia', this.href,650,700) ">
-                        Agregar Noticia
-                    </a>
-                {/if}
-                <a class="card-link text-white float-right" data-toggle="collapse" href="#collapseTwo">
+                <i class="fas fa-bell"></i> Notificaciones
+                <a class="card-link text-white float-right" data-toggle="collapse" href="#collapseOne">
                     <i class="fas fa-caret-down fa-lg"></i>
                 </a>
             </div>
-            <div id="collapseTwo" class="card-body collapse show" data-parent="#ac2">
+            <div id="collapseOne" class="card-body collapse show" data-parent="#ac1">
                 <div class="table-responsive">
-                    {include file="{$DOC_ROOT}/templates/lists/module-announcements.tpl"}
+                    {include file="{$DOC_ROOT}/templates/lists/notificacionesadmin.tpl"}
                 </div>
             </div>
         </div>
-    </div>*}
-
-
-    {if $User.type == "student"}
-        <div class="portlet box red">
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="fa fa-bullhorm"></i>Curricula Activa
-                </div>
-                <div class="tools">
-                    <a href="javascript:;" class="collapse"> </a>
-                </div>
-            </div>
-            <div class="portlet-body">
-                <div class="table-responsive">
-                    {include file="{$DOC_ROOT}/templates/lists/student-curricula-activa.tpl"}
-                </div>
-            </div>
-        </div>
-
-        <div class="portlet box red">
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="fa fa-bullhorm"></i>Curricula Inactiva (Falta de pago, baja, etc)
-                </div>
-                <div class="tools">
-                    <a href="javascript:;" class="collapse"> </a>
-                </div>
-            </div>
-            <div class="portlet-body">
-                <div class="table-responsive">
-                    {include file="{$DOC_ROOT}/templates/lists/student-curricula-inactiva.tpl"}
-                </div>
-            </div>
-        </div>
-
-        <div class="portlet box red">
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="fa fa-bullhorm"></i>Curricula Finalizada
-                </div>
-                <div class="tools">
-                    <a href="javascript:;" class="collapse"> </a>
-                </div>
-            </div>
-            <div class="portlet-body">
-                <div class="table-responsive">
-                    {include file="{$DOC_ROOT}/templates/lists/student-curricula-finalizada.tpl"}
-                </div>
-            </div>
-        </div>
-        <input type="hidden" value="0" id="recarga" name="recarga">
-    {/if}
+    </div>
 {/if}

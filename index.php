@@ -253,7 +253,6 @@ $pages = array(
 	'titulacion',
 	'indicadores',
 	'acta-examen-course',
-	'boletas',
 	'niveles-ingles',
 	'configuracion-certificados',
 	'reporte-indicadores',

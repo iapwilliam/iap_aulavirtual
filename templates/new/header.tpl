@@ -129,6 +129,10 @@
                                 <i class="mdi mdi-view-dashboard mr-2 text-success"></i>
                                 Menú Principal
                             </a>
+                            <a class="dropdown-item" href="{$WEB_ROOT}/alumn-services">
+                                <i class="mdi mdi-settings mr-2 text-success"></i>
+                                Actualizar Perfil
+                            </a>
                         {/if}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{$WEB_ROOT}/logout">
