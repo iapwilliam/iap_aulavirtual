@@ -29,7 +29,7 @@
 		$smarty->assign('noModules', 1);
 	}
 	
-	$empleados = $personal->Enumerate('lastname_paterno');
+	$empleados = $personal->getPersonal("AND role_id <> 1", 'lastname_paterno');
 	$smarty->assign('empleados', $empleados);
 	
 	$date = date("d-m-Y");

@@ -1,9 +1,4 @@
 <?php
-		
-	/* For Session Control - Don't remove this */
-	$user->allow_access(37);	
-
-	//	print_r($_SESSION); EXIT;
 	if($_POST)
 	{
   	    $activity->setActivityId($_GET["id"]);
@@ -18,20 +13,12 @@
 	$activity->setActivityId($_GET["id"]);
 	$actividad = $activity->Info();
 	$smarty->assign('actividad', $actividad);
-	$smarty->assign('id', $_GET["id"]);
-
-	// print_r($actividad);
+	$smarty->assign('id', $_GET["id"]); 
 	$module->setCourseModuleId($actividad["courseModuleId"]);
-	$info = $module->InfoCourseModule();
-	// echo $actividad["courseModuleId"];
-	// exit;
-	//grupo
-	// print_r($info);
+	$info = $module->InfoCourseModule(); 
 	$group->setCourseModuleId($actividad["courseModuleId"]);
 	$group->setCourseId($info["courseId"]);
-	$theGroup = $group->ScoreGroup($actividad["modality"], $actividad["activityType"], $_GET["id"]);
-	// echo "<pre>"; print_r($theGroup);
-	// exit;
+	$theGroup = $group->ScoreGroup($actividad["modality"], $actividad["activityType"], $_GET["id"]); 
 	$smarty->assign("periodoActual", $info["semesId"]);
 	$smarty->assign('theGroup', $theGroup);
 	$smarty->assign('cId', $_GET["cId"]);

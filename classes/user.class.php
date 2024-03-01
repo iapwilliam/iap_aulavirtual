@@ -80,7 +80,16 @@ class User extends Main
 	public $permiso;
 	protected $activo;
 	protected $courseId;
+	protected $role;
+	protected $module;
 
+	public function setRole($value) {
+		$this->role = $value;
+	}
+
+	public function setModule($value){
+		$this->module = $value;
+	}
 
 	public function setCourseId($value)
 	{
@@ -259,16 +268,6 @@ class User extends Main
 		//print_r($value);
 		$this->ciudadT = $value;
 	}
-
-
-
-
-
-
-
-
-
-
 
 	public function setCountry($value)
 	{
@@ -1080,44 +1079,15 @@ class User extends Main
 		return $name;
 	}
 
-	public function allow_access_module($userId, $moduleId)
+	public function allow_access()
 	{
-		$sql = "SELECT m.roleId FROM personal AS p, personal_role AS r, role_modules AS m WHERE 
-		p.personalId = '" . $userId . "' AND p.personalId = r.personalId AND r.roleId = m.roleId AND m.moduleId = '" . $moduleId . "'";
+		$sql = "SELECT * FROM `role_modules` INNER JOIN roles ON roles.roleId = role_modules.roleId INNER JOIN modules ON modules.moduleId = role_modules.moduleId WHERE roles.name = '{$this->role}' AND modules.name = '{$this->module}' ";
 		$this->Util()->DB()->setQuery($sql);
-		$allow = $this->Util()->DB()->GetSingle();
+		$allow = $this->Util()->DB()->GetTotalRows();
 
-		return $allow;
+		return $allow > 0 ? true : false;
 	}
 
-	public function allow_access($moduleId = 0)
-	{
-
-		$User = $_SESSION['User'];
-		if (!$User['isLogged']) {
-			header('Location: ' . WEB_ROOT . '/login');
-			exit;
-		}
-
-		/*		if($User['type'] == 'student'){
-			
-			if($User['status'] == 'pendiente')
-				$url = WEB_ROOT.'/report-calificacion';
-			else
-				$url = WEB_ROOT.'/schedule-student';
-			
-			header('Location: '.$url);
-			exit;
-		}
-*/
-
-		if ($User['positionId'] != 1 && $moduleId != 0) {
-			if (!$this->allow_access_module($User['userId'], $moduleId)) {
-				header('Location: ' . WEB_ROOT);
-				exit;
-			}
-		}
-	}
 
 	public function GetModulesAccess()
 	{
@@ -1152,15 +1122,14 @@ class User extends Main
 		if ($this->Util()->PrintErrors()) {
 			return false;
 		}
-		$sql = "SELECT * FROM personal WHERE username = '" . $this->username . "' AND MD5(passwd) = '" . md5($this->password) . "' and estatus = 'activo'";
+		$sql = "SELECT personal.personalId, personal.username, personal.name, personal.lastname_paterno, personal.lastname_materno, personal.foto, personal.correo, personal.celular, roles.name as perfil FROM personal INNER JOIN roles ON roles.roleId = personal.role_id WHERE username = '" . $this->username . "' AND MD5(passwd) = '" . md5($this->password) . "' and deleted_at IS NULL";
 		$this->Util()->DB()->setQuery($sql);
 		$row = $this->Util()->DB()->GetRow();
 		if ($row) { //Si es usuario de tipo personal 
 			$card['userId'] = $row['personalId'];
-			$card['positionId'] = $row['positionId'];
 			$card['perfil'] = $row['perfil'];
-			$card['username'] = $row['name'];
-			$card['nombreCompleto'] = $row['name'] . ' ' . $row['lastname_materno'] . ' ' . $row['lastname_paterno'];
+			$card['username'] = $row['username'];
+			$card['nombreCompleto'] = $row['name'] . ' ' . $row['lastname_paterno'] . ' ' . $row['lastname_materno'];
 			$card['isLogged'] = true;
 			$card['type'] =  $row['perfil'];
 			$card['photo'] =  $row['foto'];
@@ -1187,6 +1156,7 @@ class User extends Main
 
 						$card['userId'] = $row['userId'];
 						$card['studentId'] = $row['userId'];
+						$card['perfil']	= "Alumno";
 						$card['positionId'] = 0;
 						$card['username'] = $row['names'];
 						$card['numControl'] = $row['controlNumber'];

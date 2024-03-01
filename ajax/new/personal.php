@@ -110,7 +110,7 @@ switch ($_POST["type"]) {
 			echo "ok[#]";
 			$smarty->display(DOC_ROOT . '/templates/boxes/status.tpl');
 			echo "[#]";
-			$result = $personal->Enumerate('lastname_paterno ASC');
+			$result = $personal->getPersonal("AND role_id <> 1", 'lastname_paterno ASC');
 			$personals = $util->EncodeResult($result);
 			$smarty->assign("personals", $personals);
 			$smarty->assign("DOC_ROOT", DOC_ROOT);
@@ -152,7 +152,7 @@ switch ($_POST["type"]) {
 			echo "ok[#]";
 			$smarty->display(DOC_ROOT . '/templates/boxes/status.tpl');
 			echo "[#]";
-			$result = $personal->Enumerate();
+			$result = $personal->getPersonal();
 			$personals = $util->EncodeResult($result);
 			$smarty->assign("personals", $personals);
 			$smarty->assign("DOC_ROOT", DOC_ROOT);
@@ -172,7 +172,7 @@ switch ($_POST["type"]) {
 			echo "ok[#]";
 			$smarty->display(DOC_ROOT . '/templates/boxes/status.tpl');
 			echo "[#]";
-			$result = $personal->Enumerate('lastname_paterno ASC');
+			$result = $personal->getPersonal("AND role_id <> 1",'lastname_paterno ASC');
 			$personals = $util->EncodeResult($result);
 			$smarty->assign("personals", $personals);
 			$smarty->assign("DOC_ROOT", DOC_ROOT);

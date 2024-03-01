@@ -1,13 +1,7 @@
 <?php
-		
-	/* For Session Control - Don't remove this */
-	$user->allow_access(37);	
-	
-	// echo "<pre>"; print_r($_POST);
-	// exit;
 
 	if($_POST)
-	{
+	{ 
 		$errors = [];
 		
 		if(empty($_POST['resumen'])){
@@ -99,6 +93,6 @@
 	$activity->setCourseModuleId($_GET["id"]);
 	$actividades = $activity->Enumerate();
 	$smarty->assign('actividades', $actividades);
-	
+	$smarty->assign("auxTpl", $_GET['auxTpl'])
 
 ?>

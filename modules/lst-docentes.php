@@ -1,12 +1,4 @@
 <?php
-
-
-// exit;
-	$personal->setTipo('Docente');
-	$personals = $personal->EnumerateNew();
-
-	// echo '<pre>'; print_r($personals);
-	// exit;
-	$smarty->assign("personals", $personals);
-
+	$personals = $personal->getPersonal("AND personal.role_id = 2"); //Solo docentes
+	$smarty->assign("personals", $personals); 
 ?>

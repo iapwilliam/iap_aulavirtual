@@ -78,27 +78,7 @@ class Announcement extends Module
 			$courseModuleId = $this->getCourseModuleId();
 			$group = new Group;
 			$group->setCourseModuleId($this->getCourseModuleId());
-			$group->setCourseId($myModule["courseId"]);
-			$theGroup = $group->DefaultGroup();
-			$modulo = $this->Util()->acento($myModule["name"]);
-			$titulo = $this->Util()->acento($this->title);
-			if ($courseId != 162) {
-				//echo $modulo;
-				$message[3]["subject"] = "Nuevo anuncio disponible en el modulo " . $modulo . " | " . $titulo;
-				$message[3]["body"] = $this->Util()->DecodeTiny($this->description);
-
-				$details_body = array();
-				$details_subject = array();
-				$attachment = "";
-				$fileName = "";
-				$sendmail = new Sendmail;
-				foreach ($theGroup as $key => $value) {
-					$nombremail = $this->Util()->acento($value["names"]);
-					$correo = strtolower($value['email']);
-					if ($correo != '')
-						$sendmail->PrepareMailer($message[3]["subject"], $message[3]["body"], $details_body, $details_subject, $correo, $nombremail, $attachment, $fileName);
-				}
-			}
+			$group->setCourseId($myModule["courseId"]); 
 		} else {
 			$courseId = 0;
 			$courseModuleId = 0;

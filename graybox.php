@@ -2,36 +2,13 @@
 
 include_once('init.php');
 include_once('config.php');
-include_once(DOC_ROOT.'/libraries.php');
+include_once(DOC_ROOT . '/libraries.php');
 
-// print_r($_GET);exit;
-if (!isset($_SESSION))
-{
+// print_r($_GET);
+// exit;
+if (!isset($_SESSION)) {
     session_start();
 }
-
-
-//print_r($_SESSION);
-//		unset($_SESSION['lastClick']);
-//last click
-//print_r($_SESSION);
-if(time() > $_SESSION["lastClick"] + 90000 && $_GET["page"] != "aviso" && $_GET["page"] != "login"  && $_GET["page"] != "register" && $_GET["page"] != "recuperacion"  && $_GET["page"] != "tv"  && $_GET["page"] != "make-test")
-{
-    unset($_SESSION['User']);
-    unset($_SESSION['lastClick']);
-    header("Location: ".WEB_ROOT."/login");
-}
-
-if($_SESSION["User"])
-{
-    $_SESSION["lastClick"] = time();
-}
-
-$User = $_SESSION['User'];
-
-
-
-
 
 $pages = array(
     'login',
@@ -163,56 +140,56 @@ $pages = array(
     'solicitud-constancia',
     'add-baja',
     'add-calificacion',
-	'referencia-bancaria',
-	'view-boleta',
-	'formato-reinscripcion',
-	'add-documento',
-	'add-concepto',
-	'info',
-	'cancelar-solicitud',
-	'concepto-pago',
-	'nuevo-mensaje',
-	'add-inbox',
-	'confirma-baja',
-	'test-docente',
-	'nuevo-inbox',
-	'add-docdocente',
+    'referencia-bancaria',
+    'view-boleta',
+    'formato-reinscripcion',
+    'add-documento',
+    'add-concepto',
+    'info',
+    'cancelar-solicitud',
+    'concepto-pago',
+    'nuevo-mensaje',
+    'add-inbox',
+    'confirma-baja',
+    'test-docente',
+    'nuevo-inbox',
+    'add-docdocente',
     'add-docalumno',
-	'info-docente',
-	'doc-docente',
-	'doc-alumno',
-	'add-docente-admin',
-	'cat-doc-admin',
-	'add-cat-doc-docente',
-	'add-cat-doc-docente-add',
+    'info-docente',
+    'doc-docente',
+    'doc-alumno',
+    'add-docente-admin',
+    'cat-doc-admin',
+    'add-cat-doc-docente',
+    'add-cat-doc-docente-add',
     'add-cat-doc-alumno',
     'add-cat-doc-alumno-add',
-	'add-repositorio',
-	'val',
-	'carta',
-	'materias',
-	'eval',
-	'editar-contra',
-	'cedula-contra',
-	'down-contrato',
-	'edit-costo',
-	'up-plan',
-	'up-acta',
-	'down-contrato-doc',
-	'comentario-solicitud',
-	'validarpago-adjuntar',
-	'view-curricula',
-	'view-periodos',
-	'down-plan',
-	'encuadre',
-	'rubrica',
-	'view-cuatri',
-	'add-msj',
-	'contra',
-	'view-perfil',
-	'aviso',
-	'add-activity-c',
-	'informe',
+    'add-repositorio',
+    'val',
+    'carta',
+    'materias',
+    'eval',
+    'editar-contra',
+    'cedula-contra',
+    'down-contrato',
+    'edit-costo',
+    'up-plan',
+    'up-acta',
+    'down-contrato-doc',
+    'comentario-solicitud',
+    'validarpago-adjuntar',
+    'view-curricula',
+    'view-periodos',
+    'down-plan',
+    'encuadre',
+    'rubrica',
+    'view-cuatri',
+    'add-msj',
+    'contra',
+    'view-perfil',
+    'aviso',
+    'add-activity-c',
+    'informe',
     'add-resource-c',
     'calendar-form',
     'edit-calendar-form',
@@ -236,58 +213,38 @@ $pages = array(
     'constancias'
 );
 
-if(!in_array($_GET['page'], $pages))
-{
+if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
     $_GET['page'] = "homepage";
 }
 
-
-// echo '<pre>'; print_r($_GET);
-// exit;
-
-$smarty->assign('positionId', $User['positionId']);
-// echo  "<pre>"; print_r($_GET);
-// exit;
-include_once(DOC_ROOT.'/modules/user.php');
-include_once(DOC_ROOT.'/modules/'.$_GET['page'].'.php');
+if (!isset($_SESSION['User'])) { //Si no existe sesión
+    if (!in_array($_GET['page'], ['login', 'registro-cobach', 'recuperacion'])) { //Y no está en estas páginas
+        header('Location: ' . WEB_ROOT . "/login"); //Lo mandamos al login
+    }
+} else { //Existe sesión
+    $User = $_SESSION['User'];
+    $student->setUserId($User["userId"]);
+    if ($_GET['page'] != "homepage") { //Si es distinto del homepage checamos los permisos
+        include_once(DOC_ROOT . '/modules/user.php');
+    }
+}
+ 
+$smarty->assign('positionId', $User['positionId']);  
+include_once(DOC_ROOT . '/modules/' . $_GET['page'] . '.php');
 
 $smarty->assign('page', $_GET['page']);
-$smarty->assign('section', $_GET['section']);
-
-if($User['userId'])
-    $AccessMod = $user->GetModulesAccess();
-
-
-$smarty->assign('id',$_GET["id"]);
-$smarty->assign('auxTpl',$_GET["auxTpl"]);
-$smarty->assign('cId',$_GET["cId"]);
-$smarty->assign('auxImagen',$_GET["auxImagen"]);
-$smarty->assign('AccessMod',$AccessMod);
-$smarty->assign('User',$User);
+$smarty->assign('section', $_GET['section']); 
+$smarty->assign('User', $User);
 
 $includedTpl =  $_GET['page'];
-if($_GET['section'])
-{
-    $includedTpl =  $_GET['page']."_".$_GET['section'];
+if ($_GET['section']) {
+    $includedTpl =  $_GET['page'] . "_" . $_GET['section'];
 }
-$smarty->assign('includedTpl', $includedTpl);
-
-// echo $includedTpl;
-// exit;
-
-if(isset($_GET['vp'])){
-    $smarty->assign("vistaPrevia",$_GET['vp']);
-}else{
-    $smarty->assign("vistaPrevia",0);
-}
-
+$smarty->assign('includedTpl', $includedTpl);  
 $smarty->assign('lang', $lang);
 $smarty->assign('timestamp', time());
 
 ini_set("display_errors", "ON");
 $showErrors = "E_ALL";
 error_reporting($showErrors);
-$smarty->display(DOC_ROOT.'/templates/graybox.tpl');
-
-
-?>
+$smarty->display(DOC_ROOT . '/templates/graybox.tpl');

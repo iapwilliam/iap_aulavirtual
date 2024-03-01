@@ -69,7 +69,7 @@ if ($_POST) {
 
 $cursos = $subject->Enumerate();
 $smarty->assign('cursos', $cursos);
-$empleados = $personal->Enumerate('lastname_paterno');
+$empleados = $personal->getPersonal("AND role_id <> 1",'lastname_paterno');
 $smarty->assign('empleados', $empleados);
 $subject->setSubjectId($_GET['id']);
 $smarty->assign('post', $subject->Info());

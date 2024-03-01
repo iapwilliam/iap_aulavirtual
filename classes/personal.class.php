@@ -364,34 +364,6 @@ class Personal extends Main
 		return $this->perfil;
 	}
 
-	public function Enumerate($orden = 'name ASC')
-	{
-		global $position;
-		global $role;
-
-		$sql = "SELECT 
-					* 
-				FROM 
-					personal
-				WHERE
-					positionId <> 1
-				ORDER BY 
-					" . $orden;
-
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetResult();
-
-		foreach ($result as $key => $row) {
-			$result[$key]["wrappedDescription"] = $this->Util()->ShortString($result[$key]["description"], 50);
-			$position->setPositionId($row['positionId']);
-			$result[$key]['position'] = $position->GetClaveById();
-			$role->setRoleId($row['roleId']);
-			$result[$key]['role'] = $role->GetClaveById();
-		}
-
-		return $result;
-	}
-
 	public function EnumerateByPosition()
 	{
 		global $position;
@@ -1352,39 +1324,7 @@ class Personal extends Main
 		return $count;
 	}
 
-	public function EnumerateNew()
-	{
-
-		$filtro = "";
-
-		if ($this->tipo) {
-			$filtro .= " and perfil ='" . $this->tipo . "'";
-		}
-
-		if ($this->name) {
-			$filtro .= " and concat_ws (' ', name,lastname_paterno,lastname_materno)  like '%" . $this->name . "%'";
-		}
-
-
-
-		$filtro .= " and estatus ='activo'";
-
-		$sql = "SELECT 
-					* 
-				FROM 
-					personal
-				WHERE
-					1
-					" . $filtro . " order by lastname_paterno asc";
-		// exit;
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetResult();
-
-
-
-		return $result;
-	}
-
+	 
 	public function onDelete()
 	{
 		if ($this->Util()->PrintErrors()) {
@@ -1532,7 +1472,7 @@ class Personal extends Main
 	}
 
 	public function onDeleteRubrica($cmId)
-	{ 
+	{
 		$sql = "SELECT 
 					* 
 				FROM 
@@ -1541,15 +1481,15 @@ class Personal extends Main
 					courseModuleId = " . $cmId . "";
 		// exit;
 		$this->Util()->DB()->setQuery($sql);
-		$info = $this->Util()->DB()->GetRow(); 
+		$info = $this->Util()->DB()->GetRow();
 		@unlink(DOC_ROOT . '/docentes/rubrica/' . $info['rutaRubrica']);
 
 		$sql = 'UPDATE 		
 				course_module SET 		
 				rutaRubrica = ""			      		
-				WHERE courseModuleId = ' . $cmId . ''; 
+				WHERE courseModuleId = ' . $cmId . '';
 		$this->Util()->DB()->setQuery($sql);
-		$response['estatus'] = $this->Util()->DB()->UpdateData(); 
+		$response['estatus'] = $this->Util()->DB()->UpdateData();
 		return $response;
 	}
 
@@ -1560,15 +1500,15 @@ class Personal extends Main
 				FROM 
 					course_module
 				WHERE
-					courseModuleId = " . $cmId . ""; 
+					courseModuleId = " . $cmId . "";
 		$this->Util()->DB()->setQuery($sql);
-		$info = $this->Util()->DB()->GetRow(); 
+		$info = $this->Util()->DB()->GetRow();
 		@unlink(DOC_ROOT . '/docentes/encuadre/' . $info['rutaEncuadre']);
 
 		$sql = 'UPDATE 		
 				course_module SET 		
 				rutaEncuadre = ""			      		
-				WHERE courseModuleId = ' . $cmId . ''; 
+				WHERE courseModuleId = ' . $cmId . '';
 		$this->Util()->DB()->setQuery($sql);
 		$response['estatus'] = $this->Util()->DB()->UpdateData();
 		return $response;
@@ -1649,6 +1589,13 @@ class Personal extends Main
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 
+		return $result;
+	}
+
+	function getPersonal($where = "AND role_id <> 1", $order = "personal.name ASC") {
+		$sql = "SELECT * FROM personal INNER JOIN roles ON roles.roleId = personal.role_id WHERE 1 {$where} ORDER BY {$order}";
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetResult();
 		return $result;
 	}
 }

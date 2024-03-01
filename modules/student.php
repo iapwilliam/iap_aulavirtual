@@ -1,20 +1,12 @@
 <?php
-/* For Session Control - Don't remove this */
-if (!in_array($_SESSION['User']['positionId'], [1, 2, 3, 5])) {
-	header('Location: ' . WEB_ROOT);
-}
-// $user->allow_access(4);
-/* End Session Control */
-// echo "<pre>"; print_r($_FILES);
-// exit;
 if ($_FILES) {
 	$student->UpdateFoto();
 }
 
 
-if ($_POST['accion'] == 'export') {
-	//if($modality==0)
-	header('Location: ' . WEB_ROOT . '/reportes/alumnos.php');
+if ($_POST) {
+	$response = $student->dt_students_request($_POST);
+	print_r(json_encode($response));
 	exit;
 }
 

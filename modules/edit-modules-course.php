@@ -103,7 +103,7 @@ $cursos = $course->infoCoursem();
 
 	$smarty->assign('algo', 1);
 
-	$empleados = $personal->Enumerate();
+	$empleados = $personal->getPersonal();
 	$smarty->assign('empleados', $empleados);
 
 	$date = date("d-m-Y");

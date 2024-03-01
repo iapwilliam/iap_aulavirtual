@@ -1,207 +1,3 @@
-function desactivar(id, activo) {
-
-
-
-	var resp = confirm("Seguro de  dar de baja al alumno?");
-
-	if (!resp)
-		return;
-
-
-
-	$("#type").val("desactivar")
-
-	$.ajax({
-		type: "POST",
-		url: WEB_ROOT + '/ajax/student.php',
-		data: $("#frmFiltro").serialize(true) + '&id=' + id + '&activo=' + activo + '&type=desactivar',
-		beforeSend: function () {
-			$('#tblContent').html(LOADER3);
-		},
-		success: function (response) { 
-			var splitResp = response.split("[#]"); 
-			DoSearch();
-			if (splitResp[0] == "ok") {
-				// $("#tblContent").html(splitResp[2]);
-				// alert("d");
-				DoSearch();
-			}
-			else if (splitResp[0] == "fail") {
-				$("#res_").html(splitResp[1]);
-				$("#centeredDivOnPopup").show();
-			}
-		},
-		error: function () {
-			alert(msgError);
-		}
-	});
-
-}//desactivar
-
-
-function activar(id, activo) {
-
-	$("#type").val("activar")
-
-	$.ajax({
-		type: "POST",
-		url: WEB_ROOT + '/ajax/student.php',
-		data: $("#frmFiltro").serialize(true) + '&id=' + id + '&activo=' + activo + '&type=activar',
-		beforeSend: function () {
-			$('#tblContent').html(LOADER3);
-		},
-		success: function (response) { 
-			var splitResp = response.split("[#]"); 
-			DoSearch()
-			if (splitResp[0] == "ok") {
-				// $("#tblContent").html(splitResp[2]);
-				DoSearch()
-			}
-			else if (splitResp[0] == "fail") {
-				$("#res_").html(splitResp[1]);
-				$("#centeredDivOnPopup").show();
-			}
-		},
-		error: function () {
-			alert(msgError);
-		}
-	});
-
-}//activar
-
-
-function saveEditStudentAlumn() {
-
-	$("#type").val("saveEditStudentAlumn")
-
-	$.ajax({
-		type: "POST",
-		url: WEB_ROOT + '/ajax/student.php',
-		data: $("#editStudentForm").serialize(true) + '&auxMsj=1',
-		beforeSend: function () {
-			$("#centeredDivOnPopup").hide();
-		},
-		success: function (response) { 
-			var splitResp = response.split("[#]"); 
-			if (splitResp[0] == "ok") {
-				DoSearch()
-				$("#res_").html(splitResp[1]);
-			}
-			else if (splitResp[0] == "fail") {
-				// alert(splitResp[1])
-				$("#res_").html(splitResp[1]);
-				$("#centeredDivOnPopup").show();
-			}
-		},
-		error: function () {
-			alert(msgError);
-		}
-	});
-
-}//saveEditStudentAlumn
-
-
-
-
-function estado_dependencia() {
-
-	var tam = $("#tam").val();
-	var paisId = $("#pais").val();
-
-	$.ajax({
-		type: "POST",
-		url: WEB_ROOT + '/ajax/dependencia-estado.php',
-		data: $("#editStudentForm").serialize(true) + '&type=estado_dependencia&paisId=' + paisId + '&tam=' + tam,
-		beforeSend: function () {
-
-		},
-		success: function (response) { 
-			var splitResp = response.split("[#]");  
-			$("#Stateposition").html(response); 
-		},
-		error: function () {
-			alert(msgError);
-		}
-	});
-
-}//estado_dependencia
-
-
-function ciudad_dependencia() {
-
-
-
-	var estadoId = $("#estado").val();
-	var tam = $("#tam").val();
-
-	$.ajax({
-		type: "POST",
-		url: WEB_ROOT + '/ajax/dependencia-ciudades.php',
-		data: $("#editStudentForm").serialize(true) + '&type=loadCities&estadoId=' + estadoId + '&tam=' + tam,
-		beforeSend: function () {
-
-		},
-		success: function (response) { 
-			var splitResp = response.split("[#]"); 
-			$("#Cityposition").html(response); 
-		},
-		error: function () {
-			alert(msgError);
-		}
-	});
-
-}//estado_dependencia
-
-
-function estado_dependenciat() {
-
-	var tam = $("#tam").val();
-	var paisId = $("#paist").val();
-
-	// alert(paisId)
-
-	$.ajax({
-		type: "POST",
-		url: WEB_ROOT + '/ajax/dependencia-estadot.php',
-		data: $("#editStudentForm").serialize(true) + '&type=loadCities&paisId=' + paisId + '&tam=' + tam,
-		beforeSend: function () {
-
-		},
-		success: function (response) { 
-			var splitResp = response.split("[#]");  
-			$("#Statepositiont").html(response); 
-		},
-		error: function () {
-			alert(msgError);
-		}
-	});
-}
-
-
-
-
-
-function ciudad_dependenciat() {
-	var estadoId = $("#estadot").val();
-	var tam = $("#tam").val();
-	$.ajax({
-		type: "POST",
-		url: WEB_ROOT + '/ajax/dependencia-ciudadest.php',
-		data: $("#editStudentForm").serialize(true) + '&type=loadCities&estadoId=' + estadoId + '&tam=' + tam,
-		beforeSend: function () {
-
-		},
-		success: function (response) { 
-			var splitResp = response.split("[#]");
-			$("#Citypositiont").html(response);
-		},
-		error: function () {
-			alert(msgError);
-		}
-	});
-
-}//estado_dependencia
-
 
 function DoSearch() {
 
@@ -237,7 +33,7 @@ function AddStudentRegister() {
 		url: WEB_ROOT + '/ajax/student.php',
 		type: "POST",
 		data: $('#addStudentForm').serialize(),
-		success: function (data) { 
+		success: function (data) {
 			var splitResponse = data.split("[#]");
 
 			if (splitResponse[0] == "fail") {
@@ -276,7 +72,7 @@ function viewCourse() {
 			$('divLoading').show();
 		},
 		success: function (response) {
-			$('divLoading').hide(); 
+			$('divLoading').hide();
 			var splitResp = response.split("[#]");
 
 
@@ -311,7 +107,7 @@ function addModuls() {
 			$('#tblContentGray').html(LOADER3);
 		},
 		success: function (response) {
-			$('divLoading').hide(); 
+			$('divLoading').hide();
 			var splitResp = response.split("[#]");
 
 
@@ -337,7 +133,7 @@ function generaSolicitud(alumnoId, courseId) {
 			$('#tblContentGray').html(LOADER3);
 		},
 		success: function (response) {
-			$('divLoading').hide(); 
+			$('divLoading').hide();
 			var splitResp = response.split("[#]");
 
 
@@ -360,7 +156,7 @@ function getModules() {
 		url: WEB_ROOT + '/ajax/course.php',
 		data: { "type": "getModules", "courseId": curricula },
 		beforeSend: function () { },
-		success: function (response) { 
+		success: function (response) {
 			$("#divModules").html(response);
 		},
 		error: function () {
@@ -378,7 +174,7 @@ function addCourseModule() {
 			$('#tblContentGray').html(LOADER3);
 		},
 		success: function (response) {
-			$('divLoading').hide(); 
+			$('divLoading').hide();
 			var splitResp = response.split("[#]");
 			$('#tblContentGray').html(splitResp[1]);
 		},
@@ -403,16 +199,16 @@ function enviarArchivo(Id) {
 		type: 'POST',
 		xhr: function () {
 			var XHR = $.ajaxSettings.xhr();
-			XHR.upload.addEventListener('progress', function (e) { 
+			XHR.upload.addEventListener('progress', function (e) {
 				var Progress = ((e.loaded / e.total) * 100);
-				Progress = (Progress); 
+				Progress = (Progress);
 				$('#progress_' + Id).val(Math.round(Progress));
 				$('#porcentaje_' + Id).html(Math.round(Progress) + '%');
 			}, false);
 			return XHR;
 		},
 		beforeSend: function () { },
-		success: function (response) { 
+		success: function (response) {
 			var splitResp = response.split("[#]");
 			$("#loader").html("");
 			if ($.trim(splitResp[0]) == "ok") {
@@ -436,7 +232,7 @@ function onDeleteDoc(Id, userId) {
 		url: WEB_ROOT + '/ajax/new/studentCurricula.php',
 		data: $("#frmGral").serialize(true) + '&Id=' + Id + '&type=onDelete&userId=' + userId + '&cId=admin',
 		beforeSend: function () { },
-		success: function (response) { 
+		success: function (response) {
 			var splitResp = response.split("[#]");
 
 			if ($.trim(splitResp[0]) == "ok") {
@@ -449,3 +245,37 @@ function onDeleteDoc(Id, userId) {
 	});
 
 }
+
+$("#datatable").DataTable({
+	processing: true,
+	serverSide: true,
+	responsive: true,
+	ajax: {
+		url: $("#datatable").data('url'),
+		dataType: "json",
+		type: "POST",
+		data: {
+			_token: $("meta[name='csrf-token'] ").attr('content')
+		}
+	},
+	language: {
+		url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+	},
+	columns: [
+		{ data: "userId" },
+		{ data: "foto" },
+		{ data: "nombre" },
+		{ data: "apellido_paterno" },
+		{ data: "apellido_materno" },
+		{ data: "numero_control" },
+		{
+			data: "acciones",
+			"orderable": false,
+		}
+	],
+	columnDefs: [
+		{
+			targets: 3, className: 'compact'
+		},
+	]
+});

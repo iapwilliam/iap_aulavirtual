@@ -1,17 +1,7 @@
 <?php
 
-/* For Session Control - Don't remove this */
-$user->allow_access(37);
-
-
-
 if ($_POST) {
-
 	if ($_POST['announcementId'] <> null) {
-		// echo '<pre>'; print_r($_POST);
-		// exit;	
-		// echo 'llega';
-		// exit;
 		$announcement->setCourseModuleId($_POST["courseModuleId2"]);
 		$announcement->setTitle($_POST["title"]);
 		$announcement->setDescription($_POST["description"]);
@@ -30,18 +20,10 @@ if ($_POST) {
 		exit;
 	}
 }
-
-
-// echo '<pre>'; print_r($_GET);
-// exit;
 if ($_GET['cId']) {
 	$infos = $announcement->Info($_GET['cId']);
 	$smarty->assign('infos', $infos);
-	// $smarty->assign('id', $infos['courseModuleId']);
-	// echo '<pre>'; print_r($infos);
-	// exit;
 }
-
-
+$smarty->assign("auxTpl", $_GET['auxTpl']);
 $smarty->assign('id', $_GET["id"]);
 $date = date("d-m-Y");

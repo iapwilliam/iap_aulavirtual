@@ -178,8 +178,8 @@ class Group extends Module
 									$extencion = end($aux);
 									$temporal = $var['tmp_name'];
 									$foto_name = "doc_" . $result . "." . $extencion;
-									$url . "/file_retro/" . $foto_name;
-									if (move_uploaded_file($temporal, $url . "/file_retro/" . $foto_name)) {
+									$url . "/alumnos/retroalimentacion/" . $foto_name;
+									if (move_uploaded_file($temporal, $url . "/alumnos/retroalimentacion/" . $foto_name)) {
 										$sql = 'UPDATE activity_score SET rutaArchivoRetro = "' . $foto_name . '" WHERE activityScoreId = ' . $result . '';
 										$this->Util()->DB()->setQuery($sql);
 										$this->Util()->DB()->UpdateData();

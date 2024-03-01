@@ -6,7 +6,7 @@
 	$module->setCourseModuleId($_GET["id"]);
 	$myModule = $module->InfoCourseModule();
 	
-	$empleados = $personal->Enumerate();
+	$empleados = $personal->getPersonal();
 	$smarty->assign('empleados', $empleados);
 	
 	$date = date("d-m-Y");

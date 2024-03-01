@@ -1579,4 +1579,12 @@ class Course extends Subject
 		$modulos = $this->Util()->DB()->GetSingle();
 		return $modulos;
 	}
+
+
+	function getCourses($where = "") {
+		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}"; 
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetResult();
+		return $result;
+	}
 }

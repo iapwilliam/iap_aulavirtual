@@ -1,10 +1,4 @@
-<?php
-		
-	/* For Session Control - Don't remove this */
-	$user->allow_access(37);	
-	
-	// echo "<pre>"; print_r($_POST);
-	// exit;
+<?php 
 	$activity->setActivityId($_GET["id"]);
 	$actividad = $activity->Info();
 	if($_POST)
@@ -69,4 +63,6 @@
 	$activity->setCourseModuleId($actividad["courseModuleId"]);
 	$actividades = $activity->Enumerate();
 	$smarty->assign('actividades', $actividades);
+	$smarty->assign("auxTpl", $_GET['auxTpl'])
+
 ?>

@@ -118,7 +118,8 @@ switch ($opcion) {
 		}
 		break;
 	case 'actualizar':
-		$student->setUserId($_SESSION['User']['userId']);
+		$usuario = $_POST['admin'] ? $_POST['alumno'] : $_SESSION['User']['userId'];
+		$student->setUserId($usuario);
 		$name = trim(strip_tags($_POST['name']));
 		$firstSurname = trim(strip_tags($_POST['firstSurname']));
 		$secondSurname = trim(strip_tags($_POST['secondSurname']));
@@ -191,11 +192,21 @@ switch ($opcion) {
 		$response = $student->update();
 
 		if ($response || empty($response['message'])) {
-			echo json_encode([
-				'growl'		=> true,
-				'type'		=> 'success',
-				'message'	=> 'Se ha actualizado la información del perfil.',
-			]);
+			if ($_POST['admin']) {
+				echo json_encode([
+					'growl'		=> true,
+					'type'		=> 'success',
+					'message'	=> 'Se ha actualizado la información del perfil.',
+					'modal_close'	=>true, 
+					'dtreload'  => '#datatable'
+				]);
+			}else{
+				echo json_encode([
+					'growl'		=> true,
+					'type'		=> 'success',
+					'message'	=> 'Se ha actualizado la información del perfil.', 
+				]);
+			} 
 		} else {
 			echo json_encode([
 				'growl'		=> true,

@@ -5,7 +5,7 @@
 
 // echo '<pre>'; print_r($_SESSION);	
 // exit;
-	$empleados = $personal->Enumerate();
+	$empleados = $personal->getPersonal();
 	$smarty->assign('empleados', $empleados);
 
 	$module->setCourseModuleId($_GET["id"]);
@@ -26,7 +26,7 @@
 	$info= $course->Info();
 	$modalidad=$info["modality"];
 
-	$empleados = $personal->Enumerate();
+	$empleados = $personal->getPersonal();
 	$smarty->assign('empleados', $empleados);
 
 	$date = date("d-m-Y");

@@ -1115,87 +1115,11 @@ class Student extends User
 		return $result;
 	}
 
-	function StudentCourses($status = NULL, $active = NULL)
+	function getCourses($where = "")
 	{
-		$tmp_status = $status;
-		if ($status != NULL)
-			$status = " AND status = '" . $status . "'";
-
-		if ($active != NULL)
-			$active = " AND course.active = '" . $active . "'";
-
-		if ($tmp_status == 'finalizado') {
-			$status = '';
-			$finalizado = " AND CURDATE() > course.finalDate";
-		} elseif ($tmp_status == 'activo')
-			$finalizado = " AND CURDATE() <= course.finalDate";
-
-		$sql = "SELECT user_subject.courseId, 
-		 				user_subject.alumnoId, 
-						user_subject.status, 
-						subject.name AS name, 
-						major.name AS majorName, 
-						subject.icon, 
-						course.group, 
-						course.modality, 
-						course.initialDate, 
-						course.finalDate, 
-						'Ordinario' AS situation
-					FROM user_subject
-						LEFT JOIN course 
-							ON course.courseId = user_subject.courseId
-						LEFT JOIN subject 
-							ON subject.subjectId = course.subjectId	
-						LEFT JOIN major 
-					ON major.majorId = subject.tipo
-				WHERE
-					alumnoId = '" . $this->getUserId() . "' " . $status . " " . $active . " " . $finalizado . "
-				UNION
-				SELECT usr.courseId, 
-					usr.alumnoId, 
-					usr.status, 
-					subject.name AS name, 
-					major.name AS majorName, 
-					subject.icon, 
-					course.group, 
-					course.modality, 
-					course.initialDate, 
-					course.finalDate, 
-					'Recursador' AS situation
-				FROM user_subject_repeat usr
-					LEFT JOIN course
-						ON course.courseId = usr.courseId 
-					LEFT JOIN subject 
-						ON subject.subjectId = course.subjectId 
-					LEFT JOIN major 
-						ON major.majorId = subject.tipo 
-				WHERE alumnoId = " . $this->getUserId() . " " . $status . " 
-				ORDER BY majorName, status ASC, courseId DESC";
-		// echo $sql;
+		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group FROM user_subject INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
-
-		foreach ($result as $key => $res) {
-			$sql = "SELECT COUNT(*) FROM subject_module WHERE subjectId = '" . $res["subjectId"] . "'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["modules"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT COUNT(*) FROM user_subject WHERE courseId = '" . $res["courseId"] . "' AND status = 'inactivo'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["alumnInactive"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT COUNT(*) FROM user_subject WHERE courseId = '" . $res["courseId"] . "' AND status = 'activo'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["alumnActive"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT COUNT(*) FROM course_module WHERE courseId ='" . $res["courseId"] . "'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["courseModule"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT * FROM user_credentials WHERE course_id = '" . $res['courseId'] . "' AND user_id ='" . $res['alumnoId'] . "' ";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["credential"] = $this->Util()->DB()->GetRow();
-		}
 		return $result;
 	}
 
@@ -2609,225 +2533,6 @@ class Student extends User
 		return $has_all;
 	}
 
-	public function UpdateRegister()
-	{
-		include_once(DOC_ROOT . "/properties/messages.php");
-		if ($this->Util()->PrintErrors())
-			return false;
-
-		$sqlQuery = "UPDATE user				
-						SET 
-							names = '" . $this->getNames() . "', 
-							lastNamePaterno = '" . $this->getLastNamePaterno() . "', 
-							lastNameMaterno = '" . $this->getLastNameMaterno() . "', 
-							sexo = '" . $this->getSexo() . "', 
-							birthdate = '" . $this->getBirthdate() . "', 
-							maritalStatus = '" . $this->getMaritalStatus() . "', 
-							street = '" . $this->getStreet() . "', 
-							number = '" . $this->getNumer() . "', 
-							colony = '" . $this->getColony() . "', 
-							pais =  '" . $this->getCountry() . "', 
-							estado = '" . $this->getState() . "', 
-							ciudad = '" . $this->getCity() . "', 
-							postalCode = '" . $this->getPostalCode() . "', 
-							email = '" . $this->getEmail() . "', 
-							mobile = '" . $this->getMobile() . "', 
-							phone = '" . $this->getPhone() . "', 
-							fax = '" . $this->getFax() . "', 
-							workplaceOcupation = '" . $this->getWorkplaceOcupation() . "', 
-							workplace = '" . $this->getWorkplace() . "', 
-							workplaceAddress = '" . $this->getWorkplaceAddress() . "', 
-							paist='" . $this->getPaisT() . "',
-							estadot='" . $this->getEstadoT() . "',
-							ciudadt='" . $this->getCiudadT() . "',
-							workplaceArea = '" . $this->getWorkplaceArea() . "', 
-							workplacePosition = '" . $this->getWorkplacePosition() . "', 
-						    workplacePhone = '" . $this->getWorkplacePhone() . "', 
-							workplaceEmail = '" . $this->getWorkplaceEmail() . "', 
-							academicDegree = '" . $this->getAcademicDegree() . "', 
-							profesion = '" . $this->getProfesion() . "', 
-							school = '" . $this->getSchool() . "', 
-							masters = '" . $this->getMasters() . "', 
-							mastersSchool = '" . $this->getMastersSchool() . "', 
-							highSchool = '" . $this->getHighSchool() . "',
-							actualizado = 'si'						
-						WHERE 
-							userId = " . $this->getUserId();
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-		$this->Util()->setError(10030, "complete");
-		$this->Util()->PrintErrors();
-
-		$this->setUserId($this->getUserId());
-		$info = $this->GetInfo();
-		// Informacion Personal
-		$this->setControlNumber();
-		$this->setNames($info['names']);
-		$this->setLastNamePaterno($info['lastNamePaterno']);
-		$this->setLastNameMaterno($info['lastNameMaterno']);
-		$this->setSexo($info['sexo']);
-		$this->setPassword(trim($info['password']));
-
-		// Datos de Contacto
-		$this->setEmail($info['email']);
-		$this->setMobile($info['mobile']);
-
-		// Datos Laborales
-		$this->setWorkplaceOcupation($info['workplaceOcupation']);
-		$this->setWorkplace($info['workplace']);
-		$this->setWorkplacePosition($info['workplacePosition']);
-		$this->setWorkplaceCity($info['nombreciudad']);
-
-		// Estudios
-		$this->setAcademicDegree($info['academicDegree']);
-		// Create File to Attach
-		$sql = "SELECT courseId FROM user_subject WHERE alumnoId = " . $this->getUserId() . " AND status = 'activo' ORDER BY registrationId LIMIT 1";
-		$this->Util()->DB()->setQuery($sql);
-		$courseId = $this->Util()->DB()->GetSingle();
-		$course = new Course();
-		$course->setCourseId($courseId);
-		$courseInfo = $course->Info();
-		// $files  = new Files;
-		// $file = $files->CedulaInscripcion($this->getUserId(), $courseId, $this, $courseInfo['majorName'], $courseInfo['name']);
-		// Enviar Correo
-		$sendmail = new SendMail;
-		$details_body = array(
-			"email" => $info["controlNumber"],
-			"password" => $info['password'],
-			"major" => utf8_decode($courseInfo['majorName']),
-			"course" => utf8_decode($courseInfo['name']),
-			"alumno" => $this->getUserId(),
-			"courseId" => $courseId
-		);
-		$details_subject = array();
-		$nombre = $info['names'] . ' ' . $info['lastNamePaterno'] . ' ' . $info['lastNameMaterno'];
-		$sendmail->Prepare($message[5]['subject'], $message[5]['body'], $details_body, $details_subject, $info['email'], $nombre);
-		return true;
-	}
-
-	function hasModulesRepeat()
-	{
-		$sql = "SELECT COUNT(id) FROM user_subject_repeat WHERE alumnoId = " . $this->getUserId();
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-		return $total > 0 ? true : false;
-	}
-
-	function setCertificate($status)
-	{
-		$sql = "INSERT INTO certificate_subject(userId, courseId, date, status, downloaded) 
-					VALUES(" . $this->getUserId() . ", " . $this->courseId . ", CURDATE(), " . $status . ", 0)";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
-		return true;
-	}
-
-	public function enumerateCatProductos()
-	{
-		$sql = "SELECT *
-					FROM catdocumentoalumno
-				WHERE status = 'activo'";
-		$this->Util()->DB()->setQuery($sql);
-		$res = $this->Util()->DB()->GetResult();
-
-		foreach ($res as $key => $aux) {
-			$sql = "SELECT ruta
-						FROM documentosalumno
-					WHERE catdocumentoalumnoId = " . $aux['catdocumentoalumnoId'] . " AND userId = " . $this->userId;
-			$this->Util()->DB()->setQuery($sql);
-			$count = $this->Util()->DB()->GetRow();
-
-			if ($count['ruta'] <> '') {
-				$res[$key]['existArchivo'] = 'si';
-				$res[$key]['ruta'] = $count['ruta'];
-			} else {
-				$res[$key]['existArchivo'] = 'no';
-			}
-		}
-		return $res;
-	}
-
-	public function onSaveDocumento($nombre, $descripcion, $documentoId = null)
-	{
-		if (isset($documentoId)) {
-			$sql = "UPDATE catdocumentoalumno
-						SET nombre = '" . $nombre . "', descripcion = '" . $descripcion . "'
-				WHERE catcodumentoalumnoId = " . $documentoId;
-			$this->Util()->DB()->setQuery($sql);
-			$this->Util()->DB()->ExecuteQuery();
-		} else {
-			$sql = "INSERT INTO catdocumentoalumno(nombre, descripcion) VALUES('" . $nombre . "', '" . $descripcion . "')";
-			$this->Util()->DB()->setQuery($sql);
-			$this->Util()->DB()->InsertData();
-		}
-		return true;
-	}
-
-	public function infoDocumento($documentoId)
-	{
-		$sql = 'SELECT * 
-					FROM catdocumentoalumno
-				WHERE catdocumentoalumnoId = ' . $documentoId;
-		$this->Util()->DB()->setQuery($sql);
-		$lst = $this->Util()->DB()->GetRow();
-		return $lst;
-	}
-
-	public function onDeleteDocumento($documentoId)
-	{
-		$sql = "UPDATE catdocumentoalumno SET status = 'eliminado' WHERE catdocumentoalumnoId = " . $documentoId;
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->ExecuteQuery();
-		return true;
-	}
-
-	public function adjuntarDocAlumno()
-	{
-		$sql = "SELECT  * FROM documentosalumno WHERE catdocumentoalumnoId = " . $this->documentoId . " AND userId = " . $this->userId;
-		$this->Util()->DB()->setQuery($sql);
-		$count = $this->Util()->DB()->GetRow();
-
-		if ($count['documentosalumnoId'] == null) {
-			$sql = "INSERT INTO documentosalumno(catdocumentoalumnoId, userId)
-				 VALUES(" . $this->documentoId . ", " . $this->userId . ")";
-			$this->Util()->DB()->setQuery($sql);
-			$lastId = $this->Util()->DB()->InsertData();
-		} else
-			$lastId = $count['documentosalumnoId'];
-
-		foreach ($_FILES as $key => $var) {
-			switch ($key) {
-				case 'comprobante':
-					if ($var["name"] <> "") {
-						$aux = explode(".", $var["name"]);
-						$extencion = end($aux);
-						$temporal = $var['tmp_name'];
-						$url = DOC_ROOT;
-						$foto_name = "doc_" . $lastId . "." . $extencion;
-
-						if (move_uploaded_file($temporal, $url . "/alumnos/documentos/" . $foto_name)) {
-							$sql = "UPDATE documentosalumno SET ruta = '" . $foto_name . "' WHERE documentosalumnoId = " . $lastId;
-							$this->Util()->DB()->setQuery($sql);
-							$this->Util()->DB()->UpdateData();
-						}
-					}
-					break;
-			}
-		}
-		return  true;
-	}
-
-	public function onDeleteDocumentoAlumno($Id)
-	{
-		if ($this->Util()->PrintErrors())
-			return false;
-
-		$sql = "DELETE FROM documentosalumno WHERE userId = " . $this->userId . " AND catdocumentoalumnoId = " . $Id;
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->ExecuteQuery();
-		return true;
-	}
-
 	//Obtiene el semestre en el que se dio de baja en el curso.
 	public function bajaCurso($cursoId)
 	{
@@ -2855,13 +2560,6 @@ class Student extends User
 		return $curso;
 	}
 
-	public function cambiarCorreos()
-	{
-		$sql = "UPDATE user SET correo_institucional = '{$this->correoInstitucional}' WHERE userId = {$this->userId} ";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->ExecuteQuery();
-	}
-
 	//Obtiene el curso y el periodo de la última baja de acuerdo al tipo de especialidad estudiada.
 	public function ultimaBaja()
 	{
@@ -2880,119 +2578,6 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		$existe = $this->Util()->DB()->GetRow();
 		return $existe['revisar'] ? true : false;
-	}
-
-	/**Busca si el alumno cuenta con un pago pendiente y es de tipo periodico */
-	public function pago_pendiente()
-	{
-		$sql = "SELECT pagos.* FROM pagos INNER JOIN user_subject ON user_subject.alumnoId = pagos.alumno_id AND user_subject.courseId = pagos.course_id WHERE pagos.fecha_cobro <= NOW() AND pagos.status <> 2 AND pagos.status <> 4 AND pagos.alumno_id = {$this->userId} AND periodo <> 0 AND user_subject.status = 'activo' AND pagos.deleted_at IS NULL;";
-		$this->Util()->DB()->setQuery($sql);
-		$resultado = $this->Util()->DB()->GetResult();
-		$pagoPendiente = false;
-		foreach ($resultado as $item) {
-			if ($item['status'] == 3) { //Si hay prórroga
-				$fecha_limite = date("Y-m-d", strtotime($item['fecha_limite'] . "+ " . ($item['tolerancia']) . " days")); //Se obtiene la fecha límite de acuerdo a los días de prórroga
-			} else {
-				$fecha_limite = $item['fecha_limite']; //Se obtiene la fecha límite real
-			}
-			if ($fecha_limite < date('Y-m-d')) { //Si la fecha límite es menor al día actual, ya es un pago pendiente.
-				$pagoPendiente = true;
-				break;
-			}
-		}
-		return $pagoPendiente;
-	}
-
-	public function datos_fiscales()
-	{
-		$sql = "SELECT fsid.*, (SELECT nom_ent FROM municipalities WHERE cve_ent = fsid.cve_ent LIMIT 1) as estado, (SELECT nom_mun FROM municipalities WHERE cve_ent = fsid.cve_ent AND cve_mun = fsid.cve_mun LIMIT 1) as municipio, (SELECT nom_loc FROM municipalities WHERE cve_ent = fsid.cve_ent AND cve_mun = fsid.cve_mun AND cve_loc = fsid.cve_loc LIMIT 1) as localidad FROM fn_student_invoice_data fsid WHERE userId = {$this->userId} AND deleted_at IS NULL";
-		// echo $sql;
-		$this->Util()->DBErp()->setQuery($sql);
-		$resultado = $this->Util()->DBErp()->GetResult();
-		return $resultado;
-	}
-
-	public function getCardholder()
-	{
-		$sql = "SELECT * FROM cardholder_data WHERE userId = " . $this->userId;
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetRow();
-		return $result;
-	}
-
-	public function saveCardholder($city, $country, $email, $name, $last_name, $postal_code, $state_code, $street, $mobile)
-	{
-		$sql = "INSERT INTO cardholder_data(userId, city, country, email, name, last_name, postal_code, state_code, street, mobile, created_at, updated_at) VALUES(" . $this->userId . ", '" . $city . "', '" . $country . "', '" . $email . "', '" . $name . "', '" . $last_name . "', '" . $postal_code . "', '" . $state_code . "', '" . $street . "', '" . $mobile . "', NOW(), NOW())";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
-		return true;
-	}
-
-	public function updateCardholder($city, $email, $name, $last_name, $postal_code, $state_code, $street, $mobile)
-	{
-		$sql = "UPDATE cardholder_data SET city = '" . $city . "', email = '" . $email . "', name = '" . $name . "', last_name = '" . $last_name . "', postal_code = '" . $postal_code . "', state_code = '" . $state_code . "', street = '" . $street . "', mobile = '" . $mobile . "', updated_at = NOW() WHERE userId = " . $this->userId;
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->ExecuteQuery();
-		return true;
-	}
-
-	//Retorna la información de la credencial del alumno por curso
-	public function getCredential($student, $course)
-	{
-		$sql = "SELECT * FROM user_credentials WHERE course_id = $course AND user_id = $student";
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetRow();
-		if ($result) {
-			$result['files'] = [
-				"photo" => json_decode($result['photo'], true),
-				"credential" => json_decode($result['credential'], true),
-				"token"	=> json_decode($result['token'], true)
-			];
-		}
-		return $result;
-	}
-
-	public function createCredential($student, $course, $files)
-	{
-		$sql = "INSERT INTO user_credentials(user_id, course_id, photo, status, created_at, updated_at) VALUES($student, $course, '{$files}', 0, NOW(), NOW())";
-		$this->Util()->DB()->setQuery($sql);
-		$id = $this->Util()->DB()->InsertData();
-
-		// $token = password_hash($id . $student . $course, PASSWORD_BCRYPT);
-		// $sql = "UPDATE user_credentials SET token = '$token' WHERE id = {$id}";
-		// $this->Util()->DB()->setQuery($sql);
-		// $this->Util()->DB()->UpdateData();
-	}
-
-	public function editCredential($student, $course, $files, $status)
-	{
-		$sql = "UPDATE user_credentials SET photo = '{$files}', status = $status, updated_at = NOW() WHERE user_id = $student AND course_id = $course";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->UpdateData();
-	}
-
-	public function UpdateAvatarCredential($userId, $photoCredential)
-	{
-		$sql = "UPDATE user SET avatar_credential = {$photoCredential} WHERE userId = {$userId}";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->UpdateData($sql);
-	}
-
-	//Actualiza el bloqueo para privilegios de pagos
-	function actualizarBloqueo($userId, $bloqueo)
-	{
-		$sql = "UPDATE user SET bloqueado = {$bloqueo} WHERE userId = {$userId}";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->UpdateData();
-	}
-
-	//Retorna el alumno inscrito en el curso Gestión Documental y Administración de Archivos y, si tiene, la curricula adicional activa. 
-	function alumnoConDiplomado($alumnoId)
-	{
-		$sql = "SELECT * FROM `user_subject` B WHERE alumnoId = {$alumnoId} AND status = 'activo' AND EXISTS(SELECT * FROM user_subject A WHERE A.alumnoId = B.alumnoId AND A.courseId = 162);";
-		$this->Util()->DB()->setQuery($sql);
-		$resultado = $this->Util()->DB()->GetTotalRows();
-		return $resultado;
 	}
 
 	function saveCOBACH()
@@ -3025,7 +2610,7 @@ class Student extends User
 	function update()
 	{
 		$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', email = '{$this->email}', phone = '{$this->phone}', coordination = '{$this->coordination}', adscripcion ='{$this->adscripcion}', rfc = '{$this->rfc}', funcion = '{$this->funcion}' WHERE userId = {$this->getUserId()}";
-
+		
 		$this->Util()->DB()->setQuery($sql);
 		$resultado = $this->Util()->DB()->UpdateData();
 		return $resultado;
@@ -3037,5 +2622,39 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		$response = $this->Util()->DB()->UpdateData();
 		return $response;
+	}
+
+	function dt_students_request()
+	{
+		//SELECT *,  major.name AS majorName, subject.name AS name FROM  subject LEFT JOIN  major ON major.majorId = subject.tipo ORDER BY  FIELD (major.name,"MAESTRIA","DOCTORADO","CURSO","ESPECIALIDAD") ASC, subject.name')
+		$table = 'user';
+		$primaryKey = 'userId';
+		$columns = array(
+			array('db' => 'userId',			'dt' => 'userId'),
+			array('db' => 'avatar',			'dt' => 'foto',
+				'formatter'	=> function($d){
+					$imagen = $d != "" ? WEB_ROOT."/alumnos/avatar/".$d : WEB_ROOT."/images/logos/iap_logo.JPG";
+					return "<img src='".$imagen."'>";
+				}
+			),
+			array('db' => 'names', 			'dt' => 'nombre'),
+			array('db' => 'lastNamePaterno', 'dt' => 'apellido_paterno'),
+			array('db' => 'lastNameMaterno', 'dt' => 'apellido_materno'),
+			array('db' => 'controlNumber',	'dt' => 'numero_control'),
+			array(
+				'db' => 'userId', 'dt' => 'acciones',
+				'formatter' => function ($d, $row) {
+					return '
+					<a href="'.WEB_ROOT.'/graybox.php?page=edit-student&id='.$d.'" data-target="#ajax" data-toggle="modal" data-width="1000px">
+					 	<i class="fas fa-pen-square fa-2x pointer spanEdit" data-toggle="tooltip" data-placement="top" title="Editar"></i> 
+					</a>
+					<a href="'.WEB_ROOT.'/graybox.php?page=student-curricula&id='.$d.'" data-target="#ajax" data-toggle="modal" data-width="1000px">
+						<i class="fas fa-book fa-2x text-dark pointer" data-toggle="tooltip" data-placement="top" title="Ver Curricula Estudiante"></i> 
+					</a>';
+				}
+			)
+		);
+
+		return SSP::complex($_POST, $table, $primaryKey, $columns);
 	}
 }

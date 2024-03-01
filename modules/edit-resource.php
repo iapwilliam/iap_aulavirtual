@@ -1,8 +1,4 @@
-<?php
-
-/* For Session Control - Don't remove this */
-$user->allow_access(37);
-
+<?php  
 if ($_POST) {
 	$resource->setResourceId($_GET["id"]);
 	$resource->setName($_POST["name"]);
@@ -15,10 +11,10 @@ if ($_POST) {
 		header("Location:" . WEB_ROOT . "/edit-modules-course/id/" . $_POST["cId"] . "");
 		exit;
 	}
-}
-
-$smarty->assign('id', $_GET["id"]);
-
+} 
+$smarty->assign('id', $_GET["id"]); 
 $resource->setResourceId($_GET["id"]);
 $resource = $resource->Info();
 $smarty->assign('resource', $resource);
+$smarty->assign("auxTpl", $_GET['auxTpl']);
+$smarty->assign("cId", $_GET['cId']);
