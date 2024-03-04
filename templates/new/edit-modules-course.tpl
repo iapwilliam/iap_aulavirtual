@@ -28,15 +28,16 @@
                 <div class="col-md-12">
                     <h4>
                         Perteneciente al (a la) {$myModule.majorName}: <b>{$myModule.subjectName} -
-                            {$myModule.groupA}</b> {if !$docente} | <a href="{$WEB_ROOT}/history-subject"
-                            title="Ver Curricula" class="btn btn-success btn-sm">Ver Curricula Activa</a>{/if}
+                            {$myModule.groupA}</b> {if $User.perfil != "Docente"} |
+                            <a href="{$WEB_ROOT}/history-subject" title="Ver Curricula" class="btn btn-success btn-sm">Ver
+                            Curricula Activa</a>{/if}
                     </h4>
                     <h4>
                         Nombre del Módulo: <b>{$myModule.name}</b>
                         || <a
                             href="{$WEB_ROOT}/edit-module/id/{$myModule.subjectModuleId}/course/{$myModule.courseModuleId}"
                             title="Editar Modulo" class="btn btn-success btn-sm">Editar Detalle</a>
-                        {if !$docente}
+                        {if $User.perfil != "Docente"}
                             || <a href="{$WEB_ROOT}/graybox.php?page=view-modules-course&id={$myModule.courseId}"
                                 title="Ver Modulos de Curso" data-target="#ajax" data-toggle="modal"
                                 class="btn btn-success btn-sm">Ver Otros Modulos</a>
@@ -48,7 +49,7 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="initialDate">Fecha Inicial</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         <input type="text" class="form-control" value="{$myModule.initialDate}" disabled />
                     {else}
                         <input type="text" name="initialDate" id="initialDate" size="10" class="form-control i-calendar"
@@ -57,7 +58,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="finalDate">Fecha Final</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         <input type="text" class="form-control" value="{$myModule.finalDate}" disabled />
                     {else}
                         <input type="text" name="finalDate" id="finalDate" size="10" class="form-control i-calendar"
@@ -69,7 +70,7 @@
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="daysToFinish">Dias para Terminar</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         <input type="text" class="form-control" value="{$myModule.daysToFinish}" disabled />
                     {else}
                         <input type="text" name="daysToFinish" id="daysToFinish" value="{$myModule.daysToFinish}"
@@ -78,7 +79,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="active">Activo</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         <input type="text" class="form-control" value="{$myModule.active}" disabled />
                     {else}
                         <select id="active" name="active" class="form-control">
@@ -92,7 +93,7 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="personalId">Personal Administrativo Asignado</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         {foreach from=$empleados item=personal}
                             {if $myModule.access.0 == $personal.personalId}
                                 <input type="text" class="form-control"
@@ -112,7 +113,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="teacherId">Docente Asignado:</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         {foreach from=$empleados item=personal}
                             {if $myModule.access.1 == $personal.personalId}
                                 <input type="text" class="form-control"
@@ -132,7 +133,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="tutorId">Apoyo Académico:</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         {foreach from=$empleados item=personal}
                             {if $myModule.access.2 == $personal.personalId}
                                 <input type="text" class="form-control"
@@ -155,7 +156,7 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="extraId">Extra Asignado:</label>
-                    {if $docente}
+                    {if $User.perfil eq "Docente"}
                         {foreach from=$empleados item=personal}
                             {if $myModule.access.3 == $personal.personalId}
                                 <input type="text" class="form-control"
@@ -174,7 +175,7 @@
                     {/if}
                 </div>
             </div>
-            {if !$docente}
+            {if $User.perfil ne "Docente"}
                 <div class="row">
                     <div class="form-group col-md-12 text-center">
                         <button type="button" class="btn btn-danger btn-70-delete" data-dismiss="modal" id="addMajor"

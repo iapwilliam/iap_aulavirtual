@@ -510,13 +510,16 @@ class Course extends Subject
 				$modulesCourse = $this->getCountModulesCourse();
 				$this->setSubjectId($courseData['subjectId']);
 				$modulesSubject = $this->getCountModulesSubject();
-				return "$modulesCourse/$modulesSubject
-				<a href='" . WEB_ROOT . "/graybox.php?page=view-modules-course&id=" . $id . "' title='Ver Modulos de Curso' data-target='#ajax' data-toggle='modal' >
+
+				$html = "<a href='" . WEB_ROOT . "/graybox.php?page=view-modules-course&id=" . $id . "' title='Ver Modulos de Curso' data-target='#ajax' data-toggle='modal' >
 					<i class='far fa-window-restore text-info fa-lg'></i>
-				</a>  
-				<a href='" . WEB_ROOT . "/graybox.php?page=add-modules-course&id=" . $id . "' title='Agregar Modulo a Curso' data-target='#ajax' data-toggle='modal' style='color:#000' >
-					<i class='fas fa-plus-circle text-dark fa-lg'></i>
 				</a>";
+				if (!$_SESSION['User']['perfil'] == "Docente") {
+					$html .= "<a href='" . WEB_ROOT . "/graybox.php?page=add-modules-course&id=" . $id . "' title='Agregar Modulo a Curso' data-target='#ajax' data-toggle='modal' style='color:#000' >
+						<i class='fas fa-plus-circle text-dark fa-lg'></i>
+					</a>";
+				}
+				return $_SESSION['User']['perfil'] == "Docente" ? $html : "$modulesCourse/$modulesSubject" . $html;
 			}),
 			array('db' => 'courseId',	'dt' => 'alumnos', 'formatter'	=> function ($id) {
 				$sql = "SELECT * FROM user_subject WHERE user_subject.courseId = $id AND user_subject.status = 'activo'";
@@ -525,24 +528,36 @@ class Course extends Subject
 				$sql = "SELECT * FROM user_subject WHERE user_subject.courseId = $id AND user_subject.status = 'inactivo'";
 				$this->Util()->DB()->setQuery($sql);
 				$inactivos = $this->Util()->DB()->GetTotalRows();
-				return "<form class='form d-inline' action='" . WEB_ROOT . "/ajax/new/studentCurricula.php' method='POST' id='activeStudent" . $id . "'>
-					<input type='hidden' name='type' value='StudentAdmin'>
-					<input type='hidden' name='id' value='" . $id . "'>
-					<input type='hidden' name='tip' value='Activo'>
-					<button type='submit' class='pointer spanActive badge badge-success rounded-circle' data-target='#ajax' data-toggle='modal' title='Alumnos Activos'>$activos</button>
-				</form> / <form class='form d-inline' action='" . WEB_ROOT . "/ajax/new/studentCurricula.php' method='POST' id='inactiveStudent" . $id . "'>
-					<input type='hidden' name='type' value='StudentInactivoAdmin'>
-					<input type='hidden' name='id' value='" . $id . "'>
-					<input type='hidden' name='tip' value='Inactivo'>
-					<button type='submit' class='pointer spanInactive badge badge-danger rounded-circle' data-target='#ajax' data-toggle='modal' title='Alumnos Inactivos'>" . $inactivos . "</button>
-				</form>";
+				$html = "";
+				if ($_SESSION['User']['perfil'] == "Docente") {
+					$html .= "<span class='spanActive badge badge-success rounded-circle' title='Alumnos Activos'>$activos</span>
+					<span class='spanInactive badge badge-danger rounded-circle' title='Alumnos Inactivos'>" . $inactivos . "</span>";
+				} else {
+					$html .= "<form class='form d-inline' action='" . WEB_ROOT . "/ajax/new/studentCurricula.php' method='POST' id='activeStudent" . $id . "'>
+						<input type='hidden' name='type' value='StudentAdmin'>
+						<input type='hidden' name='id' value='" . $id . "'>
+						<input type='hidden' name='tip' value='Activo'>
+						<button type='submit' class='pointer spanActive badge badge-success rounded-circle' data-target='#ajax' data-toggle='modal' title='Alumnos Activos'>$activos</button>
+					</form> / <form class='form d-inline' action='" . WEB_ROOT . "/ajax/new/studentCurricula.php' method='POST' id='inactiveStudent" . $id . "'>
+						<input type='hidden' name='type' value='StudentInactivoAdmin'>
+						<input type='hidden' name='id' value='" . $id . "'>
+						<input type='hidden' name='tip' value='Inactivo'>
+						<button type='submit' class='pointer spanInactive badge badge-danger rounded-circle' data-target='#ajax' data-toggle='modal' title='Alumnos Inactivos'>" . $inactivos . "</button>
+					</form>";
+				}
+				return $html;
 			}),
 			array('db' => 'courseId',	'dt' => 'acciones', 'formatter'	=> function ($id) {
+				if ($_SESSION['User']['perfil'] == "Docente")
+					return "";
 				return "<a class='btn btn-primary' href='" . WEB_ROOT . "/graybox.php?page=edit-course&id=" . $id . "' data-target='#ajax' data-toggle='modal' title='Editar'>Editar</a>";
-			}),
+			}), 
 		);
-		$where = "subject.subjectId = " . $subjectId;
 
+		$where = "subject.subjectId = " . $subjectId;
+		if ($_SESSION['User']['perfil'] == "Docente") {
+			$where .= " AND SUBSTRING_INDEX(access, '|', 1) = ".$_SESSION['User']['userId'];
+		}
 		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
 	}
 

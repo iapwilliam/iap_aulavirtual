@@ -81,7 +81,7 @@ switch($_POST["type"])
 			$infoUser = $user->Info();
 
 			$module->setCourseModuleId($_POST["id"]);
-			$info = $module->InfoCourseModule();
+			$info = $module->getCourseModule();
 
 			$group->setTipoMajor($info["majorName"]);
 			$group->setCourseModuleId($_POST["id"]);

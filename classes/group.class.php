@@ -967,12 +967,11 @@ class Group extends Module
 		$this->Util()->DB()->setQuery($sql);
 		$infoSub = $this->Util()->DB()->GetRow();
 
-		$sql = "SELECT * FROM personal WHERE perfil = 'Administrador'";
+		$sql = "SELECT * FROM personal WHERE role_id = '1'";
 		$this->Util()->DB()->setQuery($sql);
 		$lstAdmins = $this->Util()->DB()->GetResult();
 
-		$notificacion = new Notificacion;
-		$sendmail = new SendMail;
+		$notificacion = new Notificacion; 
 
 		// Guardamos notificacion
 		$actividads = "El Docente " . $_SESSION['User']['nombreCompleto'] . " de la materia " . $infoSub['materia'] . " del grupo " . $infoSub['group'] . " del posgrado " . $infoSub['carrera'] . " actualizo el acta de calificaciones";
@@ -984,11 +983,6 @@ class Group extends Module
 		$notificacion->setTablas('course_module_score');
 		$notificacion->setEnlace('/edit-modules-course/id/' . $this->coursemoduleId);
 		$notificacion->saveNotificacion();
-
-		// $resposeHtml .= '<br><br><br><br>';
-		// $resposeHtml .= $actividads;
-		// $sendmail->PrepareAttachment("Actualizacion en Acta de Calificaciones", $resposeHtml, "", "", "dacademica@iapchiapas.org.mx", "Administrador", $attachment, $fileName);
-		// $sendmail->PrepareAttachment("Actualizacion en Acta de Calificaciones", $resposeHtml, "", "", "enlinea@iapchiapas.org.mx", "Administrador", $attachment, $fileName);
 		return true;
 	}
 

@@ -10,7 +10,7 @@ use Dompdf\Exception;
 session_start();
 $util = new Util;
 $module->setCourseModuleId($_GET["Id"]);
-$info = $module->InfoCourseModule();	
+$info = $module->getCourseModule();	
 // echo "<pre>";
 // var_dump($info);
 // exit;
@@ -32,7 +32,7 @@ else
 }
 	
 $course->setCourseId($info["courseId"]);
-$infoCo = $course->Info();	
+$infoCo = $course->getCourse();	
 /* echo "<pre>";
 print_r($infoCo);
 exit; */
@@ -41,9 +41,8 @@ $group->setCourseId($info["courseId"]);
 $group->setTipoMajor($info["majorName"]);
 $noTeam = $group->actaCalificacion();
 $studentsRepeat = $group->actaCalificacionRepeat();
-$infoFirma = $personal->extraeFirmaActa();
-$personal->setPersonalId($info['access'][1]);
-$infoPersonal = $personal->Info();
+$infoFirma = $personal->extraeFirmaActa(); 
+$infoPersonal = $personal->getPersonal("OR personalId = ".$info['access'][1]);
 	
 	$html .= "
 	<html>
