@@ -116,15 +116,7 @@
                                                                 <i class="fas fa-spell-check"></i> Evaluación Docente
                                                             </a>
                                                         {/if}
-                                                    {/if}
-                                                    {* ACTIVIDADES *}
-                                                    {if  $timestamp >= $subject.initialDateStamp}
-                                                        <a href="javascript:void(0)"
-                                                            onclick="CalificacionesAct({$subject.courseModuleId});"
-                                                            class="btn btn-outline-success btn-sm my-1 mx-1">
-                                                            <i class="fas fa-tasks"></i> Actividades
-                                                        </a>
-                                                    {/if}
+                                                    {/if} 
                                                     {* INGRESAR AL MODULO *}
                                                     {if $User.type == "student"}
                                                         {if  $timestamp < $subject.initialDateStamp}
