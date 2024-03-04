@@ -64,6 +64,7 @@
 		$forum->setCourseModuleId($_GET['id']);
 		$forum->setCourseId($infoModulo['courseId']);
 		$forum->setUserId($User['userId']);
+		$forum->setIsStudent(0);
 		$forum->setActividadId($actidadCreada);
 		$mensaje = "Actividad creada";
 		if($_POST['activityType'] == "Foro"){

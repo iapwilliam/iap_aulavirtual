@@ -7,7 +7,12 @@ class Forum extends Main
 	private $replyId;
 	private $archivo;
 	private $archivoActual;
+	private $isStudent;
 
+	function setIsStudent($value): void
+	{
+		$this->isStudent = $value;
+	}
 	public function setArchivo($archivo)
 	{
 		$this->archivo = $archivo;
@@ -277,14 +282,18 @@ class Forum extends Main
 	public function Replies()
 	{
 		$sql = "SELECT * FROM reply
-						LEFT JOIN user ON user.userId = reply.userId
-						LEFT JOIN personal ON personal.personalId = reply.personalId
 					WHERE topicId = " . $this->topicsubId . " AND son = 0
 					ORDER BY replyDate ASC";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 
 		foreach ($result as $key => $res) {
+			$sql = $res['isStudent'] == 1 ? "SELECT * FROM user WHERE userId = " . $res['userId'] : "SELECT name as names, lastname_paterno as lastNamePaterno, lastname_materno as lastNameMaterno FROM personal WHERE personalId = " . $res['userId'];
+			$this->Util()->DB()->setQuery($sql);
+			$usuario = $this->Util()->DB()->GetRow();
+			$result[$key]['names'] = $usuario['names'];
+			$result[$key]['lastNamePaterno'] = $usuario['lastNamePaterno'];
+			$result[$key]['lastNameMaterno'] = $usuario['lastNameMaterno'];
 			$result[$key]["content"] = $this->Util()->DecodeTiny($result[$key]["content"]);
 			if (file_exists(DOC_ROOT . "/forofiles/" . $res["path"])) {
 				$result[$key]["existeArchivo"] = "si";
@@ -303,16 +312,12 @@ class Forum extends Main
 			}
 
 			$sql = "SELECT count(*) FROM reply
-							LEFT JOIN user ON user.userId = reply.userId
-							LEFT JOIN personal ON personal.personalId = reply.personalId
 						WHERE son = " . $res["replyId"] . " ORDER BY replyDate DESC";
 			$this->Util()->DB()->setQuery($sql);
 			$countComen = $this->Util()->DB()->GetSingle();
 			$result[$key]["numComentarios"] = $countComen;
 
-			$sql = "SELECT * FROM reply
-							LEFT JOIN user ON user.userId = reply.userId
-							LEFT JOIN personal ON personal.personalId = reply.personalId
+			$sql = "SELECT *, IF(isStudent, (SELECT CONCAT(user.names, ' ', user.lastNamePaterno, ' ', user.lastNameMaterno) FROM user WHERE user.userId = reply.userId), (SELECT CONCAT(personal.name, ' ', personal.lastname_paterno, ' ', personal.lastname_materno) FROM personal WHERE personalId = reply.userId)) as usuario FROM reply
 						WHERE son = " . $res["replyId"] . " ORDER BY replyDate ASC";
 			$this->Util()->DB()->setQuery($sql);
 
@@ -388,17 +393,20 @@ class Forum extends Main
 	public function Enumeratesub()
 	{
 
-		$sql = "
-				SELECT * FROM topicsub
-				LEFT JOIN topic ON topic.topicId=topicsub.topicsubId
-				LEFT JOIN user ON user.userId = topicsub.userId
+		$sql = "SELECT topicsub.* FROM topicsub
+				LEFT JOIN topic ON topic.topicId=topicsub.topicsubId 
 				WHERE topicsub.topicId = " . $this->topicId . " 
 				ORDER BY topicsubDate DESC";
-		// exit;
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 
 		foreach ($result as $key => $res) {
+			$sql = $res['isStudent'] == 1 ? "SELECT * FROM user WHERE userId = " . $res['userId'] : "SELECT name as names, lastname_paterno as lastNamePaterno, lastname_materno as lastNameMaterno FROM personal WHERE personalId = " . $res['userId'];
+			$this->Util()->DB()->setQuery($sql);
+			$usuario = $this->Util()->DB()->GetRow();
+			$result[$key]['names'] = $usuario['names'];
+			$result[$key]['lastNamePaterno'] = $usuario['lastNamePaterno'];
+			$result[$key]['lastNameMaterno'] = $usuario['lastNameMaterno'];
 			$this->Util()->DB()->setQuery("
 				SELECT COUNT(*) FROM reply
 				WHERE topicId = '" . $res["topicsubId"] . "'");
@@ -485,7 +493,8 @@ class Forum extends Main
 							topicId,
 							topicsubDate,
 							userId,
-							activityId
+							activityId,
+							isStudent
 						)
 					VALUES (
 					         '',  
@@ -494,7 +503,8 @@ class Forum extends Main
 							'" . $this->topicId . "',
 							'" . date("Y-m-d H:i:s") . "',
 							'" . $this->userId . "',
-							'" . $this->actividadId . "'
+							'" . $this->actividadId . "',
+							'" . $this->isStudent . "'
 							)";
 		$this->Util()->DB()->setQuery($sql);
 		//ejecutamos la consulta y guardamos el resultado, que sera el ultimo positionId generado
@@ -507,13 +517,15 @@ class Forum extends Main
 						 	content,
 							replyDate,
 							topicId,
-							userId							
+							userId,
+							isStudent							
 						)
 					VALUES (
 							'" . $this->reply . "', 
 							'" . date("Y-m-d H:i:s") . "',
 							'" . $id . "',
-							'" . $this->userId . "'
+							'" . $this->userId . "',
+							'" . $this->isStudent . "'
 							)";
 		$this->Util()->DB()->setQuery($sql);
 		//ejecutamos la consulta y guardamos el resultado, que sera el ultimo positionId generado
@@ -663,17 +675,17 @@ class Forum extends Main
 
 		$sql = "INSERT INTO
 						reply
-						( content, replyDate, topicId, userId, personalId, notificado, path, mime, son )
+						( content, replyDate, topicId, userId, notificado, path, mime, son, isStudent )
                         VALUES (
 							'" . $this->reply . "', 
 							'" . date("Y-m-d H:i:s") . "',
 							'" . $this->topicsubId . "',
-							'" . $this->userId . "',
-							'" . $this->personalId . "',
+							'" . $this->userId . "', 
 							'" . $_SESSION['User']['userId'] . "',
 							'" . $relative_path . "',
                             '" . $file["type"] . "',
-                            '" . $this->replyId . "'
+                            '" . $this->replyId . "',
+                            '" . $this->isStudent . "'
                             )";
 
 		$this->Util()->DB()->setQuery($sql);

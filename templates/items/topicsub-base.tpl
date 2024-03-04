@@ -8,12 +8,12 @@
         <td id="etitl1">{$topicsub.answers}</td>
         <td>
             <a href="{$WEB_ROOT}/add-reply/id/{$id}/topicsubId/{$topicsub.topicsubId}">
-			    <i class="fas fa-sign-in-alt fa-2x text-dark"></i>
-			</a>
+                <i class="fas fa-sign-in-alt fa-2x text-dark"></i>
+            </a>
         </td>
     </tr>
 {foreachelse}
     <tr>
         <td colspan="5" class="text-center">No se encontró ningún registro.</td>
-	</tr>
+    </tr>
 {/foreach}

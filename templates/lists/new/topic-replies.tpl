@@ -40,11 +40,7 @@
 						<div class="col-md-2 text-center">
 							{$item.foto} <br>
 							<small class="font-weight-bold">
-								{if $item.positionId == NULL || $item.positionId == 0}
-									{$item.names} {$item.lastNamePaterno} {$item.lastNameMaterno}
-								{else}
-									{$item.name} {$item.lastname_paterno} {$item.lastname_materno}
-								{/if}
+								{$item.names} {$item.lastNamePaterno} {$item.lastNameMaterno}
 								<br>
 								Fecha: {$item.replyDate|date_format:"%d-%m-%Y %H:%M"}
 							</small>
@@ -109,7 +105,7 @@
 					Comentarios
 				</div>
 				<div class="card-body bg-light">
-					{foreach from=$item.replies item=reply key=key2} 
+					{foreach from=$item.replies item=reply key=key2}
 						<div class="card bg-light">
 							<div class="card-body">
 								<div class="row">
@@ -140,15 +136,11 @@
 									{* Photo *}
 									<div class="col-md-2 text-center">
 										{$reply.foto}<br>
-										<small class="font-weight-bold">
-											{if $reply.positionId == NULL || $reply.positionId == 0}
-												{$reply.names} {$reply.lastNamePaterno} {$reply.lastNameMaterno}
-											{else}
-												{$reply.names} {$reply.lastname_paterno} {$reply.lastname_materno}
-											{/if}<br>
+										<small class="font-weight-bold"> 
+											{$reply.usuario} <br>
 											{$reply.replyDate|date_format:"%d-%m-%Y %H:%M"}
 										</small>
-										{if $positionId == 1}
+										{if $perfil != "Alumno"}
 											<form id="deleteReplay" name="deleteReplay" method="post">
 												<input type="hidden" id="moduleId" name="moduleId" value="{$moduleId}">
 												<input type="hidden" id="replyId" name="replyId" value="{$reply.replyId}" />
@@ -159,8 +151,9 @@
 										{/if}
 										{if $reply.userId eq $userId}
 											<a class="d-block" href="{$WEB_ROOT}/graybox.php?page=edit-comment&id={$reply.replyId}"
-												data-target="#ajax" data-toggle="modal" title="Editar Comentario" class="text-primary text-center">
-												<i class="fas fa-pen-square fa-2x pointer"></i> 
+												data-target="#ajax" data-toggle="modal" title="Editar Comentario"
+												class="text-primary text-center">
+												<i class="fas fa-pen-square fa-2x pointer"></i>
 											</a>
 										{/if}
 									</div>

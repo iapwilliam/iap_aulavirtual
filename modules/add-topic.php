@@ -7,6 +7,9 @@ if ($_POST) {
 
 	$forum->setSubject($_POST["subject"]);
 	$forum->setReply($_POST["reply"]);
+	if ($User['perfil'] == "Alumno") {
+		$forum->setIsStudent(1);
+	}
 	$forum->AddTopic(); 
 	header("Location:" . WEB_ROOT . "/forumsub-modules-student/id/" . $_GET["cId"] . "/topicId/" . $_POST["topicId"] . "");
 	exit;

@@ -5,8 +5,7 @@ $smarty->assign('myModule', $myModule);
 
 $forum->setCourseId($myModule["courseId"]);
 $smarty->assign('id', $myModule["courseId"]);
-$topicId = $_GET["topicId"];
-
+$topicId = $_GET["topicId"]; 
 $forum->setTopicId($topicId);
 $smarty->assign('topicId', $topicId);
 
