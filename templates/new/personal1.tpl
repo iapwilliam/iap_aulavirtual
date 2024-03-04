@@ -18,7 +18,7 @@
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
         <i class="fas fa-users"></i> Personal
-        <form class="form" id="form_personal" action="{$WEB_ROOT}/ajax/new/personal">
+        <form class="form" id="form_personal" action="{$WEB_ROOT}/ajax/new/personal.php">
             <input type="hidden" name="option" value="addPersonal">
             <button type="submit" class="btn btn-info float-right" id="btnAddPersonal">
                 <i class="fas fa-plus"></i> Agregar
