@@ -18,7 +18,7 @@ use Dompdf\Exception;
 	$lst = $activity->enumerateActividadCalendario($_GET['Id']);
 	
 	$module->setCourseModuleId($_GET["Id"]);
-	$info = $module->InfoCourseModule();
+	$info = $module->getCourseModule();
  
 	// echo '<pre>'; print_r($info);
 	// exit;
