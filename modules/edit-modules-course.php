@@ -34,3 +34,6 @@ $forum->setCourseModuleId($moduleData["courseModuleId"]);
 $forum->setCourseId($moduleData["courseId"]);
 $forum = $forum->Enumerate();
 $smarty->assign('forum', $forum);
+
+$announcements = $announcement->Enumerate($moduleData["courseId"], $_GET["id"]);
+$smarty->assign('announcements', $announcements);

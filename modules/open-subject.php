@@ -18,7 +18,8 @@ if ($_POST) {
 	echo json_encode([
 		'growl'		=> true,
 		'message'	=> "Currícula creada",
-		'dttable'	=> ".datatable"
+		'dttable'	=> ".datatable",
+		'reload'	=> true
 	]);
 	exit;
 }

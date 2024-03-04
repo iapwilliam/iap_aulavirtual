@@ -31,10 +31,11 @@
 						[{$item.majorName}] {$item.name} </div>
 					<div id="collapse{$item.subjectId}" class="collapse" data-parent="#accordion">
 						<div class="col-md-12 py-4">
-							<table class="table w-100 datatable" data-url="{$WEB_ROOT}/history-subject/id/{$item.subjectId}">
+							<table class="table w-100 datatable" id="datatable{$item.subjectId}"
+								data-url="{$WEB_ROOT}/history-subject/id/{$item.subjectId}">
 								<thead>
 									<tr>
-										<td>ID</td> 
+										<td>ID{$item.subjectId}</td>
 										<td>Nombre</td>
 										<td>Grupo</td>
 										<td>Fecha Inicial</td>

@@ -411,7 +411,7 @@ class Course extends Subject
 						 	subjectId,
 							initialDate,
 							finalDate, 
-							grupo,
+							`group`,
 							access
 						)
 					VALUES (
