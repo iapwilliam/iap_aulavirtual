@@ -78,7 +78,7 @@ class Announcement extends Module
 			$courseModuleId = $this->getCourseModuleId();
 			$group = new Group;
 			$group->setCourseModuleId($this->getCourseModuleId());
-			$group->setCourseId($myModule["courseId"]); 
+			$group->setCourseId($myModule["courseId"]);
 		} else {
 			$courseId = 0;
 			$courseModuleId = 0;
@@ -130,24 +130,11 @@ class Announcement extends Module
 				//echo $modulo;
 				$message[3]["subject"] = "Se actualizo un anuncio en el modulo " . $modulo . " | " . $titulo;
 				$message[3]["body"] = $this->Util()->DecodeTiny($this->description);
-
-				$details_body = array();
-				$details_subject = array();
-				$attachment = "";
-				$fileName = "";
-				$sendmail = new Sendmail;
-				foreach ($theGroup as $key => $value) {
-					$nombremail = $this->Util()->acento($value["names"]);
-					$correo = strtolower($value['email']);
-					if ($correo != '')
-						$sendmail->PrepareMailer($message[3]["subject"], $message[3]["body"], $details_body, $details_subject, $correo, $nombremail, $attachment, $fileName);
-				}
 			}
 		} else {
 			$courseId = 0;
 			$courseModuleId = 0;
 		}
-
 
 		$sql = "UPDATE
 						announcement
