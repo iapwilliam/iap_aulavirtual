@@ -17,10 +17,12 @@
 <div class="card mb-4">
 	<div class="card-header bg-primary text-white">
 		<i class="fas fa-list"></i> Instancias de Curricula
-		<a href="{$WEB_ROOT}/graybox.php?page=open-subject" class="btn btn-info float-right" data-target="#ajax"
-			data-toggle="modal">
-			<i class="fas fa-plus"></i> Agregar
-		</a>
+		{if $User['perfil'] != "Docente"}
+			<a href="{$WEB_ROOT}/graybox.php?page=open-subject" class="btn btn-info float-right" data-target="#ajax"
+				data-toggle="modal">
+				<i class="fas fa-plus"></i> Agregar
+			</a>
+		{/if}
 	</div>
 	<div class="card-body">
 		<div id="accordion">
@@ -35,7 +37,7 @@
 								data-url="{$WEB_ROOT}/history-subject/id/{$item.subjectId}">
 								<thead>
 									<tr>
-										<td>ID{$item.subjectId}</td>
+										<td>ID</td>
 										<td>Nombre</td>
 										<td>Grupo</td>
 										<td>Fecha Inicial</td>

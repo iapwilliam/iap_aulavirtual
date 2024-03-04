@@ -406,6 +406,13 @@ class Subject extends Main
 		return $result;
 	} 
 
+	public function getSubjectsCourse($where = "") {
+		$sql = "SELECT subject.*, major.name as majorName FROM `course` INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE subject.deleted_at IS NULL {$where}";
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetResult();
+		return $result;
+	}
+
 	public function EnumerateGroups()
 	{
 
