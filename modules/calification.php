@@ -1,8 +1,4 @@
 <?php
-$user->allow_access(37);
-
-
-
 if($_POST)
 {
     $module->setCourseModuleId($_GET["id"]);
@@ -18,7 +14,7 @@ if($_POST)
 }
 
 $module->setCourseModuleId($_GET["id"]);
-$moduleInfo = $module->InfoCourseModule();
+$moduleInfo = $module->getCourseModule();
 $isEnglish = false;
 $minCal = 70;
 if($moduleInfo['majorId'] == 18)
@@ -51,7 +47,7 @@ $smarty->assign('totalPonderation', $totalPonderation);
 $majorModality = $activity->GetMajorModality();
 
 $module->setCourseModuleId($_GET["id"]);
-$info = $module->InfoCourseModule(); 
+$info = $module->getCourseModule(); 
 
 $periodoActual = $info["semesId"]; 
 
