@@ -1168,7 +1168,7 @@ class User extends Main
 						$card['activo'] = $row['activo'];
 						$card['actualizado'] = $row['actualizado'];
 						$card['isLogged'] = true;
-						$card['photo'] = $row['rutaFoto'];
+						$card['avatar'] = $row['avatar'];
 						$card['bloqueado'] = $row['bloqueado'];
 						$_SESSION['User'] = $card;
 						$_SESSION["lastClick"] = time();

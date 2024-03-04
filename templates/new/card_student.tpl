@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header position-relative p-0 card-avatar">
-        {if $infoStudent.avatar ne ''}
-            <img class="card-img-top" src="{$WEB_ROOT}/alumnos/avatar/{$infoStudent.avatar}" alt="" />
+        {if $User.avatar ne ''}
+            <img class="card-img-top" src="{$WEB_ROOT}/alumnos/avatar/{$User.avatar}" alt="" />
         {else}
             <img class="card-img-top" src="{$WEB_ROOT}/images/logos/iap_logo.JPG">
         {/if}

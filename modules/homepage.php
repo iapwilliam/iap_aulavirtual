@@ -1,9 +1,4 @@
 <?php
-	/* For Session Control - Don't remove this */
-	$x=0;	
-	// echo '<pre>'; print_r($_SESSION);
-	// exit;
-	
 	if ($_GET['id']!=NULL)
 	{
 		$announcement->setAnnouncementId($_GET['id']);
