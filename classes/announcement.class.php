@@ -73,7 +73,7 @@ class Announcement extends Module
 		$module = new Module;
 		if ($this->getCourseModuleId()) {
 			$module->setCourseModuleId($this->getCourseModuleId());
-			$myModule = $module->InfoCourseModule();
+			$myModule = $module->getCourseModule();
 			$courseId = $myModule["courseId"];
 			$courseModuleId = $this->getCourseModuleId();
 			$group = new Group;
@@ -117,7 +117,7 @@ class Announcement extends Module
 		$module = new Module;
 		if ($this->getCourseModuleId()) {
 			$module->setCourseModuleId($this->getCourseModuleId());
-			$myModule = $module->InfoCourseModule();
+			$myModule = $module->getCourseModule();
 			$courseId = $myModule["courseId"];
 			$courseModuleId = $this->getCourseModuleId();
 			$group = new Group;
