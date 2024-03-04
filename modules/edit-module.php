@@ -1,9 +1,4 @@
 <?php
-		
-	/* For Session Control - Don't remove this */
-	$user->allow_access(37);	
-	/* End Session Control */
-	// print_r($_GET);
 	if($_POST)
 	{
 		$module->setSubjectModuleId($_GET['id']);
