@@ -26,7 +26,8 @@
                     <label class="w-100">Correo electrónico institucional<span class="text-danger">*</span></label>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" placeholder="Correo electrónico"
-                            aria-label="Correo electrónico" aria-describedby="basic-addon2" name="email" value="{$alumno.email}">
+                            aria-label="Correo electrónico" aria-describedby="basic-addon2" name="email"
+                            value="{$alumno.email}">
                         <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">@cobach.edu.mx</span>
                         </div>
@@ -37,7 +38,8 @@
                     <input type="text" name="phone" id="phone" class="form-control" value="{$alumno.phone}" />
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="rfc">RFC<small>(Indique su RFC con homoclave)<span class="text-danger">*</span></small></label>
+                    <label for="rfc">RFC<small>(Indique su RFC con homoclave)<span
+                                class="text-danger">*</span></small></label>
                     <input type="text" name="rfc" id="rfc" class="form-control" value="{$alumno.rfc}" />
                 </div>
                 <div class="form-group col-md-4">
@@ -70,10 +72,36 @@
                         {/foreach}
                     </select>
                 </div>
+                {if $User.perfil == "Administrador"}
+                    <div class="form-group col-md-4">
+                        <label>Usuario<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="controlNumber" disabled value="{$alumno.controlNumber}">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Contraseña<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="password" disabled value="{$alumno.password}">
+                    </div>
+                {/if}
                 <div class="form-group col-md-12 text-center">
                     <button class="btn btn-success" type="submit">Actualizar</button>
+                    {if $User.perfil == "Administrador"}
+                        <button class="btn btn-primary" type="button" id="clipboard">Copiar usuario y contraseña</button>
+                    {/if}
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+{if $User.perfil == "Administrador"}
+    {literal}
+        <script>
+            let usuario = document.getElementById("controlNumber").value;
+            let password = document.getElementById("password").value;
+            document.getElementById("clipboard").addEventListener("click", function() {
+                navigator.clipboard.writeText(`Buen día,\nSus datos para ingresar a nuestro Sistema de Educación son:\nhttps://aulavirtual.iapchiapas.edu.mx/\nUsuario: ${usuario}\nContraseña: ${password}\nSaludos.`
+            ); alert("Se ha copiado el usuario y la contraseña");
+            });
+        </script>
+    {/literal}
+{/if}
