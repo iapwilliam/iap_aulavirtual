@@ -448,3 +448,34 @@ function additional() {
         }
     });
 }
+
+
+$(".datatable").DataTable({
+    processing: true,
+    serverSide: true,
+    responsive: true,
+    ajax: {
+        url: $(".datatable").data('url'),
+        dataType: "json",
+        type: "POST",
+        data: {
+            _token: $("meta[name='csrf-token'] ").attr('content')
+        }
+    },
+    language: {
+        url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+    },
+    columns: [
+        { data: "courseId" },
+        { data: "nombre" },
+        { data: "grupo" },
+        { data: "fecha_inicial" },
+        { data: "fecha_final" }, 
+        { data: "modulos" }, 
+        { data: "alumnos" }, 
+        {
+            data: "acciones",
+            "orderable": false,
+        }
+    ]
+});

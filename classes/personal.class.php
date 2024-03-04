@@ -147,7 +147,6 @@ class Personal extends Main
 
 	public function setPersonalId($value)
 	{
-		$this->Util()->ValidateInteger($value);
 		$this->personalId = $value;
 	}
 
@@ -181,8 +180,7 @@ class Personal extends Main
 	}
 
 	public function setName($value)
-	{
-		$this->Util()->ValidateString($value, $max_chars = 60, $minChars = 1, "Nombre");
+	{ 
 		$this->name = $value;
 	}
 
@@ -413,28 +411,7 @@ class Personal extends Main
 
 		return $result;
 	}
-
-	public function Info()
-	{
-
-		$sql = "SELECT 
-					* 
-				FROM 
-					personal 
-				WHERE 
-					personalId = '" . $this->personalId . "'";
-
-		$this->Util()->DB()->setQuery($sql);
-		$info = $this->Util()->DB()->GetRow();
-
-		$row = $info;		// anexado hrsc
-		if ($info)			// para evitar errores cuando no hay registros que coinciden con $this->personalId
-			$row = $this->Util()->EncodeRow($info);
-		return $row;
-	}
-
-
-
+ 
 	public function InfoBasica()
 	{
 
@@ -478,229 +455,62 @@ class Personal extends Main
 		return $data;
 	}
 
-	public function Save()
+	public function getPersonal($where = "", $order = "personal.name ASC")
 	{
+		$sql = "SELECT personal.*, roles.name as rol, roles.roleId FROM personal INNER JOIN roles ON roles.roleId = personal.role_id WHERE deleted_at IS NULL AND role_id <> 1 {$where} ORDER BY {$order}";
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetResult();
+		return $result;
+	}
 
-		if ($this->Util()->PrintErrors()) {
-			return false;
-		}
-
+	public function savePersonal()
+	{
 		$sql = "INSERT INTO 
 					personal 
 					(						
-						positionId, 
+						 
 						name,
 						lastname_paterno,
-						lastname_materno,
-						stateId, 
+						lastname_materno, 
 						username,
-						passwd,
-						description,
-						curp,
-						rfc,
-						sexo,
-						fecha_nacimiento,
-						fecha_sep,
-						fecha_dgta,
-						claves_presupuestales,
-						categoria,
-						perfil,
-						profesion,
-						mostrar,
-						numero
+						passwd, 
+						role_id  
 					)
 				 VALUES 
 					(						
-						" . $this->positionId . ",
 						'" . $this->name . "',
 						'" . $this->lastnamePaterno . "',
 						'" . $this->lastnameMaterno . "',
-						'" . $this->stateId . "',
 						'" . $this->username . "',
 						'" . $this->passwd . "', 
-						'" . $this->description . "',
-						'" . $this->curp . "',
-						'" . $this->rfc . "',
-						'" . $this->sexo . "',
-						'" . $this->fechaNacimiento . "',
-						'" . $this->fechaSep . "',
-						'" . $this->fechaDgta . "',
-						'" . $this->clavesPresupuestales . "',
-						'" . $this->categoria . "',
-						'" . $this->perfil . "',
-						'" . $this->prof . "',
-						'" . $this->mostrar . "',
-						'" . $this->numero . "'
+						'" . $this->roleId . "'
 					)";
-
 		$this->Util()->DB()->setQuery($sql);
-		$personalId = $this->Util()->DB()->InsertData();
-
-		$listRoles = explode(',', $this->rolesId);
-
-		if ($listRoles) {
-
-			foreach ($listRoles as $val) {
-				if (!empty($val)) {
-					$sql = "INSERT INTO 
-								personal_role 
-								(						
-									personalId, 
-									roleId
-								)
-							 VALUES 
-								(						
-									" . $personalId . ",
-									" . $val . "
-								)";
-
-					$this->Util()->DB()->setQuery($sql);
-					$this->Util()->DB()->InsertData();
-				}
-			} //foreach
-		}
-
-		$this->Util()->setError(10031, "complete");
-		$this->Util()->PrintErrors();
-
+		$this->Util()->DB()->InsertData();
 		return true;
 	}
 
-	public function Update()
+	public function updatePersonal()
 	{
-
-		// print_r($this->Util()->getErrors());
-		if ($this->Util()->PrintErrors()) {
-			return false;
-		}
-
-		$sql = "UPDATE
-					personal SET positionId = " . $this->positionId . ",
-				 	name =  '" . $this->name . "',
+		$sql = "UPDATE personal SET
+					name =  '" . $this->name . "',
 					lastname_paterno = '" . $this->lastnamePaterno . "',
 					lastname_materno = '" . $this->lastnameMaterno . "',
-					stateId = '" . $this->stateId . "', 
 					username =  '" . $this->username . "', 
 					passwd =  '" . $this->passwd . "', 
-					description = '" . $this->description . "',
-					curp = '" . $this->curp . "',
-					rfc = '" . $this->rfc . "',
-					sexo = '" . $this->sexo . "',
-					fecha_nacimiento = '" . $this->fechaNacimiento . "',
-					fecha_sep = '" . $this->fechaSep . "',
-					fecha_dgta = '" . $this->fechaDgta . "',
-					claves_presupuestales = '" . $this->clavesPresupuestales . "',
-					categoria = '" . $this->categoria . "',
-					correo = '" . $this->correo . "',
-					celular = '" . $this->celular . "',
-					semblanza = '" . $this->semblanza . "',
-					perfil = '" . $this->perfil . "',
-					profesion = '" . $this->prof . "',
-					firmaConstancia = '" . $this->firmaConstancia . "',
-					mostrar = '" . $this->mostrar . "',
-					numero = '" . $this->numero . "'
+					role_id = '" . $this->roleId . "'
 				WHERE 
 					personalId = " . $this->personalId;
-
-		// echo $sql;
 		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->ExecuteQuery();
-
-		if ($this->foto != "") {
-			$sql = "UPDATE personal SET
-					foto = '" . $this->foto . "'
-				WHERE
-					personalId = " . $this->personalId;
-			$this->Util()->DB()->setQuery($sql);
-			$this->Util()->DB()->ExecuteQuery();
-		}
-
-
-		$listRoles = explode(',', $this->rolesId);
-
-		if ($listRoles) {
-
-			$sql = 'DELETE FROM personal_role WHERE personalId = ' . $this->personalId;
-			$this->Util()->DB()->setQuery($sql);
-			$this->Util()->DB()->ExecuteQuery();
-
-			foreach ($listRoles as $val) {
-				if (!empty($val)) {
-					$sql = "INSERT INTO 
-								personal_role 
-								(						
-									personalId, 
-									roleId
-								)
-							 VALUES 
-								(						
-									" . $this->personalId . ",
-									" . $val . "
-								)";
-
-					$this->Util()->DB()->setQuery($sql);
-					$this->Util()->DB()->InsertData();
-				}
-			} //foreach
-		}
-
-
-		//actualizamos imagen de firma
-		$url = DOC_ROOT;
-		$archivo = "firma";
-		foreach ($_FILES as $key => $var) {
-			switch ($key) {
-				case $archivo:
-					if ($var["name"] <> "") {
-						$aux = explode(".", $var["name"]);
-						$extencion = end($aux);
-						$temporal = $var['tmp_name'];
-						$foto_name = "firma_" . $this->personalId . "." . $extencion;
-						if (move_uploaded_file($temporal, $url . "/images/docente/firmas/" . $foto_name)) {
-							$sql = "UPDATE personal SET
-										rutaFirma = '" . $foto_name . "'
-									WHERE
-										personalId = " . $this->personalId;
-							$this->Util()->DB()->setQuery($sql);
-							$this->Util()->DB()->ExecuteQuery();
-						}
-					}
-					break;
-			}
-		}
-
-		$this->Util()->setError(10033, "complete");
-		$this->Util()->PrintErrors();
-
+		$this->Util()->DB()->UpdateData();
 		return true;
 	}
 
-	public function Delete()
+	public function deletePersonal()
 	{
-
-		if ($this->Util()->PrintErrors()) {
-			return false;
-		}
-
-		$sql = "DELETE FROM 
-					personal
-				WHERE 
-					personalId = " . $this->personalId;
-
+		$sql = "UPDATE personal SET deleted_at = NOW() WHERE personalId = " . $this->personalId;
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->ExecuteQuery();
-
-		$sql = "DELETE FROM 
-					personal_role
-				WHERE 
-					personalId = " . $this->personalId;
-
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->ExecuteQuery();
-
-		$this->Util()->setError(10032, "complete");
-		$this->Util()->PrintErrors();
-
 		return true;
 	}
 
@@ -1324,7 +1134,7 @@ class Personal extends Main
 		return $count;
 	}
 
-	 
+
 	public function onDelete()
 	{
 		if ($this->Util()->PrintErrors()) {
@@ -1589,13 +1399,6 @@ class Personal extends Main
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 
-		return $result;
-	}
-
-	function getPersonal($where = "AND role_id <> 1", $order = "personal.name ASC") {
-		$sql = "SELECT * FROM personal INNER JOIN roles ON roles.roleId = personal.role_id WHERE 1 {$where} ORDER BY {$order}";
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetResult();
 		return $result;
 	}
 }

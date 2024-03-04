@@ -1,26 +1,19 @@
 <?php
-
-/* For Session Control - Don't remove this */
-// //$user->allow_access(8);	
-// print_r($_SESSION);exit;
-
-
-
 if ($_POST) {
 	if (isset($_POST['reply'])) {
 		$errors = [];
 		if (empty($_POST['reply'])) {
 			$errors['reply'] = 'Por favor, no se olvide de agregar la aportación.';
 		}
-         
-        if (!empty($errors)) {
-            header('HTTP/1.1 422 Unprocessable Entity');
-            header('Content-Type: application/json; charset=UTF-8');
-            echo json_encode([
-                'errors'    => $errors
-            ]);
-            exit;
-        }
+
+		if (!empty($errors)) {
+			header('HTTP/1.1 422 Unprocessable Entity');
+			header('Content-Type: application/json; charset=UTF-8');
+			echo json_encode([
+				'errors'    => $errors
+			]);
+			exit;
+		}
 		$forum->setTopicsubId($_POST["topicsubId"]);
 		$forum->setModuleId($_POST["moduleId"]);
 		$forum->setReply($_POST["reply"]);
@@ -35,7 +28,7 @@ if ($_POST) {
 		$forum->AddReply();
 		echo json_encode([
 			'growl'		=> true,
-			'message'	=> 'Se ha creado con éxito la aportación', 
+			'message'	=> 'Se ha creado con éxito la aportación',
 			'reload'	=> true
 		]);
 		exit;
@@ -54,16 +47,16 @@ if ($_POST) {
 $smarty->assign('topicsubId', $_GET["topicsubId"]);
 $smarty->assign('positionId', $User["positionId"]);
 $smarty->assign('userId', $User["userId"]);
-$smarty->assign('moduleId', $_GET['id']); 
-$forum->setTopicsubId($_GET["topicsubId"]); 
-$replies = $forum->Replies(); 
+$smarty->assign('moduleId', $_GET['id']);
+$forum->setTopicsubId($_GET["topicsubId"]);
+$replies = $forum->Replies();
 // echo "<pre>"; print_r($replies);
 // exit;
-$smarty->assign('replies', $replies); 
+$smarty->assign('replies', $replies);
 $topic = $forum->TopicsubInfo();
-$smarty->assign('topic', $topic); 
+$smarty->assign('topic', $topic);
 //echo $_GET["course"];
-$smarty->assign('id', $_GET["id"]); 
+$smarty->assign('id', $_GET["id"]);
 if ($User["positionId"] != 1 && $User["positionId"] != 4)
 	$smarty->assign('mnuMain', "modulo");
 $permiso = true;
@@ -73,9 +66,9 @@ $infoForo = $forum->TopicInfo();
 $activity->setActivityId($infoSubForo['activityId']);
 $infoActividad = $activity->Info();
 //print_r($infoForo);
-$fecha_actual = strtotime(date("Y-m-d H:i:00",time()));
-$fecha_actividad = strtotime($infoActividad['finalDateNoFormat']);  
-if($User['type'] == "student" && $fecha_actual > $fecha_actividad && $infoForo['tipo'] == "discucion"){
+$fecha_actual = strtotime(date("Y-m-d H:i:00", time()));
+$fecha_actividad = strtotime($infoActividad['finalDateNoFormat']);
+if ($User['type'] == "student" && $fecha_actual > $fecha_actividad && $infoForo['tipo'] == "discucion") {
 	$permiso = false;
-} 
+}
 $smarty->assign('permiso', $permiso);

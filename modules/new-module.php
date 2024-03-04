@@ -1,9 +1,4 @@
 <?php
-		
-	/* For Session Control - Don't remove this */
-	$user->allow_access(37);	
-	/* End Session Control */
-	
 	if($_POST)
 	{
 		if(empty($_POST['nombre'])){
@@ -42,7 +37,3 @@
 		} 
 		exit;
 	}
-
-	
-
-	//$smarty->assign('major',$major->Enumerate());

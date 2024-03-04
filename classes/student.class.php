@@ -2539,7 +2539,6 @@ class Student extends User
 		$sql = "SELECT semesterId FROM academic_history WHERE courseId = '{$cursoId}' AND userId = '{$this->userId}' AND type = 'baja' ORDER BY academicHistoryId DESC";
 		$this->Util()->DB()->setQuery($sql);
 		$semestre = $this->Util()->DB()->GetSingle();
-		// echo $sql;
 		return $semestre;
 	}
 	//Obtiene el periodo en el que se dio de alta en el curso.
@@ -2547,8 +2546,7 @@ class Student extends User
 	{
 		$sql = "SELECT IF(semesterId = 0, 1, semesterId) as semesterId FROM academic_history WHERE courseId = '{$cursoId}' AND userId = '{$this->userId}' AND type = 'alta' ORDER BY academicHistoryId DESC";
 		$this->Util()->DB()->setQuery($sql);
-		$periodo = $this->Util()->DB()->GetSingle();
-		// echo $sql;
+		$periodo = $this->Util()->DB()->GetSingle(); 
 		return $periodo;
 	}
 
@@ -2610,7 +2608,7 @@ class Student extends User
 	function update()
 	{
 		$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', email = '{$this->email}', phone = '{$this->phone}', coordination = '{$this->coordination}', adscripcion ='{$this->adscripcion}', rfc = '{$this->rfc}', funcion = '{$this->funcion}' WHERE userId = {$this->getUserId()}";
-		
+
 		$this->Util()->DB()->setQuery($sql);
 		$resultado = $this->Util()->DB()->UpdateData();
 		return $resultado;
@@ -2631,10 +2629,11 @@ class Student extends User
 		$primaryKey = 'userId';
 		$columns = array(
 			array('db' => 'userId',			'dt' => 'userId'),
-			array('db' => 'avatar',			'dt' => 'foto',
-				'formatter'	=> function($d){
-					$imagen = $d != "" ? WEB_ROOT."/alumnos/avatar/".$d : WEB_ROOT."/images/logos/iap_logo.JPG";
-					return "<img src='".$imagen."'>";
+			array(
+				'db' => 'avatar',			'dt' => 'foto',
+				'formatter'	=> function ($d) {
+					$imagen = $d != "" ? WEB_ROOT . "/alumnos/avatar/" . $d : WEB_ROOT . "/images/logos/iap_logo.JPG";
+					return "<img src='" . $imagen . "'>";
 				}
 			),
 			array('db' => 'names', 			'dt' => 'nombre'),
@@ -2645,10 +2644,10 @@ class Student extends User
 				'db' => 'userId', 'dt' => 'acciones',
 				'formatter' => function ($d, $row) {
 					return '
-					<a href="'.WEB_ROOT.'/graybox.php?page=edit-student&id='.$d.'" data-target="#ajax" data-toggle="modal" data-width="1000px">
+					<a href="' . WEB_ROOT . '/graybox.php?page=edit-student&id=' . $d . '" data-target="#ajax" data-toggle="modal" data-width="1000px">
 					 	<i class="fas fa-pen-square fa-2x pointer spanEdit" data-toggle="tooltip" data-placement="top" title="Editar"></i> 
 					</a>
-					<a href="'.WEB_ROOT.'/graybox.php?page=student-curricula&id='.$d.'" data-target="#ajax" data-toggle="modal" data-width="1000px">
+					<a href="' . WEB_ROOT . '/graybox.php?page=student-curricula&id=' . $d . '" data-target="#ajax" data-toggle="modal" data-width="1000px">
 						<i class="fas fa-book fa-2x text-dark pointer" data-toggle="tooltip" data-placement="top" title="Ver Curricula Estudiante"></i> 
 					</a>';
 				}

@@ -83,11 +83,13 @@ class User extends Main
 	protected $role;
 	protected $module;
 
-	public function setRole($value) {
+	public function setRole($value)
+	{
 		$this->role = $value;
 	}
 
-	public function setModule($value){
+	public function setModule($value)
+	{
 		$this->module = $value;
 	}
 
@@ -1124,6 +1126,7 @@ class User extends Main
 		}
 		$sql = "SELECT personal.personalId, personal.username, personal.name, personal.lastname_paterno, personal.lastname_materno, personal.foto, personal.correo, personal.celular, roles.name as perfil FROM personal INNER JOIN roles ON roles.roleId = personal.role_id WHERE username = '" . $this->username . "' AND MD5(passwd) = '" . md5($this->password) . "' and deleted_at IS NULL";
 		$this->Util()->DB()->setQuery($sql);
+		echo $sql;
 		$row = $this->Util()->DB()->GetRow();
 		if ($row) { //Si es usuario de tipo personal 
 			$card['userId'] = $row['personalId'];
@@ -1138,14 +1141,13 @@ class User extends Main
 			$_SESSION["lastClick"] = time();
 			return true;
 		} else { //Si es un estudiante 
-			$this->Util()->DB()->setQuery(
-				"SELECT 
-					* 
-			   FROM 
-					user 
-				WHERE 
-					controlNumber = '" . $this->username . "'"
-			);
+			$sql = "SELECT 
+							* 
+					FROM 
+							user 
+						WHERE 
+							controlNumber = '" . $this->username . "'";
+			$this->Util()->DB()->setQuery($sql);
 			$row = $this->Util()->DB()->GetRow();
 
 			if ($row) {

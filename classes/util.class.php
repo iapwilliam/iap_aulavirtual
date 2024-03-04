@@ -1638,6 +1638,5 @@ class Util extends ErrorLms
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;
-	}
- 
+	} 
 }

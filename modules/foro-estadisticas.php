@@ -8,7 +8,7 @@
     //Obtenemos todos los estudiantes del grupo
     $lstGrupo = $group->getGrupo($_GET['grupo']);
 	$module->setCourseModuleId($_GET['grupo']);
-	$info = $module->InfoCourseModule();
+	$info = $module->getCourseModule();
 	$periodoActual = $info["semesId"];  
  
 	foreach ($lstGrupo as $key => $value) {

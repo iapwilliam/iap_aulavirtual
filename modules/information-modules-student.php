@@ -1,26 +1,20 @@
-<?php
-		
-	/* For Session Control - Don't remove this */
-//	$user->allow_access(8);	
+<?php 
+$module->setCourseModuleId($_GET["id"]);
+$myModule = $module->getCourseModule();
 
-	$module->setCourseModuleId($_GET["id"]);
-	$myModule = $module->InfoCourseModule();
-	
-	$empleados = $personal->getPersonal();
-	$smarty->assign('empleados', $empleados);
-	
-	$date = date("d-m-Y");
-	$smarty->assign('date', $date);
+$empleados = $personal->getPersonal();
+$smarty->assign('empleados', $empleados);
 
-	$smarty->assign('invoiceId', $_GET["id"]);
-	$smarty->assign('myModule', $myModule);
+$date = date("d-m-Y");
+$smarty->assign('date', $date);
 
-	$majorModality = $activity->GetMajorModality();
-	$smarty->assign('majorModality', $majorModality);
+$smarty->assign('invoiceId', $_GET["id"]);
+$smarty->assign('myModule', $myModule);
 
-	$smarty->assign('id', $_GET["id"]);
-	
-	$smarty->assign('mnuMain', "modulo");
-	$smarty->assign('mnuSubmain','informacion');
+$majorModality = $activity->GetMajorModality();
+$smarty->assign('majorModality', $majorModality);
 
-?>
+$smarty->assign('id', $_GET["id"]);
+
+$smarty->assign('mnuMain', "modulo");
+$smarty->assign('mnuSubmain', 'informacion');

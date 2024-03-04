@@ -409,7 +409,6 @@ class Forum extends Main
 
 	public function Enumerate()
 	{
-
 		$sql = "
 				SELECT * FROM topic
 				LEFT JOIN user ON user.userId = topic.userId
@@ -562,7 +561,7 @@ class Forum extends Main
 		//echo $this->moduleId;exit;
 		$module = new Module;
 		$module->setCourseModuleId($this->moduleId);
-		$detalleModulo = $module->InfoCourseModule();
+		$detalleModulo = $module->getCourseModule();
 		//echo "<pre>". print_r($detalleModulo)."</pre>"; exit;
 		//	echo $detalleModulo['courseId'];
 
@@ -580,7 +579,7 @@ class Forum extends Main
 		$group->setCourseId($detalleModulo['courseId']);
 		$grupo = $group->DefaultGroup();
 		$visto = "";
-		if($detalleModulo['courseId'] != 162){
+		if ($detalleModulo['courseId'] != 162) {
 			$x = 0;
 			foreach ($grupo as $alumnos) {
 				if ($x == 0)
@@ -589,7 +588,7 @@ class Forum extends Main
 					$visto = $visto . "," . $alumnos['alumnoId'] . "u";
 				$x++;
 			}
-		}else{
+		} else {
 			$visto = $detalleModulo['access'][0] . "p,1p";
 		}
 

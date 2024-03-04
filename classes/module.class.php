@@ -191,7 +191,7 @@ class Module extends Course
 		return $result;
 	}
 
-	public function InfoCourseModule()
+	public function getCourseModule()
 	{
 		//creamos la cadena de seleccion
 		$sql = "SELECT 
@@ -228,28 +228,17 @@ class Module extends Course
 					LEFT JOIN subject_module ON course_module.subjectModuleId = subject_module.subjectModuleId
 					LEFT JOIN	subject ON subject.subjectId = subject_module.subjectId	
 					LEFT JOIN	major ON major.majorId = subject.tipo	
-					WHERE
-							courseModuleId='" . $this->courseModuleId . "'";
-		//configuramos la consulta con la cadena de actualizacion
-		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y obtenemos el resultado
-		$result = $this->Util()->DB()->GetRow();
-
-		$explodedInitialDate = explode("-", $result["initialDate"]);
-		//$date = mktime(0, 0, 0, $explodedInitialDate[1], $explodedInitialDate[2], $explodedInitialDate[0]); 
-		//$date = @mktime(0, 0, 0, $explodedInitialDate[1], $explodedInitialDate[2], $explodedInitialDate[0]);
-		$date = mktime(0, 0, 0, $explodedInitialDate[1], $explodedInitialDate[2], intval($explodedInitialDate[0]));
-
-		$result["name"] = $result["name"];
-
-
-		$result["week"] = date('W', $date);
-
-		$result["initialDate"] = $this->Util->FormatDateBack($result["initialDate"]);
-		$result["finalDate"] = $this->Util->FormatDateBack($result["finalDate"]);
-		$result["fechaContrato"] = $this->Util->FormatDateBack($result["fechaContrato"]);
-		$result["access"] = explode("|", $result["access"]);
-
+					WHERE courseModuleId='" . $this->courseModuleId . "'"; 
+		$this->Util()->DB()->setQuery($sql); 
+		$result = $this->Util()->DB()->GetRow(); 
+		$explodedInitialDate = explode("-", $result["initialDate"]); 
+		$date = mktime(0, 0, 0, $explodedInitialDate[1], $explodedInitialDate[2], intval($explodedInitialDate[0])); 
+		$result["name"] = $result["name"]; 
+		$result["week"] = date('W', $date); 
+		$result["initialDate"] = $this->Util()->FormatDateBack($result["initialDate"]);
+		$result["finalDate"] = $this->Util()->FormatDateBack($result["finalDate"]);
+		$result["fechaContrato"] = $this->Util()->FormatDateBack($result["fechaContrato"]);
+		$result["access"] = explode("|", $result["access"]); 
 		$result["welcomeTextDecoded"] = html_entity_decode($result["welcomeText"]);
 		$result["introductionDecoded"] = html_entity_decode($result["introduction"]);
 		$result["intentionsDecoded"] = html_entity_decode($result["intentions"]);
@@ -259,10 +248,7 @@ class Module extends Course
 		$result["methodologyDecoded"] = html_entity_decode($result["methodology"]);
 		$result["politicsDecoded"] = html_entity_decode($result["politics"]);
 		$result["evaluationDecoded"] = html_entity_decode($result["evaluation"]);
-		$result["bibliographyDecoded"] = html_entity_decode($result["bibliography"]);
-		// $result["claveMateria"] = html_entity_decode($result["claveMateria"]);
-
-		//print_r($result);
+		$result["bibliographyDecoded"] = html_entity_decode($result["bibliography"]);  
 		return $result;
 	}
 

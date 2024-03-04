@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                                 <form id="frmLogin" class="pt-3" method="POST">
-                                    <input type="hidden" name="type" value="doLogin" />
+                                    <input type="hidden" name="option" value="doLogin" />
                                     <div class="form-group">
                                         <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Usuario" />
                                     </div>

@@ -9,13 +9,15 @@
         <td>{$subject.opcionEShort}</td>
         <td>{$subject.answer}</td>
         <td>
-            <a href="{$WEB_ROOT}/graybox.php?page=edit-question&id={$subject.testId}&auxTpl=admin&cId={$myModule.courseModuleId}" data-target="#ajax" data-toggle="modal">
-                <i class="fas fa-edit fa-lg spanEdit" id="d-{$subject.subjectId}" name="d-{$subject.name}" title="Editar"></i>
-            </a>            
+            <a href="{$WEB_ROOT}/graybox.php?page=edit-question&id={$subject.testId}"
+                data-target="#ajax" data-toggle="modal">
+                <i class="fas fa-edit fa-lg spanEdit" id="d-{$subject.subjectId}" name="d-{$subject.name}"
+                    title="Editar"></i>
+            </a>
         </td>
     </tr>
 {foreachelse}
-	<tr>
-    	<td colspan="9" class="text-center">No se encontró ningún registro.</td>
-	</tr>
+    <tr>
+        <td colspan="9" class="text-center">No se encontró ningún registro.</td>
+    </tr>
 {/foreach}

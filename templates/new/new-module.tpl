@@ -19,7 +19,7 @@
                     <input type="text" name="frmClave" id="frmClave" class="form-control" />
                 </div>
                 <div class="form-group col-md-2">
-                    <label for="semesterId">Cuatrimestre/Semestre:</label>
+                    <label for="semesterId">Fase:</label>
                     <input type="number" name="semesterId" id="semesterId" class="form-control" value="1"
                         maxlength="2" />
                 </div>

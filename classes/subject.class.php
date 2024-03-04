@@ -399,50 +399,12 @@ class Subject extends Main
 		return $this->periodoId;
 	}
 
-
-
-
-
-	/********************************************************************************************************/
-	public function Enumerate_p()
-	{
-		$this->Util()->DB()->setQuery("SELECT *, major.name AS majorName, subject.name AS name FROM subject 
-				LEFT JOIN major ON major.majorId = subject.tipo
-			WHERE
-				subjectId = '" . $this->subjectId . "'");
-		//$result = $this->Util()->DB()->GetResult();
-		$res = $this->Util()->DB()->GetRow();
-		return $res;
-	}
-	/*****************************************************************************************************************+*/
-	public function Enumerate()
-	{
-
-		$this->Util()->DB()->setQuery('
-				SELECT 
-					*, 
-					major.name AS majorName, 
-					subject.name AS name 
-				FROM 
-					subject 
-				LEFT JOIN 
-					major ON major.majorId = subject.tipo
-				ORDER BY   
-					FIELD (major.name,"MAESTRIA","DOCTORADO","CURSO","ESPECIALIDAD") ASC, subject.name');
+	public function getSubjects($where = "") {
+		$sql = "SELECT subject.*, major.name as majorName FROM subject INNER JOIN major ON major.majorId = subject.tipo WHERE deleted_at IS NULL {$where}";
+		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
-
-		// ECHO '<PRE>'; PRINT_R($result);
-		// EXIT;
-
-		foreach ($result as $key => $res) {
-			$this->Util()->DB()->setQuery("
-					SELECT COUNT(*) FROM subject_module WHERE subjectId ='" . $res["subjectId"] . "'");
-
-			$result[$key]["modules"] = $this->Util()->DB()->GetSingle();
-		}
 		return $result;
-	}
-
+	} 
 
 	public function EnumerateGroups()
 	{
@@ -890,7 +852,7 @@ class Subject extends Main
 						politics='" 	. $this->politics . "', 
 						tipo = '" . $this->tipo . "',
 						totalPeriods = " . $this->totalPeriods . "
-						WHERE subjectId='" . $this->subjectId . "'"; 
+						WHERE subjectId='" . $this->subjectId . "'";  
 		$this->Util()->DB()->setQuery($sql); 
 		$result = $this->Util()->DB()->UpdateData(); 
 		return $result;
@@ -1462,7 +1424,6 @@ class Subject extends Main
 
 	function dt_subjects_request()
 	{
-		//SELECT *,  major.name AS majorName, subject.name AS name FROM  subject LEFT JOIN  major ON major.majorId = subject.tipo ORDER BY  FIELD (major.name,"MAESTRIA","DOCTORADO","CURSO","ESPECIALIDAD") ASC, subject.name')
 		$table = 'subject INNER JOIN major ON major.majorId = subject.tipo';
 		$primaryKey = 'subjectId';
 		$columns = array(
@@ -1498,5 +1459,12 @@ class Subject extends Main
 		);
 
 		return SSP::complex($_POST, $table, $primaryKey, $columns);
+	}
+
+	function getCountModulesSubject() {
+		$sql = "SELECT COUNT(*) FROM subject_module WHERE subjectId = {$this->subjectId}";
+		$this->Util()->DB()->setQuery($sql); 
+		$result = $this->Util()->DB()->GetSingle();
+		return $result;
 	}
 }

@@ -4,7 +4,7 @@
 //	$user->allow_access(8);	
 
 $module->setCourseModuleId($_GET["id"]);
-$myModule = $module->InfoCourseModule();
+$myModule = $module->getCourseModule();
 
 $empleados = $personal->getPersonal();
 $smarty->assign('empleados', $empleados);

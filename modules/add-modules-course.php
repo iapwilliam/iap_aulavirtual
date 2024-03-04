@@ -1,8 +1,4 @@
 <?php
-		
-	/* For Session Control - Don't remove this */
-	$user->allow_access(37);	
-
 	if($_POST)
 	{
 		$module->setCourseId($_GET["id"]);
@@ -20,7 +16,7 @@
 		header("Location:" . WEB_ROOT . "/history-subject");
 		exit;
 	}
-
+ 
 	$course->setCourseId($_GET["id"]);
 	$modules = $course->FreeCourseModules();
 
@@ -29,7 +25,7 @@
 		$smarty->assign('noModules', 1);
 	}
 	
-	$empleados = $personal->getPersonal("AND role_id <> 1", 'lastname_paterno');
+	$empleados = $personal->getPersonal("", 'lastname_paterno');
 	$smarty->assign('empleados', $empleados);
 	
 	$date = date("d-m-Y");

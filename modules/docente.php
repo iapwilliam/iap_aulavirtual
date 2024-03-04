@@ -4,11 +4,11 @@
 //	$user->allow_access(8);
 
 $module->setCourseModuleId($_GET["id"]);
-$myModule = $module->InfoCourseModule();
+$myModule = $module->getCourseModule();
 
 
 $personal->setPersonalId($myModule["access"][1]);
-$docente = $personal->Info();
+$docente = $personal->getPersonal();
 
 $smarty->assign('docente', $docente);
 

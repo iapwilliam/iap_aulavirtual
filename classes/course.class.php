@@ -337,180 +337,12 @@ class Course extends Subject
 	private $courseId;
 	public function setCourseId($value)
 	{
-		$this->Util()->ValidateInteger($value);
 		$this->courseId = $value;
-		//echo $this->courseId;
 	}
 
 	public function getCourseId()
 	{
 		return $this->courseId;
-	}
-
-
-	public function EnumerateCount()
-	{
-
-		$filtro = "";
-
-		// if($this->aparece){
-		// $filtro .= " and course.apareceTabla ='si'";
-		// }
-
-		$sql =   "SELECT COUNT(*) FROM course";
-
-		// exit;
-		$this->Util()->DB()->setQuery($sql);
-		return $this->Util()->DB()->GetSingle();
-	}
-
-
-	public function Infocoursem()
-	{
-		$sql = "SELECT *, major.name AS majorName, subject.name AS name  FROM course
-				LEFT JOIN subject ON course.subjectId = subject.subjectId 
-				LEFT JOIN major ON major.majorId = subject.tipo where course.courseId='" . $this->courseId . "' ";
-		$this->Util()->DB()->setQuery($sql);
-		$datos = $this->Util()->DB()->GetResult();
-
-		foreach ($datos as $dato) {
-			$majorName = $dato['majorName'];
-		}
-		return $majorName;
-	}
-
-	public function EnumerateByPage($currentPage, $rowsPerPage, $pageVar, $pageLink, &$arrPages)
-	{
-
-		$filtro = "";
-
-		// if($this->aparece){
-		// $filtro .= " and course.apareceTabla ='si'";
-		// }
-
-
-		if ($this->activo) {
-			$filtro .= " and course.active ='" . $this->activo . "'";
-		}
-
-
-		if ($this->modalidad) {
-			$filtro .= " and course.modality ='" . $this->modalidad . "'";
-		}
-
-		if ($this->curricula) {
-			$filtro .= " and majorId ='" . $this->curricula . "'";
-		}
-
-		if ($this->totalPeriods) {
-			$filtro .= " AND totalPeriods > 0";
-		}
-
-		//variable donde guardaremos los registros de la pagina actual y que se regresara para su visualizacion
-		$result = NULL;
-
-		// Verificar que este definido el metodo CountTotalRows en esta clase
-		//$totalTableRows...total de registros que hay en la tabla, usado para calcular el numero de paginas
-		$totalTableRows = $this->EnumerateCount();
-
-		//***calculamos el numero total de paginas, si hay fracciones es porque los ultimos 
-		//		registros no completan la pagina ($rowsPerPage) pero se calculan como una pagina mas con ceil()
-		@$totalPages = ceil($totalTableRows / $rowsPerPage);
-		// exit;
-
-		//validamos el valor de la pagina...no puede ser menor a 1 ni mayor al total de las paginas
-		if ($currentPage < 1)
-			$currentPage = 1;
-		if ($currentPage > $totalPages)
-			$currentPage = $totalPages;
-
-		// ***calculamos y guardamos el numero de registro inicial que se va a rcuperar
-		$arrPages['rowBegin']	= ($currentPage * $rowsPerPage) - $rowsPerPage + 1;
-		//calcular el desplazamiento de los registros a recuperar
-		$rowOffset = $arrPages['rowBegin'] - 1;
-
-		$sql = '
-				SELECT *, major.name AS majorName, subject.name AS name  FROM course
-				LEFT JOIN subject ON course.subjectId = subject.subjectId 
-				LEFT JOIN major ON major.majorId = subject.tipo
-				where 1 ' . $filtro . '
-				ORDER BY 
-				FIELD (major.name,"MAESTRIA","DOCTORADO","CURSO","ESPECIALIDAD") asc, subject.name, modality desc, initialDate desc,  active
-				
-				LIMIT ' . $rowOffset . ', ' . $rowsPerPage;
-		// exit;
-		$this->Util()->DB()->setQuery($sql);
-
-		$result = $this->Util()->DB()->GetResult();
-		// echo "<pre>"; print_r($result);
-		// exit;
-
-		foreach ($result as $key => $res) {
-			$sql = "SELECT COUNT(*) FROM subject_module WHERE subjectId = '" . $res["subjectId"] . "'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["modules"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT COUNT(*) FROM user_subject WHERE courseId = '" . $res["courseId"] . "' AND status = 'inactivo'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["alumnInactive"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT COUNT(user_subject.registrationId) 
-							FROM user_subject 
-							INNER JOIN user 
-								ON user_subject.alumnoId = user.userId 
-							WHERE user_subject.courseId = '" . $res["courseId"] . "' AND user_subject.status = 'activo' AND user.activo = 1";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["alumnActive"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT COUNT(*) FROM course_module WHERE courseId ='" . $res["courseId"] . "' AND active = 'si'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["courseModuleActive"] = $this->Util()->DB()->GetSingle();
-
-			$sql = "SELECT COUNT(*) FROM course_module WHERE courseId = '" . $res["courseId"] . "'";
-			$this->Util()->DB()->setQuery($sql);
-			$result[$key]["courseModule"] = $this->Util()->DB()->GetSingle();
-		}
-
-		//print_r($result);
-		//$countPageRows...total de registros recuperados en la pagina actual, 
-		$countPageRows = count($result);
-		//***guardamos el numero de registros recuperados en la pagina actual
-		$arrPages['countPageRows'] = $countPageRows;
-		//***calculamos y guardamos el numero de registro final que se va a recuperar
-		$arrPages['rowEnd']		= $arrPages['rowBegin'] + $countPageRows - 1;
-		//***guardamos el numero total de registros que hay en la tabla
-		$arrPages['totalTableRows'] = $totalTableRows;
-		//***guardamos los registros por pagina a mostrar
-		$arrPages['rowsPerPages'] = $rowsPerPages;
-		//***guardamos la pagina actual que estamos mostrando
-		$arrPages['currentPage'] = $currentPage;
-		//***guardamos el total de paginas
-		$arrPages['totalPages']	= $totalPages;
-
-		//***por default los enlaces inicio y anterior estan vacios
-		$arrPages['startPage'] = '';
-		$arrPages['previusPage'] = '';
-		if ($currentPage > 1) {
-			//***si la pagina actual es mayor a 1, se activa el enlace anterior
-			$arrPages['previusPage'] = $pageLink . '/' . $pageVar . '/' . ($currentPage - 1);
-			//***si la pagina actual es mayor a 2, se activa el enlace inicio
-			if ($currentPage > 2)
-				$arrPages['startPage'] = $pageLink . '/' . $pageVar . '/' . '1';
-		}
-		//***por default los enlaces siguiente y fin estan vacios
-		$arrPages['nextPage'] = '';
-		$arrPages['endPage'] = '';
-		if ($currentPage < $arrPages['totalPages']) {
-			//***si la pagina actual es menor al total de paginas, se activa el enlace siguiente
-			$arrPages['nextPage'] = $pageLink . '/' . $pageVar . '/' . ($currentPage + 1);
-			//***si la pagina actual es menor al (total de paginas - 1), se activa el enlace fin
-			if ($currentPage < ($arrPages['totalPages'] - 1))
-				$arrPages['endPage'] = $pageLink . '/' . $pageVar . '/' . $arrPages['totalPages'];
-		}
-		//enlace hacia la misma pagina para poder actualizar los valores de los datos
-		$arrPages['refreshPage'] = $pageLink . '/' . $pageVar . '/' . $currentPage;
-		//regresamos los registros recuperados de la pagina actual
-		return $result;
 	}
 
 	public function EnumerateCourse()
@@ -578,110 +410,37 @@ class Course extends Subject
 						( 	
 						 	subjectId,
 							initialDate,
-							finalDate,
-							daysToFinish,
-							`group`,
-							turn,
-							scholarCicle,
-							active,
-							modality,
-							libro,
-							folio,
-							access,
-							dias,
-							horario,
-							apareceTabla,
-							listar,
-							tipo,
-							temporalGroup
+							finalDate, 
+							grupo,
+							access
 						)
 					VALUES (
 							'" . $this->getSubjectId() . "',
 							'" . $this->initialDate . "',
-							'" . $this->finalDate . "',
-							'" . $this->daysToFinish . "',
+							'" . $this->finalDate . "', 
 							'" . $this->group . "',
-							'" . $this->turn . "',
-							'" . $this->scholarCicle . "',
-							'" . $this->active . "',
-							'" . $this->modality . "',
-							'" . $this->libro . "',
-							'" . $this->folio . "',
-							'" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "',
-							'" . $this->dias . "',
-							'" . $this->horario . "',
-							'" . $this->aparece . "',
-							'" . $this->listar . "',
-							'" . $this->tipoCuatri . "',
-							" . $this->temporalGroup . "
+							'" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "'
 							)";
-		//configuramos la consulta con la cadena de insercion
 		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y guardamos el resultado, que sera el ultimo positionId generado
 		$result = $this->Util()->DB()->InsertData();
-		// if ($result > 0) {
-		// 	//si el resultado es mayor a cero, se inserto el nuevo registro con exito...se regresara true
-		// 	$result = true;
-		// 	$this->Util()->setError(90000, 'complete', "Se ha abierto un nuevo curso");
-		// } else {
-		// 	//si el resultado es cero, no se pudo insertar el nuevo registro...se regresara false
-		// 	$result = false;
-		// 	$this->Util()->setError(90010, 'error');
-		// }
 		$this->Util()->PrintErrors();
 		return $result;
 	}
 
 
-	public function Update()
+	public function updateCourse()
 	{
-		if ($this->Util()->PrintErrors()) {
-			// si hay errores regresa false
-			return false;
-		}
-		//si no hay errores
-		//			print_r($this);
-		//creamos la cadena de actualizacion
 		$sql = "UPDATE 
 						course
 					SET
 						subjectId='" 	. $this->getSubjectId() . "', 
 						initialDate='" 	. $this->initialDate . "',
-						finalDate='" 	. $this->finalDate . "',
-						daysToFinish='" 	. $this->daysToFinish . "',
-						active='" 	. $this->active . "',
-						`group`='" 	. $this->group . "',
-						turn='" 	. $this->turn . "',
-						scholarCicle='" 	. $this->scholarCicle . "',
-						folio='" 	. $this->folio . "',
-						libro='" 	. $this->libro . "',
-						backDiploma='" 	. $this->backDiploma . "',
-						modality='" 	. $this->modality . "',
-						ponenteText='" 	. $this->ponenteText . "',
-						fechaDiploma='" 	. $this->fechaDiploma . "',
-						dias='" . $this->dias . "',
-						horario='" . $this->horario . "',
-						tipo='" . $this->tipoCuatri . "',
-						apareceTabla='" . $this->aparece . "',
-						listar='" . $this->listar . "',
-						access='" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "',
-						temporalGroup = " . $this->temporalGroup . "
-						WHERE courseId='" . utf8_decode($this->courseId) . "'";
-		//configuramos la consulta con la cadena de actualizacion
+						finalDate='" 	. $this->finalDate . "', 
+						`group`='" 	. $this->group . "', 
+						access='" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "'
+						WHERE courseId='{$this->courseId}'";
 		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y guardamos el resultado, que sera el numero de columnas afectadas
-		$this->Util()->DB()->UpdateData();
-		$result = 1;
-		if ($result > 0) {
-			//si el resultado es mayor a cero, se actualizo el registro con exito
-			$result = true;
-			$this->Util()->setError(90002, 'complete', 'El curso se ha actualizado correctamente');
-		} else {
-			//si el resultado es cero, no se pudo modificar el registro...se regresa false
-			$result = false;
-			$this->Util()->setError(90011, 'error', "No se pudo modificar el curso");
-		}
-		$this->Util()->PrintErrors();
+		$result = $this->Util()->DB()->UpdateData();
 		return $result;
 	}
 
@@ -714,74 +473,84 @@ class Course extends Subject
 		return $result;
 	}
 
-
-
-	public function Info_modality()
+	function getCourse()
 	{
-		//creamos la cadena de seleccion
-		$sql = "SELECT 
-						*, major.name AS majorName, subject.name AS name 
-					FROM
-						course
-					LEFT JOIN subject ON subject.subjectId = course.subjectId
-					LEFT JOIN major ON major.majorId = subject.tipo
-					WHERE
-						courseId='" . $this->courseId . "'   &&  modality='" . $this->modality . "'  ";
-		//configuramos la consulta con la cadena de actualizacion
-
-		//$sql="select ";
-
+		$sql = "SELECT major.name as major_name, subject.subjectId, subject.name as subject_name, course.courseId, `course`.`group`, course.initialDate, course.finalDate, course.access, subject.totalPeriods FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE courseId = {$this->courseId}";
 		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y obtenemos el resultado
 		$result = $this->Util()->DB()->GetRow();
-		if ($result) {
-			//				$result = $this->Util->EncodeRow($result);
-		}
 
 		$result["access"] = explode("|", $result["access"]);
-
-		$user = new User;
-		$user->setUserId($result["access"][0]);
-		$info = $user->Info();
-		$result["encargado"] = $info;
+		$personal = new Personal;
+		$personalData = $personal->getPersonal("AND personalId = {$result['access'][0]}")[0];
+		$result["encargado"] = $personalData;
 		return $result;
 	}
 
-
-
-	public function Info()
+	function getCourses($where = "")
 	{
-		//creamos la cadena de seleccion
-		$sql = "SELECT 
-						*, 
-						major.name AS majorName, 
-						subject.name AS name,
-						course.tipo as tipoCuatri,
-						subject.totalPeriods
-					FROM
-						course
-					LEFT JOIN subject ON subject.subjectId = course.subjectId
-					LEFT JOIN major ON major.majorId = subject.tipo
-					WHERE
-						courseId='" . $this->courseId . "'";
-		//configuramos la consulta con la cadena de actualizacion
-
-		//$sql="select ";
-
+		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, `course`.`group` FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y obtenemos el resultado
-		$result = $this->Util()->DB()->GetRow();
-		if ($result) {
-			//				$result = $this->Util->EncodeRow($result);
-		}
-
-		$result["access"] = explode("|", $result["access"]);
-
-		$user = new User;
-		$user->setUserId($result["access"][0]);
-		$info = $user->Info();
-		$result["encargado"] = $info;
+		$result = $this->Util()->DB()->GetResult();
 		return $result;
+	}
+
+	function dt_courses_request($subjectId)
+	{
+		$table = 'course INNER JOIN subject ON subject.subjectId = course.subjectId';
+		$primaryKey = 'courseId';
+		$columns = array(
+			array('db' => 'course.courseId',	'dt' => 'courseId'),
+			array('db' => 'subject.name',		'dt' => 'nombre'),
+			array('db' => '`course`.`group`',	'dt' => 'grupo'),
+			array('db' => 'course.initialDate',	'dt' => 'fecha_inicial'),
+			array('db' => 'course.finalDate',	'dt' => 'fecha_final'),
+			array('db' => 'courseId',	'dt' => 'modulos', 'formatter'	=> function ($id) {
+				$this->setCourseId($id);
+				$courseData = $this->getCourse();
+				$modulesCourse = $this->getCountModulesCourse();
+				$this->setSubjectId($courseData['subjectId']);
+				$modulesSubject = $this->getCountModulesSubject();
+				return "$modulesCourse/$modulesSubject
+				<a href='" . WEB_ROOT . "/graybox.php?page=view-modules-course&id=" . $id . "' title='Ver Modulos de Curso' data-target='#ajax' data-toggle='modal' >
+					<i class='far fa-window-restore text-info fa-lg'></i>
+				</a>  
+				<a href='" . WEB_ROOT . "/graybox.php?page=add-modules-course&id=" . $id . "' title='Agregar Modulo a Curso' data-target='#ajax' data-toggle='modal' style='color:#000' >
+					<i class='fas fa-plus-circle text-dark fa-lg'></i>
+				</a>";
+			}),
+			array('db' => 'courseId',	'dt' => 'alumnos', 'formatter'	=> function ($id) {
+				$sql = "SELECT * FROM user_subject WHERE user_subject.courseId = $id AND user_subject.status = 'activo'";
+				$this->Util()->DB()->setQuery($sql);
+				$activos = $this->Util()->DB()->GetTotalRows();
+				$sql = "SELECT * FROM user_subject WHERE user_subject.courseId = $id AND user_subject.status = 'inactivo'";
+				$this->Util()->DB()->setQuery($sql);
+				$inactivos = $this->Util()->DB()->GetTotalRows();
+				return "<form class='form d-inline' action='" . WEB_ROOT . "/ajax/new/studentCurricula.php' method='POST' id='activeStudent" . $id . "'>
+					<input type='hidden' name='type' value='StudentAdmin'>
+					<input type='hidden' name='id' value='" . $id . "'>
+					<input type='hidden' name='tip' value='Activo'>
+					<button type='submit' class='pointer spanActive badge badge-success rounded-circle' data-target='#ajax' data-toggle='modal' title='Alumnos Activos'>$activos</button>
+				</form> / <form class='form d-inline' action='" . WEB_ROOT . "/ajax/new/studentCurricula.php' method='POST' id='inactiveStudent" . $id . "'>
+					<input type='hidden' name='type' value='StudentInactivoAdmin'>
+					<input type='hidden' name='id' value='" . $id . "'>
+					<input type='hidden' name='tip' value='Inactivo'>
+					<button type='submit' class='pointer spanInactive badge badge-danger rounded-circle' data-target='#ajax' data-toggle='modal' title='Alumnos Inactivos'>" . $inactivos . "</button>
+				</form>";
+			}),
+			array('db' => 'courseId',	'dt' => 'acciones', 'formatter'	=> function ($id) {
+				return "<a class='btn btn-primary' href='" . WEB_ROOT . "/graybox.php?page=edit-course&id=" . $id . "' data-target='#ajax' data-toggle='modal' title='Editar'>Editar</a>";
+			}),
+		);
+		$where = "subject.subjectId = " . $subjectId;
+
+		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
+	}
+
+	public function getCountModulesCourse()
+	{
+		$sql = "SELECT COUNT(*) FROM course_module WHERE courseId = {$this->courseId}";
+		$this->Util()->DB()->setQuery($sql);
+		return $this->Util()->DB()->GetSingle();
 	}
 
 	public function EnumerateAll()
@@ -795,32 +564,6 @@ class Course extends Subject
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
 	}
-
-	public function EnumerateActive($where = '')
-	{
-		//TODO porque tenia IN(0) no logro recordar -> Para mostrar solo los cursos en donde si se pueden inscribir
-		//				WHERE course.active = 'si' AND courseId IN (0)
-		$sql = "
-		SELECT *, major.name AS majorName, subject.name AS name  FROM course
-		LEFT JOIN subject ON course.subjectId = subject.subjectId 
-		LEFT JOIN major ON major.majorId = subject.tipo
-		WHERE course.active = 'si' AND listar = 'si' {$where}
-		ORDER BY subject.tipo, subject.name, course.group";
-		$this->Util()->DB()->setQuery($sql); 
-		//echo $this->Util()->DB()->query;
-		$result = $this->Util()->DB()->GetResult();
-
-		foreach ($result as $key => $res) {
-			$result[$key]["initialDateStamp"] = strtotime($result[$key]["initialDate"]);
-			$result[$key]["finalDateStamp"] = strtotime($result[$key]["finalDate"]);
-
-			$toFinishSeconds = $result[$key]["daysToFinish"] * 3600 * 24;
-
-			$result[$key]["daysToFinishStamp"] = strtotime($result[$key]["initialDate"]) + $toFinishSeconds;
-		}
-		return $result;
-	}
-
 	public function EnumerateOfficial()
 	{
 		$sql = "SELECT *, major.name AS majorName, subject.name AS name FROM course
@@ -853,7 +596,7 @@ class Course extends Subject
 
 	function FreeCourseModules()
 	{
-		$info = $this->Info();
+		$info = $this->getCourse();
 		$this->Util()->DB()->setQuery("
 				SELECT * FROM subject_module
 				WHERE subject_module.subjectId = '" . $info["subjectId"] . "'
@@ -874,7 +617,7 @@ class Course extends Subject
 
 	function AddedCourseModules()
 	{
-		$info = $this->Info();
+		$info = $this->getCourse();
 		$this->Util()->DB()->setQuery("
 				SELECT * FROM course_module
 				LEFT JOIN subject_module ON subject_module.subjectModuleId = course_module.subjectModuleId
@@ -1030,7 +773,7 @@ class Course extends Subject
 
 	function StudentCourseModules()
 	{
-		$info = $this->Info();
+		$info = $this->getCourse();
 
 		$sql = "
 				SELECT * FROM course_module
@@ -1145,7 +888,7 @@ class Course extends Subject
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
 	}
-	
+
 	function boletaAlumno()
 	{
 
@@ -1420,7 +1163,7 @@ class Course extends Subject
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
 	}
-	
+
 	function SabanaCalificacionesFrontal($period = 0, $ignoreEnglish = false, $order = " ORDER BY sm.name", $type = 'initial')
 	{
 		$sql = "SELECT u.userId, u.curp, u.lastNamePaterno, u.lastNameMaterno, u.names, us.matricula, u.sexo, situation, (SELECT IF(academic_history.semesterId = 0, 1, academic_history.semesterId) as periodo FROM academic_history WHERE academic_history.courseId = '{$this->courseId}' AND academic_history.type = 'alta' AND academic_history.userId = u.userId) as alta, (SELECT academic_history.semesterId FROM academic_history WHERE academic_history.courseId = '{$this->courseId}' AND academic_history.type = 'baja' AND academic_history.userId = u.userId) as baja FROM user_subject us INNER JOIN user u ON us.alumnoId = u.userId WHERE us.courseId = '{$this->courseId}' ORDER BY lastNamePaterno, lastNameMaterno, names;";
@@ -1453,10 +1196,10 @@ class Course extends Subject
 				if ($semesterId > $period)
 					unset($students[$key]);
 			}
-		}else{
+		} else {
 			foreach ($students as $key => $value) {
 				$semesterId = intval($value['alta']);
-				if ($semesterId > $period || ( $semesterId == $period && $semesterId > 1))
+				if ($semesterId > $period || ($semesterId == $period && $semesterId > 1))
 					unset($students[$key]);
 			}
 		}
@@ -1475,11 +1218,11 @@ class Course extends Subject
 		UNION ALL SELECT situation, user.userId, user.lastNamePaterno, user.lastNameMaterno, user.names, user.sexo, 
 		( SELECT matricula FROM user_subject WHERE alumnoId = user.userId ORDER BY registrationId DESC LIMIT 1) AS matricula,
 		( SELECT academic_history.semesterId AS periodo FROM academic_history WHERE academic_history.courseId = ".$this->courseId." AND academic_history.type = 'alta' AND academic_history.userId = user.userId LIMIT 1) AS alta
-		FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId WHERE user_subject.courseId = ".$this->courseId." HAVING alta = 2) A ORDER BY A.lastNamePaterno, A.lastNameMaterno,A.names";*/ 
+		FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId WHERE user_subject.courseId = ".$this->courseId." HAVING alta = 2) A ORDER BY A.lastNamePaterno, A.lastNameMaterno,A.names";*/
 		$sql = "SELECT 'REC' AS situation, u.userId, u.lastNamePaterno, u.lastNameMaterno, u.names, u.sexo,
 		(SELECT matricula FROM user_subject WHERE alumnoId = u.userId ORDER BY registrationId DESC LIMIT 1) AS matricula, '' AS alta
 		FROM user_subject_repeat usr INNER JOIN USER u ON usr.alumnoId = u.userId
-		WHERE usr.courseId = ".$this->courseId." AND usr.courseModuleId IN(".$modules.")";
+		WHERE usr.courseId = " . $this->courseId . " AND usr.courseModuleId IN(" . $modules . ")";
 		$this->Util()->DB()->setQuery($sql);
 		// echo $sql;
 		$students = $this->Util()->DB()->GetResult();
@@ -1519,50 +1262,12 @@ class Course extends Subject
 		return $result;
 	}
 
-	function SaveEnglishLevels($data)
-	{
-		$identifiers = [
-			1 => 'INGI',
-			2 => 'INGII',
-			3 => 'INGIII',
-			4 => 'INGIV',
-			5 => 'INGV',
-			6 => 'INGVI',
-			7 => 'INGVII',
-			8 => 'INGVIII',
-			9 => 'INGIX',
-			10 => 'INGX'
-		];
-		foreach ($data as $userId => $levels) {
-			$sql = "DELETE FROM english_levels WHERE courseId = " . $this->courseId . " AND userId = " . $userId;
-			$this->Util()->DB()->setQuery($sql);
-			$result = $this->Util()->DB()->DeleteData();
-			foreach ($levels as $item) {
-				$sql = "INSERT INTO english_levels(courseId, userId, validated_level, identifier) VALUES(" . $this->courseId . ", " . $userId . ", " . $item . ", '" . $identifiers[$item] . "')";
-				$this->Util()->DB()->setQuery($sql);
-				$result = $this->Util()->DB()->InsertData();
-			}
-		}
-	}
-
-	function GetEnglishLevels()
-	{
-		$data = [];
-		$sql = "SELECT * FROM english_levels WHERE courseId = " . $this->courseId . ' ORDER BY userId, validated_level';
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetResult();
-		foreach ($result as $item) {
-			$data[$item['userId']][] = $item['validated_level'];
-		}
-		return $data;
-	}
-
 	/**
 	 * Inidica el periodo actual del curso
 	 */
 	public function periodoActual()
 	{
-		$sql = "SELECT semesterId FROM course_module LEFT JOIN subject_module ON subject_module.subjectModuleId = course_module.subjectModuleId WHERE courseId = '{$this->courseId}' ORDER BY semesterId DESC LIMIT 1"; 
+		$sql = "SELECT semesterId FROM course_module LEFT JOIN subject_module ON subject_module.subjectModuleId = course_module.subjectModuleId WHERE courseId = '{$this->courseId}' ORDER BY semesterId DESC LIMIT 1";
 		$this->Util()->DB()->setQuery($sql);
 		$periodo = $this->Util()->DB()->GetSingle();
 		return $periodo;
@@ -1578,13 +1283,5 @@ class Course extends Subject
 		$this->Util()->DB()->setQuery($sql);
 		$modulos = $this->Util()->DB()->GetSingle();
 		return $modulos;
-	}
-
-
-	function getCourses($where = "") {
-		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}"; 
-		$this->Util()->DB()->setQuery($sql);
-		$result = $this->Util()->DB()->GetResult();
-		return $result;
 	}
 }

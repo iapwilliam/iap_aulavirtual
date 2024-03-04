@@ -22,7 +22,7 @@ switch($_POST["type"])
 case "calificaciones": 
 		
 		$module->setCourseModuleId($_POST['id']);
-	    $infoModule=$module->InfoCourseModule();
+	    $infoModule=$module->getCourseModule();
 		$courseId=$infoModule['courseId'];
 		$activity->setCourseModuleId($_POST['id']);
 		$activity->setVerponderation("no");

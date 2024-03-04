@@ -76,7 +76,7 @@
 		}
 	}
 	
-	$personals = $personal->getPersonal("AND role_id <> 1",'lastname_paterno ASC');
+	$personals = $personal->getPersonal("",'lastname_paterno ASC');
 	$smarty->assign('personals', $personals);
 	$smarty->assign('mnuMain','catalogos');
 	$smarty->assign('mnuSubmain','personal');	

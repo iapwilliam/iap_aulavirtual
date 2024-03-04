@@ -23,7 +23,7 @@
                     <input type="text" name="code" id="code" value="" class="form-control" />
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="totalPeriods">Total de periodos:</label>
+                    <label for="totalPeriods">Total de fases:</label>
                     <input type="text" name="totalPeriods" id="totalPeriods" value="" class="form-control" />
                 </div>
             </div>

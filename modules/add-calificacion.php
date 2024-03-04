@@ -1,17 +1,9 @@
-<?php
-	/* For Session Control - Don't remove this */
-	$user->allow_access(37);	 
-// echo "<pre>"; print_r($_POST);
-	$user->setUserId($_SESSION['User']['userId']);// exit;
-	$infoUser = $user->Info();// exit;
-
-	$smarty->assign('id', $_GET["id"]);
-	
+<?php 
+	$infoUser = $personal->getPersonal("OR personalId = ".$_SESSION['User']['userId']);
+	$smarty->assign('id', $_GET["id"]); 
 	$module->setCourseModuleId($_GET["id"]);
-	$info = $module->InfoCourseModule();
+	$info = $module->getCourseModule();
 	$periodoActual = $info["semesId"]; 
-	// echo "<pre>"; print_r($info["majorName"]);
-	// exit;
 	$group->setTipoMajor($info["majorName"]);
 	$group->setCourseModuleId($_GET["id"]);
 	$group->setCourseId($info["courseId"]);
@@ -25,18 +17,12 @@
 	}
 	$smarty->assign('noTeam', $noTeam);
 	$studentsRepeat = $group->actaCalificacionRepeat();
-	$smarty->assign('studentsRepeat', $studentsRepeat);
-	/* echo "<pre>";
-	var_dump($noTeam);
-	exit; */
-	
+	$smarty->assign('studentsRepeat', $studentsRepeat); 
 	$numberTeams = $group->GetNumberOfTeams();
-	$smarty->assign('numberTeams', $numberTeams);
-
+	$smarty->assign('numberTeams', $numberTeams); 
 	$teams = $group->Teams();
 	$smarty->assign('info', $info);
 	$smarty->assign('infoUser', $infoUser);
 	$smarty->assign('majorName', $info["majorName"]);
-	$smarty->assign('teams', $teams);
-
+	$smarty->assign('teams', $teams); 
 ?>

@@ -1,53 +1,34 @@
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <i class="fas fa-chalkboard-teacher"></i> Docente
-    </div>
-    <div class="card-body">
-        <div class="row">
-			<div class="col-md-12"><div id="msj"></div></div>
-		</div>
-		<form id="frmGral">
-			<div class="row">
-				<div class="form-group col-md-4">
-					<label for="nombre">Nombre</label>
-					<input type="text" name="nombre" class="form-control" />
-				</div>	
-				<div class="form-group col-md-4">	
-					<label for="paterno">Apellido Paterno</label>
-					<input type="text" name="paterno" class="form-control" />
-				</div>
-				<div class="form-group col-md-4">
-					<label for="materno">Apellido Materno</label>
-					<input type="text" name="materno" class="form-control" />
-				</div>
+<div class="card">
+	<div class="card-header bg-primary text-white">
+		Agregar Personal
+	</div>
+	<div class="card-body">
+		<form class="form row" id="form_save_personl" action="{$WEB_ROOT}/ajax/new/personal.php">
+			<input type="hidden" name="option" value="savePersonal">
+			<input type="hidden" name="rol" value="2">
+			<div class="form-group col-md-4">
+				<label>Nombre</label>
+				<input type="text" class="form-control" id="nombre" name="nombre">
 			</div>
-			<div class="row">
-				<div class="form-group col-md-6">
-					<label for="correo">Correo Electronico</label>
-					<input type="text" name="correo" class="form-control" />
-				</div>
-				<div class="form-group col-md-6">
-					<label for="rfc">RFC</label>
-					<input type="text" name="rfc" class="form-control" />
-				</div>
+			<div class="form-group col-md-4">
+				<label>Apellido Paterno</label>
+				<input type="text" class="form-control" id="apellido_paterno" name="apellido_paterno">
 			</div>
-			<div class="row">
-				<div class="form-group col-md-6">
-					<label for="usuario">Usuario</label>
-					<input type="text" name="usuario" id="fecha1" class="form-control" />
-				</div>
-				<div class="form-group col-md-6">
-					<label for="pass">Contraseña</label>
-					<input type="text" name="pass" id="pass" class="form-control" />
-				</div>
+			<div class="form-group col-md-4">
+				<label>Apellido Materno</label>
+				<input type="text" class="form-control" id="apellido_materno" name="apellido_materno">
+			</div>
+			<div class="form-group col-md-4">
+				<label>Usuario</label>
+				<input type="text" class="form-control" id="usuario" name="usuario">
+			</div>
+			<div class="form-group col-md-4">
+				<label>Contraseña</label>
+				<input type="password" class="form-control" id="password" name="password" autocomplete="new-password">
+			</div>
+			<div class="form-group col-md-12 text-center">
+				<button class="btn btn-success" type="submit">Guardar</button>
 			</div>
 		</form>
-		<div class="row">
-			<div class="col-md-12"><div id="msj_1"></div></div>
-			<div class="col-md-12 text-center">
-				<button onClick="onSave()" class="btn btn-success" >Guardar</button>
-				<button type="button" class="btn btn-danger closeModal" onClick="btnClose()">Cancelar</button>
-			</div>
-		</div>
-    </div>
+	</div>
 </div>

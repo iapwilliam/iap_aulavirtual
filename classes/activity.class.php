@@ -16,7 +16,7 @@ class Activity extends Module
 	private $verponderation;
 	private $respuesta;
 	public function setVerponderation($value)
-	{ 
+	{
 		$this->verponderation = $value;
 	}
 
@@ -193,7 +193,7 @@ class Activity extends Module
 	{
 		$this->tipo = $valor;
 	}
-	
+
 	private $intentos;
 	function setIntentos($valor)
 	{
@@ -347,7 +347,7 @@ class Activity extends Module
 							tries = '" . $this->intentos . "',
 							calificacion = '" . $this->calificacionMinima . "'
 						WHERE activityId = '" . $this->activityId . "'";
- 
+
 		//configuramos la consulta con la cadena de insercion
 		$this->Util()->DB()->setQuery($sql);
 		//ejecutamos la consulta y guardamos el resultado, que sera el ultimo positionId generado
@@ -376,7 +376,7 @@ class Activity extends Module
 		//ejecutamos la consulta y guardamos el resultado, que sera el ultimo positionId generado
 		$result = $this->Util()->DB()->DeleteData();
 		if ($this->getActivityType() == "Foro") {
-			$sql = "DELETE FROM topicsub WHERE activityId = ".$this->activityId;
+			$sql = "DELETE FROM topicsub WHERE activityId = " . $this->activityId;
 			$this->Util()->DB()->setQuery($sql);
 			$this->Util()->DB()->DeleteData();
 		}
@@ -417,7 +417,7 @@ class Activity extends Module
 		// exit;
 		$module = new Module;
 		$module->setCourseModuleId($this->getCourseModuleId());
-		$myModule = $module->InfoCourseModule();
+		$myModule = $module->getCourseModule();
 		//print_r($myModule);
 
 		$count = 1;
@@ -531,7 +531,7 @@ class Activity extends Module
 
 		$module = new Module;
 		$module->setCourseModuleId($this->getCourseModuleId());
-		$myModule = $module->InfoCourseModule();
+		$myModule = $module->getCourseModule();
 		//print_r($myModule);
 
 		$count = 1;
@@ -797,32 +797,20 @@ class Activity extends Module
 
 	function EditTest()
 	{
-
-
-		if ($this->Util()->PrintErrors()) {
-
-			return false;
-		}
-
 		$sql = "UPDATE
-							activity_test
-							SET
-								question = '" . $this->pregunta . "',
-								opcionA = '" . $this->opcionA . "',
-								opcionB = '" . $this->opcionB . "',
-								opcionC = '" . $this->opcionC . "',
-								opcionD = '" . $this->opcionD . "',
-								opcionE = '" . $this->opcionE . "',
-								answer = '" . $this->respuesta . "'
-							WHERE testId = '" . $this->testId . "'";
-		//configuramos la consulta con la cadena de insercion
-		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y guardamos el resultado, que sera el ultimo positionId generado
-		$result = $this->Util()->DB()->UpdateData();
-		$this->Util()->setError(90000, 'complete', "Se ha editado la actividad");
-		$this->Util()->PrintErrors();
-
-		return true;
+					activity_test
+					SET
+						question = '" . $this->pregunta . "',
+						opcionA = '" . $this->opcionA . "',
+						opcionB = '" . $this->opcionB . "',
+						opcionC = '" . $this->opcionC . "',
+						opcionD = '" . $this->opcionD . "',
+						opcionE = '" . $this->opcionE . "',
+						answer = '" . $this->respuesta . "'
+					WHERE testId = '" . $this->testId . "'"; 
+		$this->Util()->DB()->setQuery($sql); 
+		$result = $this->Util()->DB()->UpdateData(); 
+		return $result;
 	}
 
 	function InfoApp($tipo = NULL)

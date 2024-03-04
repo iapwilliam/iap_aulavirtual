@@ -1,6 +1,4 @@
 <?php
-		
-	 
 	$course->setCourseId($_GET["id"]); 
 	$date = date("d-m-Y");
 	$addedModules = $course->AddedCourseModules();  

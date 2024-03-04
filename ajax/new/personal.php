@@ -7,207 +7,157 @@ include_once(DOC_ROOT . '/libraries.php');
 include_once(DOC_ROOT . "/properties/messages.php");
 session_start();
 
-switch ($_POST["type"]) {
+switch ($_POST["option"]) {
 	case "addPersonal":
-
-		$states = $util->EnumerateStates();
-		$listPositions = $position->Enumerate();
-		$positions = $util->EncodeResult($listPositions);
-		$listRoles = $role->Enumerate();
-		$roles = $util->EncodeResult($listRoles);
-
-		$lstPd = $personal->enumerateAbreviaciones();
-
-
-		$smarty->assign('lstPd', $lstPd);
-		$smarty->assign('states', $states);
-		$smarty->assign("roles", $roles);
-		$smarty->assign("positions", $positions);
-		$smarty->assign("DOC_ROOT", DOC_ROOT);
-		$smarty->display(DOC_ROOT . '/templates/forms/new/add-personal.tpl');
-
+		$roles = $role->getRoles("roleId <> 1 AND roleId <> 4");
+		$smarty->assign('roles', $roles);
+		print_r(json_encode([
+			'modal'	=> true,
+			'html'	=> $smarty->fetch(DOC_ROOT . "/templates/new/add-personal.tpl")
+		]));
 		break;
 
 	case "editPersonal":
-
-		$states = $util->EnumerateStates();
-		$personal->setPersonalId($_POST['id']);
-		$info = $personal->Info();
-		$listPositions = $position->Enumerate();
-		$positions = $util->EncodeResult($listPositions);
-		$listRoles = $role->Enumerate();
-		$roles = $util->EncodeResult($listRoles);
-		$lstPd = $personal->enumerateAbreviaciones();
-
-		foreach ($roles as $key => $val) {
-
-			$personal->setRoleId($val['roleId']);
-
-			$roles[$key]["selected"] = false;
-			if ($personal->IsRoleSelected()) {
-				$roles[$key]["selected"] = true;
-			}
-
-			/*            if(!$personal->IsRoleSelected())
-            {
-                $roles2[$key] = $val;
-            }*/
-		}
-
-		// echo '<pre>'; print_r($info);
-		// exit;
-		$usrRoles = $personal->EnumerateRoles();
-
-		$smarty->assign('lstPd', $lstPd);
-		$smarty->assign('states', $states);
-		$smarty->assign("usrRoles", $usrRoles);
-		$smarty->assign("roles", $roles);
-		$smarty->assign("positions", $positions);
-		$smarty->assign("info", $info);
-		$smarty->assign("DOC_ROOT", DOC_ROOT);
-		$smarty->display(DOC_ROOT . '/templates/forms/new/edit-personal.tpl');
-
+		$personalId = intval($_POST['personal']);
+		$personalInfo = $personal->getPersonal("AND personalId = {$personalId}")[0];
+		$roles = $role->getRoles("roleId <> 1 AND roleId <> 4");
+		$smarty->assign('roles', $roles);
+		$smarty->assign('personal', $personalInfo);
+		print_r(json_encode([
+			'modal'	=> true,
+			'html'	=> $smarty->fetch(DOC_ROOT . "/templates/new/edit-personal.tpl")
+		]));
 		break;
-
-	case "saveAddPersonal":
-
-		// echo '<pre>'; print_r($_POST);
-		// exit;
-		if ($_POST['mostrarP'] == 'on') {
-			$_POST['mostrarP'] = 'si';
+	case "savePersonal":
+		$nombre = strip_tags($_POST['nombre']);
+		$apellidoPaterno = strip_tags($_POST['apellido_paterno']);
+		$apellidoMaterno = strip_tags($_POST['apellido_materno']);
+		$usuario = strip_tags($_POST['usuario']);
+		$password = $_POST['password'];
+		$rol = intval($_POST['rol']);
+		$errors = [];
+		if (empty($nombre)) {
+			$errors['nombre'] = "Falta indicar el nombre";
 		}
-
-		$personal->setPositionId($_POST['positionId']);
-		$personal->setName($_POST['name']);
-		$personal->setLastnamePaterno($_POST['lastname_paterno']);
-		$personal->setLastnameMaterno($_POST['lastname_materno']);
-		$personal->setStateId($_POST['stateId']);
-		$personal->setUserName($_POST['username']);
-		$personal->setPasswd($_POST['passwd']);
-		$personal->setDescription($_POST['description']);
-		$_POST['list_roles'] = implode(',', $_POST['role_from']);
-
-		$personal->setRolesId($_POST['list_roles']);
-
-		$personal->setCurp($_POST['curp']);
-		$personal->setRfc($_POST['rfc']);
-		$personal->setSexo($_POST['sexo']);
-		$personal->setFechaNacimiento($_POST['fecha_nacimiento']);
-		$personal->setFechaSep($_POST['fecha_sep']);
-		$personal->setFechaDgta($_POST['fecha_dgta']);
-		$personal->setClavesPresupuestales($_POST['claves_presupuestales']);
-		$personal->setCategoria($_POST['categoria']);
-		$personal->setPerfil('Docente');
-		$personal->setProf($_POST['prof']);
-
-		$personal->setMostrar($_POST['mostrarP']);
-		$personal->setNumero($_POST['numeroP']);
-
-		if (!$personal->Save()) {
-			echo "fail[#]";
-			$smarty->display(DOC_ROOT . '/templates/boxes/status_on_popup.tpl');
+		if (empty($apellidoPaterno)) {
+			$errors['apellido_paterno'] = "Falta indicar el apellido paterno";
+		}
+		if (empty($apellidoMaterno)) {
+			$errors['apellido_materno'] = "Falta indicar el apellido materno";
+		}
+		if (empty($usuario)) {
+			$errors['usuario'] = "Falta indicar el usuario";
+		}
+		if (empty($password)) {
+			$errors['password'] = "Falta indicar el contraseña";
+		}
+		if (empty($rol)) {
+			$errors['rol'] = "Falta indicar el rol";
+		}
+		if (!empty($errors)) {
+			header('HTTP/1.1 422 Unprocessable Entity');
+			header('Content-Type: application/json; charset=UTF-8');
+			echo json_encode([
+				'errors'    => $errors
+			]);
+			exit;
+		}
+		$personal->setName($nombre);
+		$personal->setLastnamePaterno($apellidoPaterno);
+		$personal->setLastnameMaterno($apellidoMaterno);
+		$personal->setUserName($usuario);
+		$personal->setPasswd($password);
+		$personal->setRoleId($rol);
+		if ($personal->savePersonal()) {
+			print_r(json_encode([
+				'growl'		=> true,
+				'message'	=> 'Personal agregado correctamente',
+				'modal_close'	=> true,
+				'reload'	=> true
+			]));
 		} else {
-			echo "ok[#]";
-			$smarty->display(DOC_ROOT . '/templates/boxes/status.tpl');
-			echo "[#]";
-			$result = $personal->getPersonal("AND role_id <> 1", 'lastname_paterno ASC');
-			$personals = $util->EncodeResult($result);
-			$smarty->assign("personals", $personals);
-			$smarty->assign("DOC_ROOT", DOC_ROOT);
-			$smarty->display(DOC_ROOT . '/templates/lists/personal.tpl');
+			print_r(json_encode([
+				'growl'		=> true,
+				'message'	=> 'Ocurrió un error, intente de nuevo.'
+			]));
 		}
-
 		break;
-
-	case "saveEditPersonal":
-
-		// echo '<pre>'; print_r($_POST['id']);
-		// exit;
-		$personal->setPositionId($_POST['positionId']);
-		$personal->setPersonalId($_POST['id']);
-		$personal->setName($_POST['name']);
-		$personal->setLastnamePaterno($_POST['lastname_paterno']);
-		$personal->setLastnameMaterno($_POST['lastname_materno']);
-		$personal->setStateId($_POST['stateId']);
-		$personal->setUserName($_POST['username']);
-		$personal->setPasswd($_POST['passwd']);
-		$personal->setDescription($_POST['description']);
-		$personal->setRolesId($_POST['list_roles']);
-
-		$personal->setCurp($_POST['curp']);
-		$personal->setRfc($_POST['rfc']);
-		$personal->setSexo($_POST['sexo']);
-		$personal->setFechaNacimiento($_POST['fecha_nacimiento']);
-		$personal->setFechaSep($_POST['fecha_sep']);
-		$personal->setFechaDgta($_POST['fecha_dgta']);
-		$personal->setClavesPresupuestales($_POST['claves_presupuestales']);
-		$personal->setCategoria($_POST['categoria']);
-		$personal->setPerfil($_POST['perfil']);
-		$personal->setProf($_POST['prof']);
-
-		if (!$personal->Update()) {
-			echo "fail[#]";
-			$smarty->display(DOC_ROOT . '/templates/boxes/status_on_popup.tpl');
-		} else {
-			echo "ok[#]";
-			$smarty->display(DOC_ROOT . '/templates/boxes/status.tpl');
-			echo "[#]";
-			$result = $personal->getPersonal();
-			$personals = $util->EncodeResult($result);
-			$smarty->assign("personals", $personals);
-			$smarty->assign("DOC_ROOT", DOC_ROOT);
-			$smarty->display(DOC_ROOT . '/templates/lists/personal.tpl');
+	case "updatePersonal":
+		$personalId = intval($_POST['personal']);
+		$nombre = strip_tags($_POST['nombre']);
+		$apellidoPaterno = strip_tags($_POST['apellido_paterno']);
+		$apellidoMaterno = strip_tags($_POST['apellido_materno']);
+		$usuario = strip_tags($_POST['usuario']);
+		$password = $_POST['password'];
+		$rol = intval($_POST['rol']);
+		$errors = [];
+		if (empty($nombre)) {
+			$errors['nombre'] = "Falta indicar el nombre";
 		}
-
+		if (empty($apellidoPaterno)) {
+			$errors['apellido_paterno'] = "Falta indicar el apellido paterno";
+		}
+		if (empty($apellidoMaterno)) {
+			$errors['apellido_materno'] = "Falta indicar el apellido materno";
+		}
+		if (empty($usuario)) {
+			$errors['usuario'] = "Falta indicar el usuario";
+		}
+		if (empty($password)) {
+			$errors['password'] = "Falta indicar el contraseña";
+		}
+		if (empty($rol)) {
+			$errors['rol'] = "Falta indicar el rol";
+		}
+		if (!empty($errors)) {
+			header('HTTP/1.1 422 Unprocessable Entity');
+			header('Content-Type: application/json; charset=UTF-8');
+			echo json_encode([
+				'errors'    => $errors
+			]);
+			exit;
+		}
+		$personal->setPersonalId($personalId);
+		$personal->setName($nombre);
+		$personal->setLastnamePaterno($apellidoPaterno);
+		$personal->setLastnameMaterno($apellidoMaterno);
+		$personal->setUserName($usuario);
+		$personal->setPasswd($password);
+		$personal->setRoleId($rol);
+		if ($personal->updatePersonal()) {
+			print_r(json_encode([
+				'growl'		=> true,
+				'message'	=> 'Personal actualizado correctamente',
+				'modal_close'	=> true,
+				'reload'	=> true
+			]));
+		} else {
+			print_r(json_encode([
+				'growl'		=> true,
+				'message'	=> 'Ocurrió un error, intente de nuevo.'
+			]));
+		}
 		break;
 
 	case 'deletePersonal':
-
-		$personal->setPersonalId($_POST['id']);
-
-		if (!$personal->Delete()) {
-			echo "fail[#]";
-			$smarty->display(DOC_ROOT . '/templates/boxes/status_on_popup.tpl');
+		$personalId = intval($_POST['personal']);
+		$personal->setPersonalId($personalId);
+		if ($personal->deletePersonal()) {
+			print_r(json_encode([
+				'growl'			=> true,
+				'message'		=> 'Personal eliminado',
+				'reload'		=> true
+			]));
 		} else {
-			echo "ok[#]";
-			$smarty->display(DOC_ROOT . '/templates/boxes/status.tpl');
-			echo "[#]";
-			$result = $personal->getPersonal("AND role_id <> 1",'lastname_paterno ASC');
-			$personals = $util->EncodeResult($result);
-			$smarty->assign("personals", $personals);
-			$smarty->assign("DOC_ROOT", DOC_ROOT);
-			$smarty->display(DOC_ROOT . '/templates/lists/personal.tpl');
+			print_r(json_encode([
+				'growl'		=> true,
+				'message'	=> 'Ocurrió un error, intente de nuevo.'
+			]));
 		}
-
 		break;
-
-	case 'getCurp':
-
-		$name = $_POST['name'];
-		$paterno = $_POST['paterno'];
-		$materno = $_POST['materno'];
-		$stateId = $_POST['stateId'];
-		$sexo = $_POST['sexo'];
-		$fecha = $_POST['fecha'];
-
-		$f = explode('-', $fecha);
-
-		if ($stateId)
-			$stateClave = $util->GetClaveState($stateId);
-
-		$Curp->SetDatos($name, $paterno, $materno, $sexo, $f[0], $f[1], $f[2], $stateClave);
-
-		if ($Curp->CURP != '') {
-			echo 'ok[#]';
-			echo $Curp->CURP;
-		}
-
-		break;
-
 	case 'doLogin':
 		$username = strip_tags(trim($_POST['username']));
 		$passwd = strip_tags(trim($_POST['passwd']));
-
 		if ($username == '' || $passwd == '') {
 			echo 'fail[#]';
 			echo 'empty';
@@ -220,8 +170,8 @@ switch ($_POST["type"]) {
 		if ($user->do_login()) {
 			echo "ok[#]";
 		} else {
-			echo "fail[#]";
-			echo 'data';
+			// echo "fail[#]";
+			// echo 'data';
 		}
 
 		break;
@@ -451,7 +401,7 @@ switch ($_POST["type"]) {
 		// $personal->setDocumentoId($_POST['catId']);
 		// $personal->setPersonalId($_POST["personalId"]);
 		$response = $personal->adjuntarPlan($_POST['id'], $_POST['cmId']);
-		if ($response['estatus']) {  
+		if ($response['estatus']) {
 			echo json_encode([
 				'growl'		=> true,
 				'message'	=> 'Documento actualizado',

@@ -58,7 +58,7 @@
 		$actidadCreada = $activity->Save();
 
 		$module->setCourseModuleId($_GET['id']);
-		$infoModulo = $module->InfoCourseModule();
+		$infoModulo = $module->getCourseModule();
 		$forum->setSubject($_POST['resumen']);
 		$forum->setReply($_POST['description']);
 		$forum->setCourseModuleId($_GET['id']);

@@ -3,7 +3,7 @@
 	$smarty->assign('mnuSubmain','calendario');
 
 	$module->setCourseModuleId($_GET["id"]);
-	$myModule = $module->InfoCourseModule();
+	$myModule = $module->getCourseModule();
 	
 	$smarty->assign('id', $_GET["id"]);
 	$smarty->assign('myModule', $myModule);

@@ -3,11 +3,20 @@
         <i class="fas fa-bullhorn"></i> Foro {$asunto}
         <div class="col-md-12 text-right">
             {if $asunto == "Presentacion Personal"}
-                <a href="{$WEB_ROOT}/graybox.php?page=add-topic&id={$topicId}&cId={$id}" data-target="#ajax" data-toggle="modal" class="btn btn-outline-light btn-sm">
+                <a href="{$WEB_ROOT}/graybox.php?page=add-topic&id={$topicId}&cId={$id}" data-target="#ajax"
+                    data-toggle="modal" class="btn btn-outline-light btn-sm">
                     <span class="btnAdd" id="btnAddSubject"><i class="fas fa-plus-circle"></i> Agregar</span>
                 </a>
             {/if}
-            <a href="{$WEB_ROOT}/edit-modules-course/id/{$id}" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-circle-left"></i> Regresar</a>
+            {if $User.perfil eq "Alumno"}
+                <a href="{$WEB_ROOT}/forum-modules-student/id/{$id}" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-arrow-circle-left"></i> Regresar
+                </a>
+            {else}
+                <a href="{$WEB_ROOT}/edit-modules-course/id/{$id}" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-arrow-circle-left"></i> Regresar
+                </a>
+            {/if}
         </div>
     </div>
     <div class="card-body">
@@ -19,7 +28,7 @@
                     {include file="footer-pages-links.tpl"}
                 </div>
             {/if}
-		</div>
+        </div>
     </div>
 </div>
 <input type="hidden" id="viewPage" name="viewPage" value="{$arrPage.currentPage}" />
