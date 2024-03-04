@@ -65,11 +65,11 @@
                             </a>
                         </div>
                         <div class="card-body">
-                            <h4 class="font-weight-normal mb-3">{$subject.majorName}
+                            <h4 class="font-weight-normal mb-3">{$subject.major_name}
                                 <i class="fas fa-chalkboard float-right fa-lg"></i>
                             </h4>
                             <p class="mb-3">
-                                {$subject.name}<br>
+                                {$subject.subject_name}<br>
                                 <small>Grupo: {$subject.group} ({if $subject.modality eq 'Local'}Escolar
                                     {else}No
                                     Escolar{/if})<br>
