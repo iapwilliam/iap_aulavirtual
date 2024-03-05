@@ -248,6 +248,16 @@ class Test extends Activity
 
 		$score = 0;
 
+		//Eliminamos las respuestas anteriores que haya echo el alumno
+		$sql = "SELECT test_answers.* FROM test_answers INNER JOIN activity_test ON activity_test.testId = test_answers.answer_id WHERE activity_test.activityId = {$this->getActivityId()} AND student_id = {$this->getUserId()}";
+		$this->Util()->DB()->setQuery($sql);
+		$currentAnswers = $this->Util()->DB()->GetResult();
+		foreach ($currentAnswers as $item) {
+			$sql = "DELETE FROM test_answers WHERE id = " . $item['id'];
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->DeleteData();
+		}
+
 		if (is_array($answers)) {
 			foreach ($answers as $key => $option) {
 				$sql = "SELECT answer FROM 
@@ -264,6 +274,10 @@ class Test extends Activity
 				if ($option == $result) {
 					$score += $questionScore;
 				}
+
+				$sql = "INSERT INTO test_answers(student_id, answer_id, answer) VALUES({$this->getUserId()},{$key}, '{$option}')";
+				$this->Util()->DB()->setQuery($sql);
+				$this->Util()->DB()->InsertData();
 			}
 		}
 
@@ -342,7 +356,8 @@ class Test extends Activity
 		return $result;
 	}
 
-	function reiniciarTest() {
+	function reiniciarTest()
+	{
 		$sql = "UPDATE activity_score SET ponderation = 0 WHERE activityId = {$this->getActivityId()} AND userId = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
