@@ -257,6 +257,7 @@ switch ($opcion) {
 			if (file_exists($ruta.$alumnoInfo['avatar'])) {
 				unlink($ruta.$alumnoInfo['avatar']);
 			}
+			$_SESSION['User']['avatar'] = $documento;
 			echo json_encode([
 				'modal_close'	=> true,
 				'growl'			=> true,
