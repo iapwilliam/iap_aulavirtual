@@ -303,29 +303,6 @@ class Test extends Activity
 		}
 
 		unset($_SESSION["timeLimit"]);
-
-		$student = new Student;
-		$student->setUserId($this->getUserId);
-		$infoStudent = $student->GetInfo();
-
-		$mail = new PHPMailer(); // defaults to using php "mail()"
-		// contenido del correo
-		$body = "Has hecho realizado examen correctament <br/> Calificacion obtenida:  " . $score;
-		//asunto o tema
-		$subject = "Examen finalizado Correctamente";
-		//("quienloenvia@hotmail.com", "nombre de quien lo envia");
-		$mail->SetFrom("enlinea@iapchiapas.edu.mx", "Administrador del Sistema");
-		//correo y nombre del destinatario
-		$mail->AddAddress($infoStudent['email'], $infoStudent['names']);
-
-		$mail->Subject    = $subject;
-		$mail->MsgHTML($body);
-
-		$mail->Send();
-
-
-
-
 		$this->Util()->setError(90000, 'complete', "Has respondido el examen Satisfactoriamente. Tu resultado esta abajo.");
 		$this->Util()->PrintErrors();
 	}
