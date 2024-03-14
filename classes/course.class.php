@@ -497,14 +497,15 @@ class Course extends Subject
 	function dt_courses_request($subjectId)
 	{
 		$table = 'course INNER JOIN subject ON subject.subjectId = course.subjectId';
-		$primaryKey = 'courseId';
+		$primaryKey = 'course.courseId';
 		$columns = array(
 			array('db' => 'course.courseId',	'dt' => 'courseId'),
 			array('db' => 'subject.name',		'dt' => 'nombre'),
 			array('db' => '`course`.`group`',	'dt' => 'grupo'),
 			array('db' => 'course.initialDate',	'dt' => 'fecha_inicial'),
 			array('db' => 'course.finalDate',	'dt' => 'fecha_final'),
-			array('db' => 'courseId',	'dt' => 'modulos', 'formatter'	=> function ($id) {
+			array('db' => 'course.courseId',	'dt' => 'modulos', 'formatter'	=> function ($id, $row) { 
+				$id = $row['courseId'];
 				$this->setCourseId($id);
 				$courseData = $this->getCourse();
 				$modulesCourse = $this->getCountModulesCourse();
@@ -521,7 +522,8 @@ class Course extends Subject
 				}
 				return $_SESSION['User']['perfil'] == "Docente" ? $html : "$modulesCourse/$modulesSubject" . $html;
 			}),
-			array('db' => 'courseId',	'dt' => 'alumnos', 'formatter'	=> function ($id) {
+			array('db' => 'course.courseId',	'dt' => 'alumnos', 'formatter'	=> function ($id, $row) {
+				$id = $row['courseId'];
 				$sql = "SELECT * FROM user_subject WHERE user_subject.courseId = $id AND user_subject.status = 'activo'";
 				$this->Util()->DB()->setQuery($sql);
 				$activos = $this->Util()->DB()->GetTotalRows();
@@ -547,7 +549,8 @@ class Course extends Subject
 				}
 				return $html;
 			}),
-			array('db' => 'courseId',	'dt' => 'acciones', 'formatter'	=> function ($id) {
+			array('db' => 'course.courseId',	'dt' => 'acciones', 'formatter'	=> function ($id, $row) {
+				$id = $row['courseId'];
 				if ($_SESSION['User']['perfil'] == "Docente")
 					return "";
 				return "<a class='btn btn-primary' href='" . WEB_ROOT . "/graybox.php?page=edit-course&id=" . $id . "' data-target='#ajax' data-toggle='modal' title='Editar'>Editar</a>";
@@ -556,7 +559,8 @@ class Course extends Subject
 
 		$where = "subject.subjectId = " . $subjectId;
 		if ($_SESSION['User']['perfil'] == "Docente") {
-			$where .= " AND (SUBSTRING(access, 1, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(access, 3, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(access, 5, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(access, 7, 1) = {$_SESSION['User']['userId']})";
+			$table.=" INNER JOIN course_module ON course_module.courseId = course.courseId";
+			$where .= " AND (SUBSTRING(course_module.access, 1, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(course_module.access, 3, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(course_module.access, 5, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(course_module.access, 7, 1) = {$_SESSION['User']['userId']}) GROUP BY course.courseId";
 		}
 		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
 	}

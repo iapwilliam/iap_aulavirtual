@@ -273,7 +273,7 @@ class SSP
 		// echo "Columns:";
 		// print_r($columns);
 		// Data set length after filtering
-		$sql = "SELECT COUNT(`{$primaryKey}`) as filtrado FROM $table $where";
+		$sql = "SELECT COUNT({$primaryKey}) as filtrado FROM $table $where";
 		$resFilterLength = self::sql_exec(
 			$db,
 			$bindings,
@@ -283,7 +283,7 @@ class SSP
 		$recordsFiltered = $resFilterLength[0]['filtrado'];
 
 		// Total data set length
-		$sql = "SELECT COUNT(`{$primaryKey}`) as total FROM $table " . $whereAllSql; 
+		$sql = "SELECT COUNT({$primaryKey}) as total FROM $table " . $whereAllSql; 
 		$resTotalLength = self::sql_exec(
 			$db,
 			$bindings,
