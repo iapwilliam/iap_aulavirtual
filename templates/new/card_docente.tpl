@@ -8,7 +8,7 @@
     {/if}
     <div class="card-body">
         <h5 class="card-title text-center">
-            {$User.username}<br>
+            {$User.nombreCompleto}<br>
             <span class="bg-info px-1 rounded text-white mt-4"><small>DOCENTE</small></span>
         </h5>
         <p class="card-text">El <b>Instituto de Administración Pública del Estado de Chiapas, A. C.</b> te da la más cordial bienvenida a nuestro Sistema de Educación en Línea.</p>
