@@ -551,12 +551,12 @@ class Course extends Subject
 				if ($_SESSION['User']['perfil'] == "Docente")
 					return "";
 				return "<a class='btn btn-primary' href='" . WEB_ROOT . "/graybox.php?page=edit-course&id=" . $id . "' data-target='#ajax' data-toggle='modal' title='Editar'>Editar</a>";
-			}), 
+			}),
 		);
 
 		$where = "subject.subjectId = " . $subjectId;
 		if ($_SESSION['User']['perfil'] == "Docente") {
-			$where .= " AND SUBSTRING_INDEX(access, '|', 1) = ".$_SESSION['User']['userId'];
+			$where .= " AND (SUBSTRING(access, 1, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(access, 3, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(access, 5, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(access, 7, 1) = {$_SESSION['User']['userId']})";
 		}
 		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
 	}

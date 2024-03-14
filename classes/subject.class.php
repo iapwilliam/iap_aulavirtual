@@ -407,7 +407,7 @@ class Subject extends Main
 	} 
 
 	public function getSubjectsCourse($where = "") {
-		$sql = "SELECT subject.*, major.name as majorName FROM `course` INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE subject.deleted_at IS NULL {$where}";
+		$sql = "SELECT subject.*, major.name as majorName, SUBSTRING(access, 1,1) as administrativo, SUBSTRING(access, 3,1) as docente, SUBSTRING(access, 5,1) as apoyo, SUBSTRING(access, 7,1) as auxiliar FROM `course` INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE subject.deleted_at IS NULL {$where}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
