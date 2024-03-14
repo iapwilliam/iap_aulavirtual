@@ -238,7 +238,7 @@ class Module extends Course
 		$result["initialDate"] = $this->Util()->FormatDateBack($result["initialDate"]);
 		$result["finalDate"] = $this->Util()->FormatDateBack($result["finalDate"]);
 		$result["fechaContrato"] = $this->Util()->FormatDateBack($result["fechaContrato"]);
-		$result["access"] = explode("|", $result["access"]); 
+		$result["access"] = explode("|", $result["access"]);
 		$result["welcomeTextDecoded"] = html_entity_decode($result["welcomeText"]);
 		$result["introductionDecoded"] = html_entity_decode($result["introduction"]);
 		$result["intentionsDecoded"] = html_entity_decode($result["intentions"]);
@@ -587,7 +587,7 @@ class Module extends Course
 				finalDate = '" . $final . "',
 				daysToFinish  = '" . $this->getDaysToFinish() . "',
 				active = '" . $this->getActive() . "',
-				access = '" . $this->getPersonalId() . "|" . $this->getTeacherId() . "|" . $this->getTutorId() . "|" . $this->getExtraId() . "'
+				access = '|" . $this->getPersonalId() . "|" . $this->getTeacherId() . "|" . $this->getTutorId() . "|" . $this->getExtraId() . "|'
 			WHERE courseModuleId = " . $this->getCourseModuleId() . "	LIMIT 1";
 		//configuramos la consulta con la cadena de insercion
 		$this->Util()->DB()->setQuery($sql);

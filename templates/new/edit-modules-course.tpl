@@ -95,33 +95,13 @@
                     <label for="personalId">Personal Administrativo Asignado</label>
                     {if $User.perfil eq "Docente"}
                         {foreach from=$empleados item=personal}
-                            {if $myModule.access.0 == $personal.personalId}
-                                <input type="text" class="form-control"
-                                    value="{$personal.lastname_paterno} {$personal.lastname_materno} {$personal.name}" disabled />
-                            {/if}
-                        {/foreach}
-                    {else}
-                        <select name="personalId" id="personalId" class="form-control">
-                            <option value="-1">Seleccione...</option>
-                            {foreach from=$empleados item=personal}
-                                <option value="{$personal.personalId}" {if $myModule.access.0 == $personal.personalId}
-                                    selected="selected" {/if}>{$personal.lastname_paterno} {$personal.lastname_materno}
-                                    {$personal.name}</option>
-                            {/foreach}
-                        </select>
-                    {/if}
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="teacherId">Docente Asignado:</label>
-                    {if $User.perfil eq "Docente"}
-                        {foreach from=$empleados item=personal}
                             {if $myModule.access.1 == $personal.personalId}
                                 <input type="text" class="form-control"
                                     value="{$personal.lastname_paterno} {$personal.lastname_materno} {$personal.name}" disabled />
                             {/if}
                         {/foreach}
                     {else}
-                        <select name="teacherId" id="teacherId" class="form-control">
+                        <select name="personalId" id="personalId" class="form-control">
                             <option value="-1">Seleccione...</option>
                             {foreach from=$empleados item=personal}
                                 <option value="{$personal.personalId}" {if $myModule.access.1 == $personal.personalId}
@@ -132,7 +112,7 @@
                     {/if}
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="tutorId">Apoyo Académico:</label>
+                    <label for="teacherId">Docente Asignado:</label>
                     {if $User.perfil eq "Docente"}
                         {foreach from=$empleados item=personal}
                             {if $myModule.access.2 == $personal.personalId}
@@ -141,10 +121,30 @@
                             {/if}
                         {/foreach}
                     {else}
-                        <select name="tutorId" id="tutorId" class="form-control">
+                        <select name="teacherId" id="teacherId" class="form-control">
                             <option value="-1">Seleccione...</option>
                             {foreach from=$empleados item=personal}
                                 <option value="{$personal.personalId}" {if $myModule.access.2 == $personal.personalId}
+                                    selected="selected" {/if}>{$personal.lastname_paterno} {$personal.lastname_materno}
+                                    {$personal.name}</option>
+                            {/foreach}
+                        </select>
+                    {/if}
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="tutorId">Apoyo Académico:</label>
+                    {if $User.perfil eq "Docente"}
+                        {foreach from=$empleados item=personal}
+                            {if $myModule.access.3 == $personal.personalId}
+                                <input type="text" class="form-control"
+                                    value="{$personal.lastname_paterno} {$personal.lastname_materno} {$personal.name}" disabled />
+                            {/if}
+                        {/foreach}
+                    {else}
+                        <select name="tutorId" id="tutorId" class="form-control">
+                            <option value="-1">Seleccione...</option>
+                            {foreach from=$empleados item=personal}
+                                <option value="{$personal.personalId}" {if $myModule.access.3 == $personal.personalId}
                                     selected="selected" {/if}>{$personal.lastname_paterno} {$personal.lastname_materno}
                                     {$personal.name}</option>
                             {/foreach}
@@ -158,7 +158,7 @@
                     <label for="extraId">Extra Asignado:</label>
                     {if $User.perfil eq "Docente"}
                         {foreach from=$empleados item=personal}
-                            {if $myModule.access.3 == $personal.personalId}
+                            {if $myModule.access.4 == $personal.personalId}
                                 <input type="text" class="form-control"
                                     value="{$personal.lastname_paterno} {$personal.lastname_materno} {$personal.name}" disabled />
                             {/if}
@@ -167,7 +167,7 @@
                         <select name="extraId" id="extraId" class="form-control">
                             <option value="-1">Seleccione...</option>
                             {foreach from=$empleados item=personal}
-                                <option value="{$personal.personalId}" {if $myModule.access.3 == $personal.personalId}
+                                <option value="{$personal.personalId}" {if $myModule.access.4 == $personal.personalId}
                                     selected="selected" {/if}>{$personal.lastname_paterno} {$personal.lastname_materno}
                                     {$personal.name}</option>
                             {/foreach}

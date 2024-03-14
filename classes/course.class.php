@@ -437,7 +437,7 @@ class Course extends Subject
 						initialDate='" 	. $this->initialDate . "',
 						finalDate='" 	. $this->finalDate . "', 
 						`group`='" 	. $this->group . "', 
-						access='" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "'
+						access='|" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "|'
 						WHERE courseId='{$this->courseId}'";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->UpdateData();
@@ -560,7 +560,7 @@ class Course extends Subject
 		$where = "subject.subjectId = " . $subjectId;
 		if ($_SESSION['User']['perfil'] == "Docente") {
 			$table.=" INNER JOIN course_module ON course_module.courseId = course.courseId";
-			$where .= " AND (SUBSTRING(course_module.access, 1, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(course_module.access, 3, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(course_module.access, 5, 1) = {$_SESSION['User']['userId']} OR SUBSTRING(course_module.access, 7, 1) = {$_SESSION['User']['userId']}) GROUP BY course.courseId";
+			$where .= " AND course_module.access LIKE '%|{$_SESSION['User']['userId']}|%' GROUP BY course.courseId";
 		}
 		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
 	}
