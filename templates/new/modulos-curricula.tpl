@@ -47,54 +47,10 @@
                                                     <h5 class="card-title"><b>Fecha Fin:</b>
                                                         {$subject.finalDate|date_format:"%d-%m-%Y"}</h5>
                                                     <p class="card-text">
-                                                        <b>Calificación Parcial:</b> <span
+                                                        <b>Calificación:</b> <span
                                                             class="badge {if $subject.totalScore < $minCal} badge-danger {else} badge-success {/if} rounded-circle">
                                                             {$subject.totalScore}
                                                         </span><br />
-                                                        {if ($subject.finalDateStamp > 0) AND ($timestamp > $subject.finalDateStamp)}
-                                                            <b>Calificación Final:</b>
-                                                            {if  $timestamp < $subject.initialDateStamp}
-                                                                No Disponible {* no iniciada *}
-                                                            {else}
-                                                                {if $subject.finalDateStamp > 0 AND $timestamp > $subject.finalDateStamp}
-                                                                    {* materia finalizada *}
-                                                                    {if $subject.countEval >=1 || $inactivo}
-                                                                        <span
-                                                                            class="badge {if $subject.calificacionFinal < $minCalInt} badge-danger {else} badge-success {/if} rounded">
-                                                                            {$subject.calificacionFinal}
-                                                                        </span>
-                                                                    {else}
-                                                                        <a href="{$WEB_ROOT}/test-docente/id/{$subject.courseModuleId}">Contestar
-                                                                            Evaluación</a>
-                                                                    {/if}
-                                                                {elseif $subject.active == "no"}
-                                                                    {* materia finalizada *}
-                                                                    {if $subject.countEval >=1}
-                                                                        <span
-                                                                            class="badge {if $subject.calificacionFinal < $minCalInt} badge-danger {else} badge-success {/if} rounded">
-                                                                            {$subject.calificacionFinal}
-                                                                        </span>
-                                                                    {else}
-                                                                        <a href="{$WEB_ROOT}/test-docente/id/{$subject.courseModuleId}">Contestar
-                                                                            Evaluación</a>
-                                                                    {/if}
-                                                                {elseif $subject.finalDateStamp <= 0 AND $initialDateStamp < $subject.daysToFinishStamp AND $timestamp > $subject.daysToFinishStamp}
-                                                                    {* materia finalizada *}
-                                                                    {if $subject.countEval >=1}
-                                                                        <span
-                                                                            class="badge {if $subject.calificacionFinal < $minCalInt} badge-danger {else} badge-success {/if} rounded">
-                                                                            {$subject.calificacionFinal}
-                                                                        </span>
-                                                                    {else}
-                                                                        <a href="{$WEB_ROOT}/test-docente/id/{$subject.courseModuleId}">Contestar
-                                                                            Evaluación</a>
-                                                                    {/if}
-                                                                {else}
-                                                                    <a href="{$WEB_ROOT}/test-docente/id/{$subject.courseModuleId}">Contestar
-                                                                        Evaluación</a> {* materia activa *}
-                                                                {/if}
-                                                            {/if}
-                                                        {/if}
                                                     </p>
                                                 </div>
                                                 <div class="col-md-8 text-center">
@@ -104,19 +60,7 @@
                                                     {else}
                                                         <img src="{$WEB_ROOT}/images/new/modulos/{$subject.icon}" alt="IAP Chiapas"
                                                             style="width: 300px !important; height: auto !important; border-radius: 0 !important;">
-                                                    {/if}<br />
-                                                    {* EVALUACION DOCENTE *}
-                                                    {if $subject.countEval >=1}
-                                                        <span class="badge badge-success my-1 mx-1"><i class="fas fa-check-circle"></i>
-                                                            Evaluación Docente Contestada</span>
-                                                    {else}
-                                                        {if ($subject.finalDateStamp > 0) AND ($timestamp > $subject.finalDateStamp)}
-                                                            <a href="{$WEB_ROOT}/test-docente/id/{$subject.courseModuleId}"
-                                                                class="btn btn-outline-info btn-sm my-1 mx-1">
-                                                                <i class="fas fa-spell-check"></i> Evaluación Docente
-                                                            </a>
-                                                        {/if}
-                                                    {/if} 
+                                                    {/if}<br /> 
                                                     {* INGRESAR AL MODULO *}
                                                     {if $User.type == "student"}
                                                         {if  $timestamp < $subject.initialDateStamp}

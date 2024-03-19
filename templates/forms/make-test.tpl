@@ -109,19 +109,17 @@
 			<a href="{$WEB_ROOT}/view-modules-student/id/{$actividad.courseModuleId}" class="btn btn-primary">
 				<i class="fas fa-undo"></i> Regresar al Módulo
 			</a>
-			{* {$access|print_r} *}
-			{if isset($access['tipo'])}
-				{if $access['intentos'] > 0}
-					<div class="py-3 text-center">
-						Puedes volver a realizar el examen, aún cuentas con {$access['intentos']} intento(s)
-					</div> 
-					<form class="form" action="{$WEB_ROOT}/ajax/new/activity.php" data-alert="true" data-mensaje="Se eliminará la calificación actual" method="post" id="form_reinicio">
-						<input type="hidden" name="type" value="reiniciarExamen">
-						<input type="hidden" name="actividad" value="{$actividad.activityId}" />
-						<button class="btn btn-danger" type="submit">Volver a hacer el examen</button>
-					</form>
-				{/if}
-			{/if}
+			{if $access['intentos'] > 0}
+				<div class="py-3 text-center">
+					{$access['mensaje']}
+				</div>
+				<form class="form" action="{$WEB_ROOT}/ajax/new/activity.php" data-alert="true"
+					data-mensaje="Se eliminará la calificación actual" method="post" id="form_reinicio">
+					<input type="hidden" name="type" value="reiniciarExamen">
+					<input type="hidden" name="actividad" value="{$actividad.activityId}" />
+					<button class="btn btn-danger" type="submit">Volver a hacer el examen</button>
+				</form>
+			{/if} 
 		</div>
 	</div>
 {/if}
@@ -133,7 +131,7 @@
 		var timer = setInterval(function() {
 			countdown.innerHTML = Math.floor(remain / 60) + ":" + (remain % 60 < 10 ? "0" : "") + remain % 60;
 			if (messages[remain]) { notifier.innerHTML = messages[remain]; }
-			if (--remain < 0) {
+			if (--remain == 0) {
 				//clearInterval(timer); 
 				$('#addMajorForm').submit();
 			}

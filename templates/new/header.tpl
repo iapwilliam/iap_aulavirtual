@@ -114,15 +114,7 @@
                             <a class="dropdown-item" href="{$WEB_ROOT}/doc-docente">
                                 <i class="mdi mdi-file-document mr-2 text-success"></i>
                                 Documentos
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/repositorio">
-                                <i class="mdi mdi-folder mr-2 text-success"></i>
-                                Repositorio
-                            </a>
-                            <a class="dropdown-item" href="{$WEB_ROOT}/inbox/or/h">
-                                <i class="mdi mdi-email mr-2 text-success"></i>
-                                Inbox
-                            </a>
+                            </a> 
                         {/if}
                         {if $User.type == 'student'}
                             <a class="dropdown-item" href="{$WEB_ROOT}">

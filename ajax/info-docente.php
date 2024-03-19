@@ -19,26 +19,15 @@
 			}
 			// $_POST['nacimiento'] = $_POST['dia'].'-'.$_POST['mes'].'-'.$_POST['anio'];
 			
-			$personal->setPersonalId($_POST['personalId']);
-			$personal->setIne($_POST['ine']);
-			$personal->setCalle($_POST['calle']);
-			$personal->setNExterior($_POST['exterior']);
-			$personal->setNInterior($_POST['interior']);
-			$personal->setColonia($_POST['colonia']);
-			$personal->setCelular($_POST['celular']);
-			$personal->setEstado($_POST['estado']);
-			$personal->setCiudad($_POST['ciudad']);
+			$personal->setPersonalId($_POST['personalId']); 
+			$personal->setCelular($_POST['celular']); 
 			$personal->setCorreo($_POST['correo']);
 			$personal->setName($_POST['nombre']);
 			$personal->setLastnamePaterno($_POST['paterno']);
-			$personal->setLastnameMaterno($_POST['materno']);
-			$personal->setCurp($_POST['curp']);
-			$personal->setRfc($_POST['rfc']);
-			$personal->setFechaNacimiento($_POST['nacimiento']);
-			$personal->setFace($_POST['facebook']);
-			$personal->setTwitter($_POST['twitter']);
+			$personal->setLastnameMaterno($_POST['materno']); 
 			$personal->setDescription($_POST['descripcion']);
-			if($personal->updateDocente()){
+			$personal->setRoleId(2);
+			if($personal->updatePersonal()){
 				echo 'ok[#]';
 				echo '
 				<div class="alert alert-info alert-dismissable">

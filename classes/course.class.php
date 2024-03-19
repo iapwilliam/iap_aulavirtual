@@ -515,7 +515,7 @@ class Course extends Subject
 				$html = "<a href='" . WEB_ROOT . "/graybox.php?page=view-modules-course&id=" . $id . "' title='Ver Modulos de Curso' data-target='#ajax' data-toggle='modal' >
 					<i class='far fa-window-restore text-info fa-lg'></i>
 				</a>";
-				if (!$_SESSION['User']['perfil'] == "Docente") {
+				if ($_SESSION['User']['perfil'] != "Docente") {
 					$html .= "<a href='" . WEB_ROOT . "/graybox.php?page=add-modules-course&id=" . $id . "' title='Agregar Modulo a Curso' data-target='#ajax' data-toggle='modal' style='color:#000' >
 						<i class='fas fa-plus-circle text-dark fa-lg'></i>
 					</a>";

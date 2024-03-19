@@ -180,7 +180,7 @@ class Personal extends Main
 	}
 
 	public function setName($value)
-	{ 
+	{
 		$this->name = $value;
 	}
 
@@ -411,7 +411,7 @@ class Personal extends Main
 
 		return $result;
 	}
- 
+
 	public function InfoBasica()
 	{
 
@@ -492,13 +492,22 @@ class Personal extends Main
 
 	public function updatePersonal()
 	{
+		$set = "";
+		if ($this->username) {
+			$set .= ",username =  '" . $this->username . "'";
+		}
+		if ($this->passwd) {
+			$set .= ",passwd = '" . $this->passwd . "'";
+		}
 		$sql = "UPDATE personal SET
 					name =  '" . $this->name . "',
 					lastname_paterno = '" . $this->lastnamePaterno . "',
-					lastname_materno = '" . $this->lastnameMaterno . "',
-					username =  '" . $this->username . "', 
-					passwd =  '" . $this->passwd . "', 
-					role_id = '" . $this->roleId . "'
+					lastname_materno = '" . $this->lastnameMaterno . "', 
+					role_id = '" . $this->roleId . "', 
+					correo	= '" . $this->correo . "',
+					celular = '" . $this->celular . "',
+					descripcion = '" . $this->description . "'
+					$set
 				WHERE 
 					personalId = " . $this->personalId;
 		$this->Util()->DB()->setQuery($sql);

@@ -36,12 +36,6 @@
 					<li class="nav-item">
 						<a class="nav-link" data-toggle="tab" href="#portlet_tabp_2">Información Escolar</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" data-toggle="tab" href="#portlet_tabp_3">Información Bancaria</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" data-toggle="tab" href="#portlet_tabp_4">Información Automovil</a>
-					</li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane container active pt-3" id="portlet_tabp_1">
@@ -96,8 +90,6 @@
 									<input type="text" id="materno" name="materno" class="form-control"
 										{if $cId eq 'si'} disabled {/if} value="{$info.lastname_materno}" />
 								</div>
-							</div>
-							<div class="row">
 								<div class="form-group col-md-4">
 									<label for="correo">Correo Electronico</label>
 									<input type="text" id="correo" name="correo" class="form-control" {if $cId eq 'si'}
@@ -107,85 +99,6 @@
 									<label for="celular">Celular</label>
 									<input type="text" id="celular" name="celular" class="form-control"
 										{if $cId eq 'si'} disabled {/if} value="{$info.celular}" />
-								</div>
-								<div class="form-group col-md-4">
-									<label for="rfc">RFC</label>
-									<input type="text" id="rfc" name="rfc" class="form-control" {if $cId eq 'si'}
-										disabled {/if} value="{$info.rfc}" />
-								</div>
-							</div>
-							<div class="row">
-								<div class="form-group col-md-4">
-									<label for="nacimiento">Fecha Nacimiento</label>
-									<input type="text" id="nacimiento" name="nacimiento" class="form-control i-calendar"
-										{if $cId eq 'si'} disabled {/if} value="{$nacimiento}" />
-								</div>
-								<div class="form-group col-md-4">
-									<label for="ine">Numero INE</label>
-									<input type="text" id="ine" name="ine" class="form-control" {if $cId eq 'si'}
-										disabled {/if} value="{$info.INE}" />
-								</div>
-								<div class="form-group col-md-4">
-									<label for="curp">Curp</label>
-									<input type="text" id="curp" name="curp" class="form-control" {if $cId eq 'si'}
-										disabled {/if} value="{$info.curp}" />
-								</div>
-							</div>
-							<span class="badge badge-dark"><i class="fas fa-map-marked-alt"></i> Domicilio</span>
-							<hr />
-							<div class="row">
-								<div class="form-group col-md-4">
-									<label for="calle">Calle</label>
-									<input type="text" id="calle" name="calle" class="form-control"
-										value="{$info.calle}" {if $cId eq 'si'} disabled {/if} />
-								</div>
-								<div class="form-group col-md-4">
-									<label for="interior">Numero Interior</label>
-									<input type="text" id="interior" name="interior" class="form-control"
-										{if $cId eq 'si'} disabled {/if} value="{$info.nInterior}" />
-								</div>
-								<div class="form-group col-md-4">
-									<label for="exterior">Numero Exterior</label>
-									<input type="text" id="exterior" name="exterior" class="form-control"
-										{if $cId eq 'si'} disabled {/if} value="{$info.nExterior}" />
-								</div>
-							</div>
-							<div class="row">
-								<div class="form-group col-md-4">
-									<label for="colonia">Colonia:</label>
-									<input type="text" id="colonia" name="colonia" class="form-control"
-										{if $cId eq 'si'} disabled {/if} value="{$info.colonia}" />
-								</div>
-								<div class="form-group col-md-4">
-									<label for="estado">Estado</label>
-									<select name="estado" id="estado" onChange="loadMunicipio()" class="form-control"
-										{if $cId eq 'si'} disabled {/if}>
-										<option value="">-- Seleccionar --</option>
-										{foreach from=$estados item=item}
-										<option value="{$item.estadoId}" {if $info.stateId eq $item.estadoId} selected
-											{/if}>
-											{$item.nombre}
-										</option>
-										{/foreach}
-									</select>
-								</div>
-								<div class="form-group col-md-4">
-									<label for="ciudad">Ciudad</label>
-									<div id="divCiudad">
-										{include file="{$DOC_ROOT}/templates/new/ciudades.tpl"}
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="form-group col-md-6">
-									<label for="facebook">Facebook:</label>
-									<input type="text" id="facebook" name="facebook" class="form-control"
-										{if $cId eq 'si'} disabled {/if} value="{$info.facebook}" />
-								</div>
-								<div class="form-group col-md-6">
-									<label for="twitter">Twitter</label>
-									<input type="text" id="twitter" name="twitter" class="form-control"
-										{if $cId eq 'si'} disabled {/if} value="{$info.twitter}" />
 								</div>
 							</div>
 						</form>
@@ -215,12 +128,6 @@
 					<div class="tab-pane container fade pt-3" id="portlet_tabp_2">
 						{include file="{$DOC_ROOT}/templates/forms/informacion-escolar.tpl"}
 					</div>
-					<div class="tab-pane container fade pt-3" id="portlet_tabp_3">
-						{include file="{$DOC_ROOT}/templates/forms/informacion-bancaria.tpl"}
-					</div>
-					<div class="tab-pane container fade pt-3" id="portlet_tabp_4">
-						{include file="{$DOC_ROOT}/templates/forms/informacion-automovil.tpl"}
-					</div>
 				</div>
 			</div>
 		</div>
@@ -233,7 +140,7 @@
 	var editor = new Jodit('#descripcion', {
 		language: "es",
 		toolbarButtonSize: "small",
-		autofocus: true,
-		toolbarAdaptive: false
-	});
-</script>
+			autofocus: true,
+			toolbarAdaptive: false
+		});
+	</script>

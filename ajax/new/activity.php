@@ -30,9 +30,9 @@ switch ($_POST["type"]) {
         $test->setActivityId($_POST["actividad"]);
         $test->SendTest($_POST["anwer"]);
         echo json_encode([
-            'growl'        => true,
-            'message'    => 'Examen contestado',
-            'type'        => 'success',
+            'growl'     => true,
+            'message'   => 'Examen contestado',
+            'type'      => 'success',
             'reload'    => true
         ]);
         break;
@@ -45,9 +45,9 @@ switch ($_POST["type"]) {
         $actividad = $activity->Info();
         $_SESSION["timeLimit"] = time() + $actividad["timeLimit"] * 60;
         echo json_encode([
-            'growl'        => true,
-            'message'    => 'Examen reiniciado',
-            'type'        => 'success',
+            'growl'     => true,
+            'message'   => 'Examen reiniciado',
+            'type'      => 'success',
             'reload'    => true
         ]);
         break;
