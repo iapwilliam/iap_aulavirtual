@@ -516,7 +516,7 @@ class Activity extends Module
 		$pond = "";
 
 		if ($this->verponderation == 'no') {
-			$pond = " and ponderation <> 0";
+			// $pond = " and ponderation <> 0";
 		}
 
 		$sql = "
@@ -538,6 +538,11 @@ class Activity extends Module
 		// print_r($result);
 		// exit;
 		foreach ($result as $key => $res) {
+			if ($res['activityType'] == "Foro" && $res["ponderation"] == 0 && $this->verponderation == 'no')
+			{
+				unset($result[$key]);
+				continue;
+			}
 			$result[$key]["count"] = $count;
 			$count++;
 			$result[$key]["descriptionShort"] = substr($result[$key]["description"], 0, 30);
