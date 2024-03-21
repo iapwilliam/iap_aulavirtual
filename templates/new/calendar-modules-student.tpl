@@ -75,7 +75,8 @@
                                         <tr class="{if $timestamp > $item.initialDateTimestamp && $timestamp < $item.finalDateTimestamp} table-success {/if} {if $timestamp > $item.finalDateTimestamp} table-danger {/if} {if $timestamp < $item.initialDateTimestamp} table-danger {/if}">
                                             <td class="text-center">{$consecutive++}</td>
                                             <td>{include file="{$DOC_ROOT}/templates/lists/new/module-calendar-td.tpl"}</td>
-                                            <td>
+                                            <td class="text-center">
+                                            {if $item.activityScore != 0}
                                                 <p><b>Valor de la Actividad:</b> {$item.activityScore}%</p>
                                                 {if $item.ponderation}
                                                     <p>
@@ -86,6 +87,7 @@
                                                         <div class="progress-bar bg-primary" role="progressbar" style="width: {$item.ponderation}%" aria-valuenow="{$item.ponderation}" aria-valuemin="0" aria-valuemax="100">{$item.ponderation}%</div>
                                                     </div>
                                                 {/if}
+                                            {/if}
                                             </td>
                                             <td class="text-center">
                                                 {if $timestamp > $item.initialDateTimestamp && $timestamp < $item.finalDateTimestamp}
