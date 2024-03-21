@@ -2656,4 +2656,21 @@ class Student extends User
 
 		return SSP::complex($_POST, $table, $primaryKey, $columns);
 	}
+
+	public function evaluaciones_cobach(){
+		$sql = 'SELECT user.controlNumber AS usuario, user.names as nombre, user.lastNamePaterno, user.lastNameMaterno,
+		IFNULL((SELECT activity_score.ponderation FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId WHERE activity_score.userId = user.userId AND activity_score.activityId = 11),"NO PRESENTÓ") as "actividad_1",
+		IFNULL((SELECT activity_score.ponderation FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId WHERE activity_score.userId = user.userId AND activity_score.activityId = 13),"NO PRESENTÓ") as "actividad_2",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 14 AND homework.userId = user.userId) as "actividad_3",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 15 AND homework.userId = user.userId) as "actividad_4",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 16 AND homework.userId = user.userId) as "actividad_5",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 17 AND homework.userId = user.userId) as "actividad_6",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 18 AND homework.userId = user.userId) as "actividad_7",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 19 AND homework.userId = user.userId) as "actividad_8",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 20 AND homework.userId = user.userId) as "actividad_9"
+		FROM user INNER JOIN user_subject ON user_subject.alumnoId = user.userId WHERE user_subject.courseId = 2 AND user.userId > 2;';
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetResult();
+		return $result;
+	}
 }

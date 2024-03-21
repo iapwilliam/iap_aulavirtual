@@ -111,7 +111,11 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item">
                             <a class="nav-link" target="_blank"
-                                href="{$WEB_ROOT}/ajax/new/reportes.php?opcion=cobach&page=export-excel">COBACH</a>
+                                href="{$WEB_ROOT}/ajax/new/reportes.php?opcion=cobach&page=export-excel">Registros COBACH</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" target="_blank"
+                                href="{$WEB_ROOT}/ajax/new/reportes.php?opcion=cobach-evaluaciones&page=export-excel">Evaluaciones COBACH</a>
                         </li>
                     </ul>
                 </div>

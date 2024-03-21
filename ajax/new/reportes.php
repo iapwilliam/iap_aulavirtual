@@ -11,4 +11,7 @@ switch ($_POST["opcion"]) {
     case 'cobach':
         include_once('reportes/cobach.php');
         break;
+    case 'cobach-evaluaciones':
+        include_once('reportes/cobach-evaluaciones.php');
+        break;
 }
