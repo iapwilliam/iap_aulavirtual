@@ -235,7 +235,7 @@ class Test extends Activity
 					return $response;
 				}
 				if ($actividad['tipo'] && $examenRealizado['ponderation'] < $actividad['calificacion']) { //Por calificacion 
-					$response['mensaje'] = "El puntaje mínimo requerido para aprobar esta evaluación es de ({$actividad['calificacion']}). Te recomendamos vuelvas a intentarlo para alcanzar este objetivo. Tienes la oportunidad de volver a realizarla";
+					$response['mensaje'] = "Tienes la oportunidad de volver a realizarla";
 					$response['intentos'] = 1;
 					return $response;
 				}
