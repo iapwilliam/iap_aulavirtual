@@ -498,7 +498,7 @@ class Group extends Module
 	{ 
 		$sql = "SELECT user.userId, user.controlNumber, user.names, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.password, user.adscripcion, user.coordination, user.funcion, user.rfc FROM user 
 		INNER JOIN user_subject ON user_subject.alumnoId = user.userId
-		AND user_subject.courseId = {$this->getCourseId()}";
+		AND user_subject.courseId = {$this->getCourseId()} AND user.userId > 2";
 		$this->Util()->DB()->setQuery($sql); 
 		$result = $this->Util()->DB()->getResult();
 		return $result;
