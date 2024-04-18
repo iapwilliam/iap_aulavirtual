@@ -117,7 +117,7 @@ switch ($opcion) {
 			]);
 		}
 		break;
-	case 'actualizar':
+	case 'actualizar-cobach':
 		$usuario = $_POST['admin'] ? $_POST['alumno'] : $_SESSION['User']['userId'];
 		$student->setUserId($usuario);
 		$name = trim(strip_tags($_POST['name']));
@@ -189,7 +189,7 @@ switch ($opcion) {
 		$student->setFuncion($function);
 		$student->setAdscripcion($adscripcion);
 		$student->setCoordination($coordination);
-		$response = $student->update();
+		$response = $student->updateCobach();
 
 		if ($response || empty($response['message'])) {
 			if ($_POST['admin']) {
@@ -360,7 +360,81 @@ switch ($opcion) {
 			]);
 		}
 		break;
+	case 'actualizar':
+		$usuario = $_SESSION['User']['userId'];
+		$student->setUserId($usuario);
+		$name = trim(strip_tags($_POST['name']));
+		$firstSurname = trim(strip_tags($_POST['firstSurname']));
+		$secondSurname = trim(strip_tags($_POST['secondSurname']));
+		$phone = str_replace(' ', '', strip_tags($_POST['mobile']));
+		$password = $_POST['password'];
+		$state = intval($_POST['estadot']);
+		$city = intval($_POST['ciudadt']);
+		$email = strip_tags($_POST['email']);
+		$errors = [];
+		if ($name == '') {
+			$errors['name'] = "Por favor, no se olvide de poner el nombre.";
+		}
+		if ($firstSurname == '') {
+			$errors['firstSurname'] = "Por favor, no se olvide de poner el apellido parterno.";
+		}
+		if ($secondSurname == '') {
+			$errors['secondSurname'] = "Por favor, no se olvide de poner el apellido materno.";
+		}
+		if ($password == '') {
+			$errors['password'] = "Por favor, no se olvide de poner la contraseña.";
+		}
+		if ($email == '') {
+			$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
+		}
+		if ($phone == '') {
+			$errors['mobile'] = "Por favor, no se olvide de poner el número de celular.";
+		}
+		if ($state == '') {
+			$errors['estadot'] = "Por favor, no se olvide de seleccionar el estado.";
+		}
+		if ($city == '') {
+			$errors['ciudadt'] = "Por favor, no se olvide de seleccionar la ciudad.";
+		}
 
+		if (!empty($errors)) {
+			header('HTTP/1.1 422 Unprocessable Entity');
+			header('Content-Type: application/json; charset=UTF-8');
+			echo json_encode([
+				'errors'    => $errors
+			]);
+			exit;
+		}
+
+		$student->setName($name);
+		$student->setLastNamePaterno($firstSurname);
+		$student->setLastNameMaterno($secondSurname);
+		$student->setEmail($email);
+		$student->setPassword($password);
+		$student->setPhone($phone);
+		$student->setControlNumber();
+		$student->setCourseId($curso);
+		$student->setSubjectId($dataCourse['subjectId']);
+		$student->setWorkplace($_POST['workplace']);
+		$student->setWorkplacePosition($_POST['workplacePosition']);
+		$student->setState($state);
+		$student->setCity($city);
+		$response = $student->update();
+		if ($response['status']) {
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'success',
+				'message'	=> 'Se ha actualizado la información del perfil.'
+			]);
+		} else {
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'danger',
+				'message'	=> $response['message'],
+			]);
+		}
+
+		break;
 	default:
 		echo "Petición desconocida";
 		break;

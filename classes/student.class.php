@@ -305,7 +305,7 @@ class Student extends User
 
 	public function EnumerateCiudades()
 	{
-		$sql = "SELECT * FROM municipio WHERE estadoId='" . $this->getState() . "'";
+		$sql = "SELECT * FROM sepomex WHERE id_estado = '" . $this->getState() . "' GROUP BY municipio ORDER BY municipio";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
@@ -1014,48 +1014,6 @@ class Student extends User
 		$sql = "SELECT por_beca FROM user_subject WHERE alumnoId = '" . $id . "'";
 		$this->Util()->DB()->setQuery($sql);
 		return $this->Util()->DB()->GetSingle();
-	}
-
-	function encuentro_monto($courseId)
-	{
-		$sql = "SELECT subjectId FROM course WHERE courseId='" . $courseId . "' ";
-		$this->Util()->DB()->setQuery($sql);
-		$res = $this->Util()->DB()->GetRow();
-		$sql = "SELECT cost FROM subject WHERE subjectId = '" . $res['subjectId'] . "' ";
-		$this->Util()->DB()->setQuery($sql);
-		$costo = $this->Util()->DB()->GetRow();
-		return $costo['cost'];
-	}
-
-	function editarPor($alumnoId, $courseId, $por_beca, $tipo_beca)
-	{
-		if ($tipo_beca == "Ninguno")
-			$por_beca = 0;
-
-		$sqlQuery = "UPDATE user_subject SET por_beca = '" . $por_beca . "', tipo_beca = '" . $tipo_beca . "' WHERE alumnoId = '" . $alumnoId . "'  AND courseId = '" . $courseId . "'";
-		$this->Util()->DB()->setQuery($sqlQuery);
-		$this->Util()->DB()->ExecuteQuery();
-
-		$sql = "SELECT * FROM invoice WHERE userId = '" . $alumnoId . "'";
-		$this->Util()->DB()->setQuery($sql);
-		$id_invoices = $this->Util()->DB()->GetResult();
-		foreach ($id_invoices as $fila) {
-			$sql = "SELECT * FROM payment WHERE invoiceId = '" . $fila[0] . "'";
-			$this->Util()->DB()->setQuery($sql);
-			$info_payment = $this->Util()->DB()->GetResult();
-			if (count($info_payment) == 0) {
-				if ($por_beca != 0) {
-					$v = (100 - $por_beca) / 100;
-					$valor = round($this->encuentro_monto($fila["courseId"]) * $v, 2);
-				} else
-					$valor = $this->encuentro_monto($fila["courseId"]);
-				$sql = "UPDATE invoice SET amount = '" . $valor . "' WHERE invoiceId = '" . $fila[0] . "'";
-				$this->Util()->DB()->setQuery($sql);
-				$this->Util()->DB()->ExecuteQuery();
-			}
-		}
-		$this->Util()->setError(10030, "complete");
-		$this->Util()->PrintErrors();
 	}
 
 	function AddInvoices($id, $curricula)
@@ -2546,7 +2504,7 @@ class Student extends User
 	{
 		$sql = "SELECT IF(semesterId = 0, 1, semesterId) as semesterId FROM academic_history WHERE courseId = '{$cursoId}' AND userId = '{$this->userId}' AND type = 'alta' ORDER BY academicHistoryId DESC";
 		$this->Util()->DB()->setQuery($sql);
-		$periodo = $this->Util()->DB()->GetSingle(); 
+		$periodo = $this->Util()->DB()->GetSingle();
 		return $periodo;
 	}
 
@@ -2605,7 +2563,7 @@ class Student extends User
 		return $resultado;
 	}
 
-	function update()
+	function updateCobach()
 	{
 		$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', email = '{$this->email}', phone = '{$this->phone}', coordination = '{$this->coordination}', adscripcion ='{$this->adscripcion}', rfc = '{$this->rfc}', funcion = '{$this->funcion}' WHERE userId = {$this->getUserId()}";
 
@@ -2657,7 +2615,8 @@ class Student extends User
 		return SSP::complex($_POST, $table, $primaryKey, $columns);
 	}
 
-	public function evaluaciones_cobach(){
+	public function evaluaciones_cobach()
+	{
 		$sql = 'SELECT user.controlNumber AS usuario, user.names as nombre, user.lastNamePaterno, user.lastNameMaterno,
 		IFNULL((SELECT activity_score.ponderation FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId WHERE activity_score.userId = user.userId AND activity_score.activityId = 11),"NO PRESENTÓ") as "actividad_1",
 		IFNULL((SELECT activity_score.ponderation FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId WHERE activity_score.userId = user.userId AND activity_score.activityId = 13),"NO PRESENTÓ") as "actividad_2",
@@ -2685,7 +2644,7 @@ class Student extends User
 			return $resultado;
 		}
 		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '".$this->workplace."', 'OTROS', '".$this->workplacePosition."', 1, {$this->state}, {$this->city}, '" . $this->schoolNumber . "', 'si', 'student', {$this->state}, {$this->city})";
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->state}, {$this->city}, '" . $this->schoolNumber . "', 'si', 'student', {$this->state}, {$this->city})";
 		$this->Util()->DB()->setQuery($sql);
 		$resultado['status'] = $this->Util()->DB()->InsertData();
 		$resultado['usuario'] = $controlNumber;
@@ -2698,6 +2657,15 @@ class Student extends User
 		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
+		return $resultado;
+	}
+
+	function update()
+	{
+		$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', email = '{$this->email}', phone = '{$this->phone}', password = '{$this->password}', workplace = '{$this->workplace}', workplacePosition = '{$this->workplacePosition}', ciudad = {$this->city}, estado = {$this->state}, estadot = {$this->state}, ciudadt = {$this->city} WHERE userId = {$this->getUserId()}";
+		$this->Util()->DB()->setQuery($sql);
+	 	$this->Util()->DB()->UpdateData();
+		$resultado['status'] = true;
 		return $resultado;
 	}
 }

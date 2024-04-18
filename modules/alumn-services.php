@@ -1,11 +1,28 @@
 <?php
+$cursos = $student->getCourses("AND user_subject.alumnoId = {$User['studentId']}");
 $student->setUserId($User['studentId']);
 $infoAlumno = $student->InfoStudent();
-$infoAlumno['email'] = explode("@",$infoAlumno['email'])[0];
-$coordinaciones = $util->cobach_coordinaciones();
-$adscripciones = $util->cobach_adscripciones();
-$funciones = $util->cobach_funciones(); 
-$smarty->assign("coordinaciones", $coordinaciones);
-$smarty->assign("adscripciones", $adscripciones);
-$smarty->assign("funciones", $funciones);
+if (count($cursos) > 1 && !isset($_GET['curso'])) {
+    $form = 0; //Se debe escoger el formulario
+    $smarty->assign("cursos", $cursos);
+} else {
+    if ($cursos[0]['courseId'] == 2 || $_GET['curso'] == 2) {
+        $form = 1;
+        $infoAlumno['email'] = explode("@", $infoAlumno['email'])[0];
+        $coordinaciones = $util->cobach_coordinaciones();
+        $adscripciones = $util->cobach_adscripciones();
+        $funciones = $util->cobach_funciones();
+        $smarty->assign("coordinaciones", $coordinaciones);
+        $smarty->assign("adscripciones", $adscripciones);
+        $smarty->assign("funciones", $funciones);
+    } else {
+        $form = 2;
+        $estados = $student->EnumerateEstados();
+        $student->setState($infoAlumno['estado']);
+        $municipios = $student->EnumerateCiudades(); 
+        $smarty->assign("estados", $estados);
+        $smarty->assign("municipios", $municipios);
+    }
+}
 $smarty->assign("alumno", $infoAlumno);
+$smarty->assign("form", $form);
