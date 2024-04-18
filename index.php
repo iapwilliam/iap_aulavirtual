@@ -220,7 +220,7 @@ if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 }
 
 if (!isset($_SESSION['User'])) { //Si no existe sesión
-	if (!in_array($_GET['page'], ['login', 'registro-cobach', 'recuperacion'])) { //Y no está en estas páginas
+	if (!in_array($_GET['page'], ['login', 'registro-cobach', 'recuperacion', 'registro'])) { //Y no está en estas páginas
 		header('Location: ' . WEB_ROOT . "/login"); //Lo mandamos al login
 	}
 } else { //Existe sesión

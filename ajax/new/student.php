@@ -197,16 +197,16 @@ switch ($opcion) {
 					'growl'		=> true,
 					'type'		=> 'success',
 					'message'	=> 'Se ha actualizado la información del perfil.',
-					'modal_close'	=>true, 
+					'modal_close'	=> true,
 					'dtreload'  => '#datatable'
 				]);
-			}else{
+			} else {
 				echo json_encode([
 					'growl'		=> true,
 					'type'		=> 'success',
-					'message'	=> 'Se ha actualizado la información del perfil.', 
+					'message'	=> 'Se ha actualizado la información del perfil.',
 				]);
-			} 
+			}
 		} else {
 			echo json_encode([
 				'growl'		=> true,
@@ -254,8 +254,8 @@ switch ($opcion) {
 		$student->setPerfil($documento);
 		$alumnoInfo = $student->GetInfo();
 		if ($student->updateAvatar($documento)) {
-			if (file_exists($ruta.$alumnoInfo['avatar'])) {
-				unlink($ruta.$alumnoInfo['avatar']);
+			if (file_exists($ruta . $alumnoInfo['avatar'])) {
+				unlink($ruta . $alumnoInfo['avatar']);
 			}
 			$_SESSION['User']['avatar'] = $documento;
 			echo json_encode([
@@ -266,12 +266,101 @@ switch ($opcion) {
 			]);
 		} else {
 			unlink($ruta . $documento);
-			echo json_encode([ 
+			echo json_encode([
 				'growl'			=> true,
-				'message'		=> 'Sucedió un error con la subida de la imagen, intente de nuevo.', 
+				'message'		=> 'Sucedió un error con la subida de la imagen, intente de nuevo.',
 			]);
 		}
 		break;
+	case 'registro':
+		$name = trim(strip_tags($_POST['name']));
+		$firstSurname = trim(strip_tags($_POST['firstSurname']));
+		$secondSurname = trim(strip_tags($_POST['secondSurname']));
+		$phone = str_replace(' ', '', strip_tags($_POST['mobile']));
+		$password = $_POST['password'];
+		$curso = intval($_POST['curricula']);
+		$state = intval($_POST['estadot']);
+		$city = intval($_POST['ciudadt']);
+		$email = strip_tags($_POST['email']);
+		$errors = [];
+		if ($name == '') {
+			$errors['name'] = "Por favor, no se olvide de poner el nombre.";
+		}
+		if ($firstSurname == '') {
+			$errors['firstSurname'] = "Por favor, no se olvide de poner el apellido parterno.";
+		}
+		if ($secondSurname == '') {
+			$errors['secondSurname'] = "Por favor, no se olvide de poner el apellido materno.";
+		}
+		if ($password == '') {
+			$errors['password'] = "Por favor, no se olvide de poner la contraseña.";
+		}
+		if ($email == '') {
+			$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
+		}
+		if ($phone == '') {
+			$errors['mobile'] = "Por favor, no se olvide de poner el número de celular.";
+		}
+		if ($state == '') {
+			$errors['estadot'] = "Por favor, no se olvide de seleccionar el estado.";
+		}
+		if ($city == '') {
+			$errors['ciudadt'] = "Por favor, no se olvide de seleccionar la ciudad.";
+		}
+		if ($curso == '') {
+			$errors['curricula'] = "Por favor, no se olvide de seleccionar el programa académico.";
+		}
+
+		if (!empty($errors)) {
+			header('HTTP/1.1 422 Unprocessable Entity');
+			header('Content-Type: application/json; charset=UTF-8');
+			echo json_encode([
+				'errors'    => $errors
+			]);
+			exit;
+		}
+		$course->setCourseId($curso);
+		$dataCourse = $course->getCourse();
+		$student->setName($name);
+		$student->setLastNamePaterno($firstSurname);
+		$student->setLastNameMaterno($secondSurname);
+		$student->setEmail($email);
+		$student->setPassword($password);
+		$student->setPhone($phone);
+		$student->setControlNumber();
+		$student->setCourseId($curso);
+		$student->setSubjectId($dataCourse['subjectId']);
+		$student->setWorkplace($_POST['workplace']);
+		$student->setWorkplaceOcupation($_POST['workplaceOcupation']);
+		$student->setState($state);
+		$student->setCity($city);
+		$response = $student->save();
+		if ($response['status']) {
+			$details_body = array(
+				'email'	=> $response['usuario'],
+				'password'	=> $password,
+				'major'		=> $dataCourse['major_name'],
+				'course'	=> $dataCourse['subject_name']
+			);
+			$details_subject = array();
+			$sendmail->Prepare($message[1]["subject"], $message[1]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
+
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'success',
+				'message'	=> 'Se ha completado el registro, se ha enviado un correo con el usuario y contraseña para acceder a la plataforma.',
+				'location'	=> WEB_ROOT . "/login",
+				'duracion'	=> 5000
+			]);
+		} else {
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'danger',
+				'message'	=> $response['message'],
+			]);
+		}
+		break;
+
 	default:
 		echo "Petición desconocida";
 		break;

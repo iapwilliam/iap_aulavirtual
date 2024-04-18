@@ -297,7 +297,7 @@ class Student extends User
 
 	public function EnumerateEstados()
 	{
-		$sql = "SELECT * FROM estado WHERE paisId='" . $this->getCountry() . "'";
+		$sql = "SELECT * FROM sepomex GROUP BY estado ORDER BY estado";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
@@ -2672,5 +2672,32 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
+	}
+
+	function save()
+	{
+		$sql = "SELECT * FROM user WHERE email = '" . $this->email . "'";
+		$this->Util()->DB()->setQuery($sql);
+		$existe = $this->Util()->DB()->getRow();
+		if ($existe) {
+			$resultado['status'] = 0;
+			$resultado['message'] = "Ya existe un registro con este correo.";
+			return $resultado;
+		}
+		$controlNumber = $this->getControlNumber();
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '".$this->workplace."', 'OTROS', '".$this->workplacePosition."', 1, {$this->state}, {$this->city}, '" . $this->schoolNumber . "', 'si', 'student', {$this->state}, {$this->city})";
+		$this->Util()->DB()->setQuery($sql);
+		$resultado['status'] = $this->Util()->DB()->InsertData();
+		$resultado['usuario'] = $controlNumber;
+
+		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '" . $this->courseId . "')";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->InsertData();
+
+		$date = date('Y-m-d');
+		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->InsertData();
+		return $resultado;
 	}
 }
