@@ -640,11 +640,11 @@ class Course extends Subject
 		$this->Util()->DB()->setQuery($sql);
 		$modulos = $this->Util()->DB()->GetSingle();
 		return $modulos;
-	}
+	}  
 
 	function StudentCourseModules()
 	{
-		$info = $this->Info();
+		$info = $this->getCourse();
 
 		$sql = "
 				SELECT * FROM course_module
@@ -694,9 +694,7 @@ class Course extends Subject
 				$infoCc['calificacion'] = '<font color="red">' . $infoCc['calificacion'] . '</font>';
 			} else if ($infoCc['calificacion'] <= 6) {
 				$infoCc['calificacion'] = '<font color="red">' . $infoCc['calificacion'] . '</font>';
-			}
-
-
+			} 
 
 			$result[$key]["finalDate"] = $result[$key]["finalDate"] . " 23:59:59";
 			$result[$key]["initialDateStamp"] = strtotime($result[$key]["initialDate"]);
@@ -714,5 +712,6 @@ class Course extends Subject
 		}
 
 		return $result;
-	}
+	} 
+	 
 }
