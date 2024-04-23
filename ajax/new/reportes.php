@@ -7,7 +7,7 @@ session_start();
 if ($_GET['opcion']) {
     $_POST['opcion'] = $_GET['opcion'];
 }
-switch ($_POST["opcion"]) { 
+switch ($_POST["opcion"]) {
     case 'cobach':
         include_once('reportes/cobach.php');
         break;

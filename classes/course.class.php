@@ -640,7 +640,7 @@ class Course extends Subject
 		$this->Util()->DB()->setQuery($sql);
 		$modulos = $this->Util()->DB()->GetSingle();
 		return $modulos;
-	}  
+	}
 
 	function StudentCourseModules()
 	{
@@ -694,7 +694,7 @@ class Course extends Subject
 				$infoCc['calificacion'] = '<font color="red">' . $infoCc['calificacion'] . '</font>';
 			} else if ($infoCc['calificacion'] <= 6) {
 				$infoCc['calificacion'] = '<font color="red">' . $infoCc['calificacion'] . '</font>';
-			} 
+			}
 
 			$result[$key]["finalDate"] = $result[$key]["finalDate"] . " 23:59:59";
 			$result[$key]["initialDateStamp"] = strtotime($result[$key]["initialDate"]);
@@ -712,6 +712,25 @@ class Course extends Subject
 		}
 
 		return $result;
-	} 
-	 
+	}
+
+	function getStudents($sql)
+	{
+		$sql = "SELECT user.names, user.password, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.workplace, user.workplacePosition,(SELECT estado FROM sepomex WHERE sepomex.id_estado = user.estado LIMIT 1) as estado, (SELECT municipio FROM sepomex WHERE sepomex.id_estado = user.estado AND sepomex.id_municipio = user.ciudadt LIMIT 1) as municipio FROM user_subject INNER JOIN user ON user.userId = user_subject.alumnoId WHERE 1 {$sql}";
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetResult();
+		return $result;
+	}
+
+	function AddedCourseModules()
+	{
+		$info = $this->getCourse();
+		$this->Util()->DB()->setQuery("
+				SELECT * FROM course_module
+				LEFT JOIN subject_module ON subject_module.subjectModuleId = course_module.subjectModuleId
+				WHERE courseId = '" . $info["courseId"] . "'
+				ORDER BY semesterId ASC, name ASC");
+		$result = $this->Util()->DB()->GetResult();
+		return $result;
+	}
 }

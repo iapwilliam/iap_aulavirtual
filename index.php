@@ -213,7 +213,8 @@ $pages = array(
 	'credenciales',
 	'registro',
 	'reporte-becas',
-	'registro-cobach'
+	'registro-cobach',
+	'reporte-licencias'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
@@ -228,22 +229,22 @@ if (!isset($_SESSION['User'])) { //Si no existe sesión
 	$student->setUserId($User["userId"]);
 	if ($_GET['page'] != "homepage") { //Si es distinto del homepage checamos los permisos
 		include_once(DOC_ROOT . '/modules/user.php');
-	} 
+	}
 }
- 
-$smarty->assign('positionId', $User['positionId']);  
-include_once(DOC_ROOT . '/modules/' . $_GET['page'] . '.php'); 
+
+$smarty->assign('positionId', $User['positionId']);
+include_once(DOC_ROOT . '/modules/' . $_GET['page'] . '.php');
 $smarty->assign('page', $_GET['page']);
-$smarty->assign('section', $_GET['section']);  
-$smarty->assign('User', $User); 
+$smarty->assign('section', $_GET['section']);
+$smarty->assign('User', $User);
 $includedTpl =  $_GET['page'];
 if ($_GET['section']) {
 	$includedTpl =  $_GET['page'] . "_" . $_GET['section'];
 }
-$smarty->assign('includedTpl', $includedTpl);  
+$smarty->assign('includedTpl', $includedTpl);
 $smarty->assign('lang', $lang);
 $smarty->assign('timestamp', time());
-$smarty->assign('rand', rand()); 
+$smarty->assign('rand', rand());
 ini_set("display_errors", "ON");
 $showErrors = "E_ALL";
 error_reporting($showErrors);
@@ -256,4 +257,4 @@ if ($includedTpl == 'login') {
 } else {
 
 	$smarty->display(DOC_ROOT . '/templates/index_new.tpl');
-} 
+}
