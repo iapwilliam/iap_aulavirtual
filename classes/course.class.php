@@ -733,4 +733,24 @@ class Course extends Subject
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
 	}
+	function FreeCourseModules()
+	{
+		$info = $this->getCourse();
+		$this->Util()->DB()->setQuery("
+				SELECT * FROM subject_module
+				WHERE subject_module.subjectId = '" . $info["subjectId"] . "'
+				ORDER BY semesterId ASC, name ASC");
+		$result = $this->Util()->DB()->GetResult();
+		foreach ($result as $key => $value) {
+			$this->Util()->DB()->setQuery("
+				SELECT * FROM course_module
+				WHERE subjectModuleId = '" . $value["subjectModuleId"] . "' AND courseId = '" . $this->courseId . "'");
+			$row = $this->Util()->DB()->GetRow();
+
+			if ($row) {
+				unset($result[$key]);
+			}
+		}
+		return $result;
+	}
 }
