@@ -173,16 +173,6 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-6">
-                        <label for="curricula">Selecciona el programa académico al que te quieres registrar:</label>
-                        <select name="curricula" id="curricula" class="form-control">
-                            {foreach from=$activeCourses item=course}
-                                <option value="{$course.courseId}">{$course.major_name} - {$course.subject_name} -
-                                    {$course.group}
-                                </option>
-                            {/foreach}
-                        </select>
-                    </div>
                 </div>
                 <div id="loader"></div>
                 <div class="form-group text-center">

@@ -2697,12 +2697,21 @@ class Student extends User
 		$resultado['status'] = $this->Util()->DB()->InsertData();
 		$resultado['usuario'] = $controlNumber;
 
-		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '" . $this->courseId . "')";
+		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' ,7)";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 
 		$date = date('Y-m-d');
-		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
+		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(7, 7, '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->InsertData();
+
+		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , 8)";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->InsertData();
+
+		$date = date('Y-m-d');
+		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(8, 8, '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 		return $resultado;

@@ -111,3 +111,23 @@ Favor de realizar de nueva cuenta el proceso para generar tu credencial digital.
 
 $message[10]['subject'] = "Actualización de documentación | Instituto de Administración Pública del Estado de Chiapas";
 $message[10]['body'] = "El docente |docente| ha actualizado el siguiente documento: \"|documento|\"";
+
+$message[11]["subject"] = "Confirmación de inscripción al aula virtual del Instituto de Administración Pública del Estado de Chiapas, A. C.";
+$message[11]["body"] = "
+¡Bienvenido/a a la Jornada de Certificación en Transparencia, Acceso a la Información y Protección de Datos Personales
+
+Nos complace confirmar que hemos recibido con éxito tu inscripción. Estamos emocionados de tenerte como parte de nuestra comunidad educativa y esperamos proporcionarte una experiencia de aprendizaje enriquecedora y satisfactoria. 
+
+	Tus datos para ingresar al sistema son los siguientes
+	https://aulavirtual.iapchiapas.edu.mx/
+	<b>Usuario:</b> |email|
+	<b>Contrase&ntilde;a del Sistema:</b>	|password|
+
+Si tienes alguna pregunta o necesitas asistencia adicional antes del inicio del curso, no dudes en ponerte en contacto con nuestro equipo al correo enlinea@iapchiapas.edu.mx o al teléfono 961 1251508
+
+Gracias por inscribirte con nosotros. Estamos ansiosos por ayudarte a alcanzar tus objetivos de aprendizaje y brindarte una experiencia educativa excepcional.
+
+¡Nos vemos en clase!
+
+Atentamente,
+IAP Chiapas";

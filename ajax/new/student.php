@@ -511,10 +511,6 @@ switch ($opcion) {
 			]);
 			exit;
 		}
-		$course->setCourseId($curso);
-		$dataCourse = $course->getCourse();
-		$student->setCourseId($curso);
-		$student->setSubjectId($dataCourse['subjectId']);
 		$student->setPermiso(1);
 		$student->setControlNumber();
 		$student->setName($name);
@@ -561,11 +557,9 @@ switch ($opcion) {
 			$details_body = array(
 				'email'	=> $response['usuario'],
 				'password'	=> $password,
-				'major'		=> $dataCourse['major_name'],
-				'course'	=> $dataCourse['subject_name']
 			);
 			$details_subject = array();
-			$sendmail->Prepare($message[1]["subject"], $message[1]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
+			$sendmail->Prepare($message[11]["subject"], $message[11]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
 
 			echo json_encode([
 				'growl'		=> true,
