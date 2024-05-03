@@ -513,6 +513,7 @@ switch ($opcion) {
 		}
 		$course->setCourseId($curso);
 		$dataCourse = $course->getCourse();
+		$student->setCourseId($curso);
 		$student->setPermiso(1);
 		$student->setControlNumber();
 		$student->setName($name);
