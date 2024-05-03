@@ -514,6 +514,7 @@ switch ($opcion) {
 		$course->setCourseId($curso);
 		$dataCourse = $course->getCourse();
 		$student->setCourseId($curso);
+		$student->setSubjectId($dataCourse['subjectId']);
 		$student->setPermiso(1);
 		$student->setControlNumber();
 		$student->setName($name);
