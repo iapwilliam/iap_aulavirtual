@@ -110,7 +110,7 @@
 			{if $vistaPrevia eq 1}
 				{include file="new/sidebar_vp.tpl"}
 			{else}
-				{if (($User.type ne "Docente") and ($User.type ne "student") and ($page ne "register") and ($page ne "registro") and $page ne "registro-cobach")}
+				{if (($User.type ne "Docente") and ($User.type ne "student") and ($page ne "register") and ($page ne "registro") and $page ne "registro-cobach" and $page ne "registro-transparencia")}
 					{include file="new/sidebar.tpl"}
 				{/if}
 			{*if (($User.type eq "Docente") or ($User.type eq "student"))}
@@ -119,7 +119,7 @@
 			{/if}
 			{* End sidebar *}
 			<div class="main-panel"
-				{if (($User.type eq "Docente") or ($User.type eq "student") or ($page eq "register") or ($page eq "registro") or $page eq "registro-cobach")}
+				{if (($User.type eq "Docente") or ($User.type eq "student") or ($page eq "register") or ($page eq "registro") or $page eq "registro-cobach" or $page eq "registro-transparencia")}
 				style="width:100% !important;" {/if}>
 				{* Container *}
 				<div class="content-wrapper">

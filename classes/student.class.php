@@ -186,6 +186,16 @@ class Student extends User
 	{
 		$this->rfc = $value;
 	}
+	private $curpDrive;
+	public function setCurpDrive($value)
+	{
+		$this->curpDrive = $value;
+	}
+	private $foto;
+	public function setFoto($value)
+	{
+		$this->foto = $value;
+	} 
 
 	public function AddAcademicHistory($type, $situation, $semesterId = 1)
 	{
@@ -2664,8 +2674,37 @@ class Student extends User
 	{
 		$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', email = '{$this->email}', phone = '{$this->phone}', password = '{$this->password}', workplace = '{$this->workplace}', workplacePosition = '{$this->workplacePosition}', ciudad = {$this->city}, estado = {$this->state}, estadot = {$this->state}, ciudadt = {$this->city} WHERE userId = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
-	 	$this->Util()->DB()->UpdateData();
+		$this->Util()->DB()->UpdateData();
 		$resultado['status'] = true;
+		return $resultado;
+	}
+
+
+	function saveTransparencia()
+	{
+		$sql = "SELECT * FROM user WHERE email = '" . $this->email . "'";
+		$this->Util()->DB()->setQuery($sql);
+		$existe = $this->Util()->DB()->getRow();
+		if ($existe) {
+			$resultado['status'] = 0;
+			$resultado['message'] = "Ya existe un registro con este correo.";
+			return $resultado;
+		}
+		$controlNumber = $this->getControlNumber();
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, type, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', 'student', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})"; 
+		
+		$this->Util()->DB()->setQuery($sql);
+		$resultado['status'] = $this->Util()->DB()->InsertData();
+		$resultado['usuario'] = $controlNumber;
+
+		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '" . $this->courseId . "')";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->InsertData();
+
+		$date = date('Y-m-d');
+		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->InsertData();
 		return $resultado;
 	}
 }
