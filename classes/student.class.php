@@ -195,7 +195,7 @@ class Student extends User
 	public function setFoto($value)
 	{
 		$this->foto = $value;
-	} 
+	}
 
 	public function AddAcademicHistory($type, $situation, $semesterId = 1)
 	{
@@ -2684,36 +2684,66 @@ class Student extends User
 	{
 		$sql = "SELECT * FROM user WHERE email = '" . $this->email . "'";
 		$this->Util()->DB()->setQuery($sql);
-		$existe = $this->Util()->DB()->getRow();
-		if ($existe) {
-			$resultado['status'] = 0;
-			$resultado['message'] = "Ya existe un registro con este correo.";
-			return $resultado;
+		$user = $this->Util()->DB()->GetRow();
+		if ($user['userId']) { 
+			$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', phone = '{$this->phone}', workPlace = '{$this->workplace}', workplacePosition = '{$this->workplacePosition}',  estadot = {$this->estadoT}, ciudadt = {$this->ciudadT}, actualizado = 'si', type =  'student', estado = {$this->estadoT}, ciudad = {$this->ciudadT}, curpDrive = {$this->curpDrive}, curp = '{$this->curp}', foto = {$this->foto} WHERE userId = {$user['userId']}";
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->UpdateData();
+			
+			$sql = "SELECT * FROM user_subject WHERE alumnoId = {$user['userId']} AND courseId = 7";
+			$this->Util()->DB()->setQuery($sql);
+			$existe = $this->Util()->DB()->getRow();
+			if(!$existe){
+				$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $user['userId'] . "', 'activo' ,7)";
+				$this->Util()->DB()->setQuery($sql);
+				$this->Util()->DB()->InsertData();
+	
+				$date = date('Y-m-d');
+				$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(7, 7, '" . $user['userId'] . "', 1, '" . $date . "', 'alta', 'A')";
+				$this->Util()->DB()->setQuery($sql);
+				$this->Util()->DB()->InsertData();
+			}
+			$sql = "SELECT * FROM user_subject WHERE alumnoId = {$user['userId']} AND courseId = 8";
+			$this->Util()->DB()->setQuery($sql);
+			$existe = $this->Util()->DB()->getRow();
+			if(!$existe){
+				$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $user['userId'] . "', 'activo' ,8)";
+				$this->Util()->DB()->setQuery($sql);
+				$this->Util()->DB()->InsertData();
+	
+				$date = date('Y-m-d');
+				$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(8, 8, '" . $user['userId'] . "', 1, '" . $date . "', 'alta', 'A')";
+				$this->Util()->DB()->setQuery($sql);
+				$this->Util()->DB()->InsertData();
+			}
+			$resultado['status'] = $user['userId'];
+			$resultado['usuario'] = $user['controlNumber']; 
+		} else {
+			$controlNumber = $this->getControlNumber();
+			$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, type, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', 'student', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})";
+			$this->Util()->DB()->setQuery($sql);
+			$resultado['status'] = $this->Util()->DB()->InsertData();
+			$resultado['usuario'] = $controlNumber; 
+
+
+			$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' ,7)";
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->InsertData();
+
+			$date = date('Y-m-d');
+			$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(7, 7, '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->InsertData();
+
+			$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , 8)";
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->InsertData();
+
+			$date = date('Y-m-d');
+			$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(8, 8, '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->InsertData();
 		}
-		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, type, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', 'student', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})"; 
-		
-		$this->Util()->DB()->setQuery($sql);
-		$resultado['status'] = $this->Util()->DB()->InsertData();
-		$resultado['usuario'] = $controlNumber;
-
-		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' ,7)";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
-
-		$date = date('Y-m-d');
-		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(7, 7, '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
-
-		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , 8)";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
-
-		$date = date('Y-m-d');
-		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(8, 8, '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
 		return $resultado;
 	}
 }
