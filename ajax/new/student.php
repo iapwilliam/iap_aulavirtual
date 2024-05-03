@@ -490,12 +490,7 @@ switch ($opcion) {
 				'types' 	=> ['application/pdf'],
 				'size' 		=> 5242880,
 				'required'	=> true
-			],
-			"foto"	=> [
-				'types' 	=> ['image/jpeg', 'image/png'],
-				'size' 		=> 5242880,
-				'required'	=> true
-			]
+			]  
 		]);
 		foreach ($response as $key => $value) {
 			if (!$value['status']) {
@@ -548,12 +543,12 @@ switch ($opcion) {
 			}';
 			unlink($ruta . $documento);
 		}
-		$student->setCurpDrive("'{$files['curparchivo']}'");
-		$student->setFoto("'{$files['foto']}'");
+		$student->setCurpDrive("'{$files['curparchivo']}'"); 
 		// Estudios
 		$student->setAcademicDegree($_POST['academicDegree']);
 		$response = $student->saveTransparencia();
 		if ($response['status']) {
+			$password = isset($response['password']) ? $response['password'] : $password;
 			$details_body = array(
 				'email'	=> $response['usuario'],
 				'password'	=> $password,

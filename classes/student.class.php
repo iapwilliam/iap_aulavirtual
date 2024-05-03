@@ -2686,7 +2686,7 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		$user = $this->Util()->DB()->GetRow();
 		if ($user['userId']) { 
-			$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', phone = '{$this->phone}', workPlace = '{$this->workplace}', workplacePosition = '{$this->workplacePosition}',  estadot = {$this->estadoT}, ciudadt = {$this->ciudadT}, actualizado = 'si', type =  'student', estado = {$this->estadoT}, ciudad = {$this->ciudadT}, curpDrive = {$this->curpDrive}, curp = '{$this->curp}', foto = {$this->foto} WHERE userId = {$user['userId']}";
+			$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', phone = '{$this->phone}', workPlace = '{$this->workplace}', workplacePosition = '{$this->workplacePosition}',  estadot = {$this->estadoT}, ciudadt = {$this->ciudadT}, actualizado = 'si', type =  'student', estado = {$this->estadoT}, ciudad = {$this->ciudadT}, curpDrive = {$this->curpDrive}, curp = '{$this->curp}' WHERE userId = {$user['userId']}";
 			$this->Util()->DB()->setQuery($sql);
 			$this->Util()->DB()->UpdateData();
 			
@@ -2718,9 +2718,10 @@ class Student extends User
 			}
 			$resultado['status'] = $user['userId'];
 			$resultado['usuario'] = $user['controlNumber']; 
+			$resultado['password'] = $user['password'];
 		} else {
 			$controlNumber = $this->getControlNumber();
-			$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, type, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', 'student', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})";
+			$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, type, estado, ciudad, curpDrive, curp) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', 'student', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}')";
 			$this->Util()->DB()->setQuery($sql);
 			$resultado['status'] = $this->Util()->DB()->InsertData();
 			$resultado['usuario'] = $controlNumber; 

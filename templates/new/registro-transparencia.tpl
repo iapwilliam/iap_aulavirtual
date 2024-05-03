@@ -54,33 +54,6 @@
                     </div>
                 </div>
 
-                <span class="badge badge-dark"><i class="fas fa-user"></i>Fotografía para inscripción</span>
-                <hr />
-                <div class="row">
-                    <div class="form-group col-md-2">
-                        <img src="{$WEB_ROOT}/images/credencial/instrucciones.jpeg" class="img-fluid">
-                    </div>
-                    <div class="form-group col-md-2">
-                        <ul>
-                            <li>Fotografía digital reciente</li>
-                            <li>Del pecho hacia arriba</li>
-                            <li>Rostro de frente</li>
-                            <li>Dejar espacio sobre la cabeza</li>
-                            <li>Enfocada y nítida</li>
-                            <li>Rostro y cuerpo centrado</li>
-                            <li>Bien iluminada</li>
-                            <li>Fondo claro</li>
-                            <li>Sin cubrebocas</li>
-                            <li>Sin lentes</li>
-                        </ul>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="foto">Foto</label>
-                        <input type="file" id="foto" class="form-control" name="foto">
-                        <span class="invalid-feedback"></span>
-                    </div>
-                </div>
-
                 <span class="badge badge-dark"><i class="fas fa-address-book"></i> Datos de Contacto</span>
                 <hr />
                 <div class="row">
