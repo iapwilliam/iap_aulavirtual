@@ -122,6 +122,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{$WEB_ROOT}/reporte-licencias">Licenciaturas</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{$WEB_ROOT}/reporte-transparencia">Cursos - Transparencia</a>
+                        </li>
                     </ul>
                 </div>
             </li>

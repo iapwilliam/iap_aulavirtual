@@ -11,7 +11,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 $licenciatura = $_GET['licenciatura'];
 if ($licenciatura == 0) {
-    $licenciaturas = $course->getCourses("AND courseId > 2");
+    $licenciaturas = $course->getCourses("AND courseId > 2 AND courseId < 7");
 } else {
     $licenciaturas = $course->getCourses("AND courseId = $licenciatura");
 }

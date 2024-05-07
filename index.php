@@ -215,7 +215,8 @@ $pages = array(
 	'reporte-becas',
 	'registro-cobach',
 	'registro-transparencia',
-	'reporte-licencias'
+	'reporte-licencias',
+	'reporte-transparencia'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
