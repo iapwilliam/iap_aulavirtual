@@ -29,6 +29,34 @@ $sheet->setCellValue('J1', 'Módulo 2 | Actividad 2');
 $sheet->setCellValue('K1', 'Módulo 2 | Actividad 3');
 $sheet->setCellValue('L1', 'Módulo 2 | Actividad 4');
 $sheet->setCellValue('M1', 'Módulo 2 | Actividad 5');
+$sheet->setCellValue('N1', 'Evaluación Módulo 3 | Sesión 1');
+$sheet->setCellValue('O1', 'Módulo 3 | Actividad 1');
+$sheet->setCellValue('P1', 'Módulo 3 | Actividad 2');
+$sheet->setCellValue('Q1', 'Módulo 3 | Actividad 3');
+$sheet->setCellValue('R1', 'Módulo 3 | Actividad 4');
+$sheet->setCellValue('S1', 'Módulo 3 | Actividad 5');
+$sheet->setCellValue('T1', 'Evaluación Módulo 4 | Sesión 1');
+$sheet->setCellValue('U1', 'Módulo 4 | Actividad 1');
+$sheet->getColumnDimension('A')->setAutoSize(true);
+$sheet->getColumnDimension('B')->setAutoSize(true);
+$sheet->getColumnDimension('C')->setAutoSize(true);
+$sheet->getColumnDimension('D')->setAutoSize(true);
+$sheet->getColumnDimension('E')->setAutoSize(true);
+$sheet->getColumnDimension('F')->setAutoSize(true);
+$sheet->getColumnDimension('G')->setAutoSize(true);
+$sheet->getColumnDimension('H')->setAutoSize(true);
+$sheet->getColumnDimension('I')->setAutoSize(true);
+$sheet->getColumnDimension('J')->setAutoSize(true);
+$sheet->getColumnDimension('K')->setAutoSize(true);
+$sheet->getColumnDimension('L')->setAutoSize(true);
+$sheet->getColumnDimension('M')->setAutoSize(true);
+$sheet->getColumnDimension('N')->setAutoSize(true);
+$sheet->getColumnDimension('O')->setAutoSize(true);
+$sheet->getColumnDimension('Q')->setAutoSize(true);
+$sheet->getColumnDimension('R')->setAutoSize(true);
+$sheet->getColumnDimension('S')->setAutoSize(true);
+$sheet->getColumnDimension('T')->setAutoSize(true);
+$sheet->getColumnDimension('U')->setAutoSize(true);
 
 $sheet->getStyle('A')->getAlignment()->setHorizontal('center')->setVertical('center');
 $sheet->getStyle('A')->getFont()->setSize(14)->setBold(true);
@@ -56,7 +84,22 @@ $sheet->getStyle('L')->getAlignment()->setHorizontal('center')->setVertical('cen
 $sheet->getStyle('L')->getFont()->setSize(14)->setBold(true);
 $sheet->getStyle('M')->getAlignment()->setHorizontal('center')->setVertical('center');
 $sheet->getStyle('M')->getFont()->setSize(14)->setBold(true);
-
+$sheet->getStyle('N')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('N')->getFont()->setSize(14)->setBold(true);
+$sheet->getStyle('O')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('O')->getFont()->setSize(14)->setBold(true);
+$sheet->getStyle('P')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('P')->getFont()->setSize(14)->setBold(true);
+$sheet->getStyle('Q')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('Q')->getFont()->setSize(14)->setBold(true);
+$sheet->getStyle('R')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('R')->getFont()->setSize(14)->setBold(true);
+$sheet->getStyle('S')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('S')->getFont()->setSize(14)->setBold(true);
+$sheet->getStyle('T')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('T')->getFont()->setSize(14)->setBold(true);
+$sheet->getStyle('U')->getAlignment()->setHorizontal('center')->setVertical('center');
+$sheet->getStyle('U')->getFont()->setSize(14)->setBold(true);
 
 for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("A" . ($i + 2), $students[$i]['usuario']);
@@ -72,6 +115,14 @@ for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("K" . ($i + 2), $students[$i]['actividad_7']); 
     $sheet->setCellValue("L" . ($i + 2), $students[$i]['actividad_8']); 
     $sheet->setCellValue("M" . ($i + 2), $students[$i]['actividad_9']); 
+    $sheet->setCellValue("N" . ($i + 2), $students[$i]['actividad_10']); 
+    $sheet->setCellValue("O" . ($i + 2), $students[$i]['actividad_11']); 
+    $sheet->setCellValue("P" . ($i + 2), $students[$i]['actividad_12']); 
+    $sheet->setCellValue("Q" . ($i + 2), $students[$i]['actividad_13']); 
+    $sheet->setCellValue("R" . ($i + 2), $students[$i]['actividad_14']); 
+    $sheet->setCellValue("S" . ($i + 2), $students[$i]['actividad_15']); 
+    $sheet->setCellValue("T" . ($i + 2), $students[$i]['actividad_16']); 
+    $sheet->setCellValue("U" . ($i + 2), $students[$i]['actividad_17']); 
 }
 
 $sheet->getStyle("A2:M" . (count($students) + 1))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);

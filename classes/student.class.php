@@ -2636,7 +2636,15 @@ class Student extends User
 		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 17 AND homework.userId = user.userId) as "actividad_6",
 		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 18 AND homework.userId = user.userId) as "actividad_7",
 		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 19 AND homework.userId = user.userId) as "actividad_8",
-		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 20 AND homework.userId = user.userId) as "actividad_9"
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 20 AND homework.userId = user.userId) as "actividad_9",
+		IFNULL((SELECT activity_score.ponderation FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId WHERE activity_score.userId = user.userId AND activity_score.activityId = 22),"NO PRESENTÓ") as "actividad_10",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 23 AND homework.userId = user.userId) as "actividad_11",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 24 AND homework.userId = user.userId) as "actividad_12",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 25 AND homework.userId = user.userId) as "actividad_13",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 26 AND homework.userId = user.userId) as "actividad_14",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 27 AND homework.userId = user.userId) as "actividad_15",
+		IFNULL((SELECT activity_score.ponderation FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId WHERE activity_score.userId = user.userId AND activity_score.activityId = 30),"NO PRESENTÓ") as "actividad_16",
+		(SELECT IF(COUNT(*) > 0, "ENTREGÓ", "NO ENTREGÓ")  FROM homework WHERE homework.activityId = 29 AND homework.userId = user.userId) as "actividad_17"
 		FROM user INNER JOIN user_subject ON user_subject.alumnoId = user.userId WHERE user_subject.courseId = 2 AND user.userId > 2;';
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
