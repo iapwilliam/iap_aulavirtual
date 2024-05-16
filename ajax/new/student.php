@@ -690,7 +690,7 @@ switch ($opcion) {
 				'password'	=> $password,
 			);
 			$details_subject = array();
-			$sendmail->Prepare($message[11]["subject"], $message[11]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
+			$sendmail->Prepare($message[11]["subject"], $message[12]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
 
 			echo json_encode([
 				'growl'		=> true,

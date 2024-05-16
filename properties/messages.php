@@ -131,3 +131,21 @@ Gracias por inscribirte con nosotros. Estamos ansiosos por ayudarte a alcanzar t
 
 Atentamente,
 IAP Chiapas";
+$message[12]["body"] = "
+¡Bienvenido/a a la Jornada de Certificación en Primeros Auxilios
+
+Nos complace confirmar que hemos recibido con éxito tu inscripción. Estamos emocionados de tenerte como parte de nuestra comunidad educativa y esperamos proporcionarte una experiencia de aprendizaje enriquecedora y satisfactoria. 
+
+	Tus datos para ingresar al sistema son los siguientes
+	https://aulavirtual.iapchiapas.edu.mx/
+	<b>Usuario:</b> |email|
+	<b>Contrase&ntilde;a del Sistema:</b>	|password|
+
+Si tienes alguna pregunta o necesitas asistencia adicional antes del inicio del curso, no dudes en ponerte en contacto con nuestro equipo al correo enlinea@iapchiapas.edu.mx o al teléfono 961 1251508
+
+Gracias por inscribirte con nosotros. Estamos ansiosos por ayudarte a alcanzar tus objetivos de aprendizaje y brindarte una experiencia educativa excepcional.
+
+¡Nos vemos en clase!
+
+Atentamente,
+IAP Chiapas";
