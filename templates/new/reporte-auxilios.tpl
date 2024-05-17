@@ -22,7 +22,7 @@
         <form id="frmGral" action="{$WEB_ROOT}/ajax/new/reportes.php" method="get" target="_blank"> 
             <div class="row">
                 <div class="col-md-2">
-                    <input type="hidden" name="opcion" value="transparencia">
+                    <input type="hidden" name="opcion" value="auxilios">
                     <input type="hidden" name="page" value="export-excel">
                 </div>
                 <div class="col-md-8 mb-3">

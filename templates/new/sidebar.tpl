@@ -125,6 +125,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{$WEB_ROOT}/reporte-transparencia">Cursos - Transparencia</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{$WEB_ROOT}/reporte-auxilios">Cursos - Primeros Auxilios</a>
+                        </li>
                     </ul>
                 </div>
             </li>

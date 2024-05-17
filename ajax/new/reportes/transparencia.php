@@ -116,7 +116,7 @@ $spreadsheet->setActiveSheetIndex(0);
 $fileName = bin2hex(random_bytes(4));
 // Redirect output to a client’s web browser (Xls)
 header('Content-Type: application/vnd.ms-excel; charset=utf-8');
-header('Content-Disposition: attachment;filename="registros_transparencia' . $fileName . '.xls"');
+header('Content-Disposition: attachment;filename="registros' . $fileName . '.xls"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');

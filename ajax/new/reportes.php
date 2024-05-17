@@ -17,4 +17,7 @@ switch ($_POST["opcion"]) {
     case 'transparencia':
         include_once('reportes/transparencia.php');
         break;
+    case 'auxilios':
+        include_once('reportes/transparencia.php');
+        break;
 }

@@ -217,7 +217,8 @@ $pages = array(
 	'registro-transparencia',
 	'reporte-licencias',
 	'reporte-transparencia',
-	'registro-primeros-auxilios'
+	'registro-primeros-auxilios',
+	'reporte-auxilios'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
