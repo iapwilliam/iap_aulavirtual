@@ -101,8 +101,7 @@ class Forum extends Main
 
 	public function setReply($value)
 	{
-		// $this->Util()->ValidateString($value, 50000, 1, 'Respuesta');
-		$this->reply = $value;
+		$this->reply = htmlspecialchars($value, ENT_QUOTES);
 	}
 
 	public function getReply()

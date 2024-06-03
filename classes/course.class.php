@@ -437,7 +437,7 @@ class Course extends Subject
 						initialDate='" 	. $this->initialDate . "',
 						finalDate='" 	. $this->finalDate . "', 
 						`group`='" 	. $this->group . "', 
-						access='|" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "|'
+						access='" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "'
 						WHERE courseId='{$this->courseId}'";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->UpdateData();
