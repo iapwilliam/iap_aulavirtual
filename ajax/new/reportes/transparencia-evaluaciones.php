@@ -1,5 +1,5 @@
 <?php
-include_once('../../initPdf.php');
+include_once('../../init.php');
 include_once('../../config.php');
 include_once(DOC_ROOT . '/libraries.php');
 session_start();
@@ -7,8 +7,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 // $students = $student->evaluaciones_diplomado(); 
-$headings = $course->getHeadersActivities("AND course_module.courseId = {$_GET['curso']}"); 
-$students = $course->getStudents("AND user_subject.courseId = {$_GET['curso']}"); 
+$headings = $course->getHeadersActivities("AND course_module.courseId = {$_GET['curso']}");
+$students = $course->getStudents("AND user_subject.courseId = {$_GET['curso']}");
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getActiveSheet()->getDefaultColumnDimension()->setWidth(30);
 // Set document properties
@@ -49,7 +49,7 @@ for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("H" . ($i + 2), $curp['urlBlank']);
     $sheet->getCell('H' . ($i + 2))->getHyperlink()->setUrl($curp['urlBlank']);
     $auxColumn = "I";
-    foreach ($headings as $heading) {
+    foreach ($headings as $heading) { 
         if ($heading['activityType'] == "Tarea") {
             $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");  
             $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : WEB_ROOT."/homework/".$data['path']));
@@ -65,7 +65,6 @@ for ($i = 0; $i < (count($students)); $i++) {
     }
     $auxRow++;
 }
- 
 
 $sheet->getStyle("A2:$auxHeading" . (count($students) + 1))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
 

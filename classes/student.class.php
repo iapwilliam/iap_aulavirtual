@@ -2823,4 +2823,17 @@ class Student extends User
 		}
 		return $resultado;
 	}
+
+	function getActivityScore($typeActivity, $where = "") {
+		if ($typeActivity == "Tarea") {
+			$sql = "SELECT * FROM homework WHERE 1 {$where}"; 
+			$this->Util()->DB()->setQuery($sql);
+			return $this->Util()->DB()->GetRow();
+		}
+		if ($typeActivity == "Examen") {
+			$sql = "SELECT * FROM activity_score WHERE 1 {$where}";
+			$this->Util()->DB()->setQuery($sql);
+			return $this->Util()->DB()->GetRow();
+		}
+	} 
 }
