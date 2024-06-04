@@ -15,7 +15,11 @@ switch ($_POST["opcion"]) {
         include_once('reportes/cobach-evaluaciones.php');
         break;
     case 'transparencia':
-        include_once('reportes/transparencia.php');
+        if ($_GET['tipo'] == 1) {
+            include_once('reportes/transparencia.php');
+        }else{
+            include_once('reportes/transparencia-evaluaciones.php');
+        }
         break;
     case 'auxilios':
         include_once('reportes/transparencia.php');

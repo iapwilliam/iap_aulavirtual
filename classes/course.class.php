@@ -753,4 +753,11 @@ class Course extends Subject
 		}
 		return $result;
 	}
+
+	function getHeadersActivities($where = "") {
+		$sql = "SELECT * FROM `activity` INNER JOIN course_module ON course_module.courseModuleId = activity.courseModuleId WHERE 1 {$where}"; 
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetResult();
+		return $result;
+	}
 }
