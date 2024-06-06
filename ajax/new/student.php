@@ -707,6 +707,104 @@ switch ($opcion) {
 			]);
 		}
 		break;
+	case 'registro-igualdad':
+		case 'registro-auxilios':
+			$name = strip_tags($_POST['names']);
+			$firstSurname = strip_tags($_POST['lastNamePaterno']);
+			$secondSurname = strip_tags($_POST['lastNameMaterno']);
+			$genre = strip_tags($_POST['sexo']);
+			$curp = $_POST['curp'];
+			$password = $_POST['password'];
+			$email = $_POST['email'];
+			$phone = $_POST['mobile'];
+			$workplacePosition = $_POST['workplacePosition'];
+			$workplace = $_POST['workplace'];
+			$estado = intval($_POST['estadot']);
+			$municipio = intval($_POST['ciudadt']);
+			$curso = intval(11);
+			$errors = [];
+			if ($name == '') {
+				$errors['names'] = "Por favor, no se olvide de poner el nombre.";
+			}
+			if ($firstSurname == '') {
+				$errors['lastNamePaterno'] = "Por favor, no se olvide de poner el apellido parterno.";
+			}
+			if ($secondSurname == '') {
+				$errors['lastNameMaterno'] = "Por favor, no se olvide de poner el apellido materno.";
+			}
+			if ($password == '') {
+				$errors['password'] = "Por favor, no se olvide de poner la contraseña.";
+			}
+			if ($email == '') {
+				$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
+			}
+			if ($phone == '') {
+				$errors['mobile'] = "Por favor, no se olvide de el número de celular.";
+			}
+			if ($workplace == '') {
+				$errors['workplace'] = "Por favor, no se olvide de poner el lugar de trabajo.";
+			}
+			if ($workplacePosition == '') {
+				$errors['workplacePosition'] = "Por favor, no se olvide de poner el puesto.";
+			}
+			if (empty($estado)) {
+				$errors['estadot'] = "Por favor, no se olvide de seleccionar el estado.";
+			}
+			if (empty($municipio)) {
+				$errors['ciudadt'] = "Por favor, no se olvide de seleccionar el municipio.";
+			} 
+	
+			if (!empty($errors)) {
+				header('HTTP/1.1 422 Unprocessable Entity');
+				header('Content-Type: application/json; charset=UTF-8');
+				echo json_encode([
+					'errors'    => $errors
+				]);
+				exit;
+			}
+			$student->setPermiso(1);
+			$student->setControlNumber();
+			$student->setName($name);
+			$student->setLastNamePaterno($firstSurname);
+			$student->setLastNameMaterno($secondSurname);
+			$student->setSexo($genre);
+			$student->setPassword($password);
+			$student->setEmail($email);
+			$student->setPhone($phone);
+			$student->setWorkplace($workplace);
+			$student->setWorkplacePosition($workplacePosition);
+			$student->setEstadoT($estado);
+			$student->setCiudadT($municipio); 
+			$student->setAcademicDegree($_POST['academicDegree']);
+			$response = $student->saveIgualdad();
+			if ($response['status']) {
+				$password = isset($response['password']) ? $response['password'] : $password;
+				$course->setCourseId(11);
+				$cursoInfo = $course->getCourse();
+				$details_body = array(
+					'email'		=> $response['usuario'],
+					'password'	=> $password,
+					'major'		=> $cursoInfo['major_name'],
+					'course'	=> $cursoInfo['subject_name']
+				);
+				$details_subject = array();
+				$sendmail->Prepare($message[1]["subject"], $message[1]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
+	
+				echo json_encode([
+					'growl'		=> true,
+					'type'		=> 'success',
+					'message'	=> 'Se ha completado el registro, se ha enviado un correo con el usuario y contraseña para acceder a la plataforma.',
+					'location'	=> WEB_ROOT . "/login",
+					'duracion'	=> 5000
+				]);
+			} else {
+				echo json_encode([
+					'growl'		=> true,
+					'type'		=> 'danger',
+					'message'	=> $response['message'],
+				]);
+			}
+		break;
 	default:
 		echo "Petición desconocida";
 		break;
