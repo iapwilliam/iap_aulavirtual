@@ -47,8 +47,8 @@ foreach ($headings as $item) {
 
 $auxRow = 2;
 for ($i = 0; $i < (count($students)); $i++) {
-    $sheet->setCellValue("A" . ($i + 2), $students[$i]['usuario']);
-    $sheet->setCellValue("B" . ($i + 2), mb_strtoupper($students[$i]['nombre']));
+    $sheet->setCellValue("A" . ($i + 2), $students[$i]['controlNumber']);
+    $sheet->setCellValue("B" . ($i + 2), mb_strtoupper($students[$i]['names']));
     $sheet->setCellValue("C" . ($i + 2), mb_strtoupper($students[$i]['lastNamePaterno']));
     $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno']));
     $auxColumn = "E";
