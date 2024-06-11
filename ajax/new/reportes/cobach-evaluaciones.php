@@ -53,8 +53,8 @@ for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno']));
     $auxColumn = "E";
     foreach ($headings as $heading) { 
-        if ($item['activityType'] != "Tarea" || $item['activityType'] != "Examen") {
-            continue;;
+        if ($item['activityType'] != "Tarea" && $item['activityType'] != "Examen") {
+            continue;
         }
         if ($heading['activityType'] == "Tarea") {
             $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");  
