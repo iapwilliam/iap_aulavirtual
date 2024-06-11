@@ -37,8 +37,12 @@ $headings = $course->getHeadersActivities("AND course_module.courseId = 2");
 $students = $course->getStudents("AND user_subject.courseId = 2");
 $auxHeading = "E";
 foreach ($headings as $item) {
-    $sheet->setCellValue("{$auxHeading}1", $item['resumen']);
-    $auxHeading++;
+    if ($item['activityType'] == "Tarea" || $item['activityType'] == "Examen") {
+        $sheet->setCellValue("{$auxHeading}1", $item['resumen']);
+        $auxHeading++;
+    }else{
+        continue;
+    }
 }
 
 $auxRow = 2;
@@ -49,6 +53,9 @@ for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno']));
     $auxColumn = "E";
     foreach ($headings as $heading) { 
+        if ($item['activityType'] != "Tarea" || $item['activityType'] != "Examen") {
+            continue;;
+        }
         if ($heading['activityType'] == "Tarea") {
             $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");  
             $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : "ENTREGÓ" )); 
