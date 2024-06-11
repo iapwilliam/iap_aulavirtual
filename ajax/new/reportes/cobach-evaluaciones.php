@@ -53,7 +53,7 @@ for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno']));
     $auxColumn = "E";
     foreach ($headings as $heading) { 
-        if ($item['activityType'] != "Tarea" && $item['activityType'] != "Examen") {
+        if (!in_array($heading['activityType'],["Tarea", "Examen"])) {
             continue;
         }
         if ($heading['activityType'] == "Tarea") {
