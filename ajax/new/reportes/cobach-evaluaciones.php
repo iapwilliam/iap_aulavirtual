@@ -34,7 +34,7 @@ $sheet->getStyle('D')->getAlignment()->setHorizontal('center')->setVertical('cen
 $sheet->getStyle('D')->getFont()->setSize(14)->setBold(true); 
 
 $headings = $course->getHeadersActivities("AND course_module.courseId = 2");
-$students = $course->getStudents("AND user_subject.courseId = 2");
+$students = $course->getStudents("AND user_subject.courseId = 2 AND user_subject.alumnoId <> 2");
 $auxHeading = "E";
 foreach ($headings as $item) {
     if ($item['activityType'] == "Tarea" || $item['activityType'] == "Examen") {
