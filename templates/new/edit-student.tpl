@@ -45,7 +45,7 @@
                 <div class="form-group col-md-4">
                     <label for="rfc">Coordinación</label>
                     <select class="form-control" id="coordination" name="coordination">
-                        <option value="">--Selecciona la coordinación adscrita--</option>
+                        <option value="0">--Selecciona la coordinación adscrita--</option>
                         {foreach from=$coordinaciones item=item}
                             <option value="{$item.id}" {($item.id eq $alumno.coordination) ? "selected" : ""}>{$item.name}
                             </option>
@@ -55,7 +55,7 @@
                 <div class="form-group col-md-4">
                     <label>Adscripción</label>
                     <select class="form-control" id="adscripcion" name="adscripcion">
-                        <option value="">--Indique su lugar de adscripción--</option>
+                        <option value="0">--Indique su lugar de adscripción--</option>
                         {foreach from=$adscripciones item=item}
                             <option value="{$item.id}" {($item.id eq $alumno.adscripcion) ? "selected" : ""}>{$item.name}
                             </option>
@@ -65,7 +65,7 @@
                 <div class="form-group col-md-4">
                     <label>Función</label>
                     <select class="form-control" id="functionWork" name="functionWork">
-                        <option value="">--Indique la función que realiza en su centro de trabajo--</option>
+                        <option value="0">--Indique la función que realiza en su centro de trabajo--</option>
                         {foreach from=$funciones item=item}
                             <option value="{$item.id}" {($item.id eq $alumno.funcion) ? "selected" : ""}>{$item.name}
                             </option>
