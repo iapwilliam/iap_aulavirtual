@@ -196,7 +196,7 @@ class DB
     {
         $setParts = [];
         foreach ($fields as $field => $value) {
-            if ($value) {
+            if (isset($value) && $value !== '') {
                 $setParts[] = "$field = '{$value}'";
             }
         }

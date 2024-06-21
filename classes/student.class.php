@@ -2579,7 +2579,6 @@ class Student extends User
 
 	function updateStudent()
 	{
-		
 		$fields = [
 			'names' 			=> $this->names,
 			'lastNamePaterno' 	=> $this->lastNamePaterno,
@@ -2604,7 +2603,7 @@ class Student extends User
 			'funcion'			=> $this->funcion
 		]; 
 		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
-		$sql = "UPDATE user SET $updateQuery WHERE userId = {$this->getUserId()}";
+		$sql = "UPDATE user SET $updateQuery WHERE userId = {$this->getUserId()}";  
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 		$resultado['status'] = true;
