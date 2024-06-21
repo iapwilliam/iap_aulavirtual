@@ -980,6 +980,7 @@ class User extends Main
 		$sql = "SELECT * FROM user WHERE userId = '" . $this->userId . "'";
 		$this->Util()->DB()->setQuery($sql);
 		$row = $this->Util()->DB()->GetRow();
+		$row['curpDrive'] = json_decode($row['curpDrive']);
 		return $row;
 	}
 
@@ -1125,8 +1126,8 @@ class User extends Main
 			return false;
 		}
 		$sql = "SELECT personal.personalId, personal.username, personal.name, personal.lastname_paterno, personal.lastname_materno, personal.foto, personal.correo, personal.celular, roles.name as perfil FROM personal INNER JOIN roles ON roles.roleId = personal.role_id WHERE username = '" . $this->username . "' AND MD5(passwd) = '" . md5($this->password) . "' and deleted_at IS NULL";
+		// echo $sql;
 		$this->Util()->DB()->setQuery($sql);
-		echo $sql;
 		$row = $this->Util()->DB()->GetRow();
 		if ($row) { //Si es usuario de tipo personal 
 			$card['userId'] = $row['personalId'];
@@ -1141,42 +1142,28 @@ class User extends Main
 			$_SESSION["lastClick"] = time();
 			return true;
 		} else { //Si es un estudiante 
-			$sql = "SELECT 
-							* 
-					FROM 
-							user 
-						WHERE 
-							controlNumber = '" . $this->username . "'";
+			$sql = "SELECT * FROM user WHERE controlNumber = '" . $this->username . "'"; 
 			$this->Util()->DB()->setQuery($sql);
-			$row = $this->Util()->DB()->GetRow();
-
+			$row = $this->Util()->DB()->GetRow(); 
 			if ($row) {
-
-				if ((!empty($row['password']) && $row['password'] == $this->password  && $row['activo'] == 1)  || (empty($row['password']) &&  $row['activo'] == 1 && $this->password == date('Y', strtotime($row['birthdate'])))) {
-
-					if ($row['status'] == 'autorizada' || $row['status'] == 'pendiente') {
-
-						$card['userId'] = $row['userId'];
-						$card['studentId'] = $row['userId'];
-						$card['perfil']	= "Alumno";
-						$card['positionId'] = 0;
-						$card['username'] = $row['names'];
-						$card['numControl'] = $row['controlNumber'];
-						$card['status'] = $row['status'];
-						$card['nombreCompleto'] =  $row['names'] . ' ' . $row['lastNamePaterno'] . ' ' . $row['lastNameMaterno'];
-						$card['type'] = 'student';
-						$card['activo'] = $row['activo'];
-						$card['actualizado'] = $row['actualizado'];
-						$card['isLogged'] = true;
-						$card['avatar'] = $row['avatar'];
-						$card['bloqueado'] = $row['bloqueado'];
-						$_SESSION['User'] = $card;
-						$_SESSION["lastClick"] = time();
-						return $row['userId'];
-					} else {
-						$this->Util()->setError(10057, "error", "");
-						$this->Util()->PrintErrors();
-					}
+				if ((!empty($row['password']) && $row['password'] == $this->password  && $row['activo'] == 1)) {
+					$card['userId'] = $row['userId'];
+					$card['studentId'] = $row['userId'];
+					$card['perfil']	= "Alumno";
+					$card['positionId'] = 0;
+					$card['username'] = $row['names'];
+					$card['numControl'] = $row['controlNumber'];
+					$card['status'] = $row['status'];
+					$card['nombreCompleto'] =  $row['names'] . ' ' . $row['lastNamePaterno'] . ' ' . $row['lastNameMaterno'];
+					$card['type'] = 'student';
+					$card['activo'] = $row['activo'];
+					$card['actualizado'] = $row['actualizado'];
+					$card['isLogged'] = true;
+					$card['avatar'] = $row['avatar'];
+					$card['bloqueado'] = $row['bloqueado'];
+					$_SESSION['User'] = $card;
+					$_SESSION["lastClick"] = time();
+					return $row['userId'];
 				} else {
 					$this->Util()->setError(10006, "error", "");
 					$this->Util()->PrintErrors();

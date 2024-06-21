@@ -5,7 +5,7 @@
     <div class="card-body">
         <div id="tblContent">
             <form class="form row" id="form_usuario" method="post" action="{$WEB_ROOT}/ajax/new/student.php">
-                <input type="hidden" id="opcion" name="opcion" value="actualizar" />
+                <input type="hidden" id="opcion" name="opcion" value="actualizar-admin" />
                 <input type="hidden" name="admin" value="true">
                 <input type="hidden" name="alumno" value="{$alumno.userId}">
                 <div class="form-group col-md-4">
@@ -24,14 +24,8 @@
                 </div>
                 <div class="col-md-4">
                     <label class="w-100">Correo electrónico institucional<span class="text-danger">*</span></label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Correo electrónico"
-                            aria-label="Correo electrónico" aria-describedby="basic-addon2" name="email"
-                            value="{$alumno.email}">
-                        <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">@cobach.edu.mx</span>
-                        </div>
-                    </div>
+                    <input type="text" class="form-control" placeholder="Correo electrónico"
+                        aria-label="Correo electrónico" name="email" value="{$alumno.email}">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="phone">Teléfono de contacto<span class="text-danger">*</span></label>
@@ -43,7 +37,13 @@
                     <input type="text" name="rfc" id="rfc" class="form-control" value="{$alumno.rfc}" />
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="rfc">Coordinación<span class="text-danger">*</span></label>
+                    <label for="curp">
+                        CURP
+                    </label>
+                    <input type="text" name="curp" id="curp" class="form-control" value="{$alumno.curp}" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="rfc">Coordinación</label>
                     <select class="form-control" id="coordination" name="coordination">
                         <option value="">--Selecciona la coordinación adscrita--</option>
                         {foreach from=$coordinaciones item=item}
@@ -53,7 +53,7 @@
                     </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <label>Adscripción<span class="text-danger">*</span></label>
+                    <label>Adscripción</label>
                     <select class="form-control" id="adscripcion" name="adscripcion">
                         <option value="">--Indique su lugar de adscripción--</option>
                         {foreach from=$adscripciones item=item}
@@ -63,13 +63,82 @@
                     </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <label>Función<span class="text-danger">*</span></label>
+                    <label>Función</label>
                     <select class="form-control" id="functionWork" name="functionWork">
                         <option value="">--Indique la función que realiza en su centro de trabajo--</option>
                         {foreach from=$funciones item=item}
                             <option value="{$item.id}" {($item.id eq $alumno.funcion) ? "selected" : ""}>{$item.name}
                             </option>
                         {/foreach}
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="estadot">Estado:<span class="text-danger">*</span></label>
+                    <div id="Statepositiont">
+                        <select id="estadot" name="estadot" onChange="ciudad_dependenciat();" class="form-control">
+                            <option value="">Selecciona tu Estado</option>
+                            {foreach from=$estados item=estado}
+                                <option value="{$estado.id_estado}"
+                                    {($alumno.estado == $estado.id_estado) ? "selected" : ""}>
+                                    {$estado.estado}
+                                </option>
+                            {/foreach}
+                        </select>
+                        <span class="invalid-feedback"></span>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="ciudadt"> Municipio:<span class="text-danger">*</span></label>
+                    <div id="Citypositiont">
+                        <select id="ciudadt" name="ciudadt" class="form-control">
+                            <option value="0">Selecciona tu Ciudad</option>
+                            {foreach from=$municipios item=municipio}
+                                <option value="{$municipio.id_municipio}"
+                                    {($alumno.ciudad == $municipio.id_municipio) ? "selected" : ""}>
+                                    {$municipio.municipio}
+                                </option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Sexo</label>
+                    <select name="sexo" id="sexo" class="form-control">
+                        <option>Femenino</option>
+                        <option {($alumno.sexo == "m") ? "selected" : ""}>Masculino</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Lugar de trabajo</label>
+                    <input name="workplace" id="workplace" class="form-control" value="{$alumno.workplace}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Ocupación</label>
+                    <select name="workplaceOcupation" id="workplaceOcupation" class="form-control">
+                        <option value="">--Selecciona la ocupación--</option>
+                        <option {($alumno.workplaceOcupation == "FUNCIONARIO PÚBLICO MUNICIPAL") ? "selected" : ""}>
+                            FUNCIONARIO PÚBLICO MUNICIPAL</option>
+                        <option {($alumno.workplaceOcupation == "FUNCIONARIO PÚBLICO ESTATAL") ? "selected" : ""}>
+                            FUNCIONARIO PÚBLICO ESTATAL</option>
+                        <option {($alumno.workplaceOcupation == "FUNCIONARIO PÚBLICO FEDERAL") ? "selected" : ""}>
+                            FUNCIONARIO PÚBLICO FEDERAL</option>
+                        <option {($alumno.workplaceOcupation == "OTROS") ? "selected" : ""}>OTROS</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Puesto</label>
+                    <input name="workplacePosition" id="workplacePosition" class="form-control"
+                        value="{$alumno.workplacePosition}">
+                </div>
+                <div class="form-group col-md-4">
+                    <label>Grado Académico</label>
+                    <select name="academicDegree" id="academicDegree" class="form-control">
+                        <option value="">--Selecciona el grado académico--</option>
+                        <option {($alumno.academicDegree == "UNIVERSITARIO") ? "selected" : ""}>UNIVERSITARIO</option>
+                        <option {($alumno.academicDegree == "LICENCIATURA") ? "selected" : ""}>LICENCIATURA</option>
+                        <option {($alumno.academicDegree == "MAESTRÍA") ? "selected" : ""}>MAESTRÍA</option>
+                        <option {($alumno.academicDegree == "DOCTORADO") ? "selected" : ""}>DOCTORADO</option>
+                        <option {($alumno.academicDegree == "OTROS") ? "selected" : ""}>OTROS</option>
                     </select>
                 </div>
                 {if $User.perfil == "Administrador"}
@@ -79,7 +148,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label>Contraseña<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="password" disabled value="{$alumno.password}">
+                        <input type="text" class="form-control" id="password" name="password" value="{$alumno.password}">
                     </div>
                 {/if}
                 <div class="form-group col-md-12 text-center">

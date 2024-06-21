@@ -728,108 +728,7 @@ class Student extends User
 		$fileName[1] = "Manual_Alumno.pdf";
 		$sendmail->PrepareAttachment($message[1]["subject"], $message[1]["body"], $details_body, $details_subject, $email, $nombre, $attachment, $fileName); */
 		return $complete;
-	}
-
-
-	public function EnumerateByPage($currentPage, $rowsPerPage, $pageVar, $pageLink, &$arrPages, $orderSemester = '')
-	{
-		global $semester;
-		global $group;
-		$result = NULL;
-		$result2 = NULL;
-		$filtro = "";
-		$pageExtra = "";
-		if ($this->nombre) {
-			$filtro .= " and names like '%" . $this->nombre . "%'";
-			$pageExtra = "/nombre/{$this->nombre}";
-		}
-		if ($this->apaterno) {
-			$filtro .= " and lastNamePaterno like '%" . $this->apaterno . "%'";
-			$pageExtra .= "/paterno/{$this->apaterno}";
-		}
-		if ($this->amaterno) {
-			$filtro .= " and lastNameMaterno like '%" . $this->amaterno . "%'";
-			$pageExtra .= "/materno/{$this->amaterno}";
-		}
-		if ($this->noControl) {
-			$filtro .= " and controlNumber = '" . $this->noControl . "'";
-			$pageExtra .= "/control/{$this->noControl}";
-		}
-		if ($this->estatus) {
-			if ($this->estatus == 2)
-				$filtro .= " and activo = 0";
-			else
-				$filtro .= " and activo = '" . $this->estatus . "'";
-		}
-		$sqlSearch = "";
-		$totalTableRows = $this->CountTotalRows($sqlSearch);
-		$totalPages = ceil($totalTableRows / $rowsPerPage);
-		if ($currentPage < 1)
-			$currentPage = 1;
-		if ($currentPage > $totalPages)
-			$currentPage = $totalPages;
-		$arrPages['rowBegin']	= ($currentPage * $rowsPerPage) - $rowsPerPage + 1;
-		$rowOffset = $arrPages['rowBegin'] - 1;
-		$sql = "SELECT *,
-						(SELECT COUNT(userId) FROM accepted_regulations WHERE userId = user.userId) AS hasRGP
-					FROM user
-					WHERE 1 " . $sqlSearch . " " . $filtro . " AND type = 'student'									 
-					ORDER BY " . $orderSemester . " lastNamePaterno ASC, lastNameMaterno ASC, `names` ASC 
-					LIMIT " . $rowOffset . ", " . $rowsPerPage;
-		$this->Util()->DB()->setQuery($sql);
-		$result2 = $this->Util()->DB()->GetResult();
-		foreach ($result2 as $key => $res) {
-			$card = $res;
-			$sql = "SELECT user_subject.courseId, user_subject.alumnoId, user_subject.status, subject.name AS name, major.name AS majorName, subject.icon, course.group, course.modality, course.initialDate, course.finalDate, 'Ordinario' AS situation FROM user_subject LEFT JOIN course ON course.courseId = user_subject.courseId LEFT JOIN subject ON subject.subjectId = course.subjectId LEFT JOIN major ON major.majorId = subject.tipo WHERE alumnoId = '{$res['userId']}' AND status = 'activo' AND CURDATE() <= course.finalDate UNION SELECT usr.courseId, usr.alumnoId, usr.status, subject.name AS name, major.name AS majorName, subject.icon, course.group, course.modality, course.initialDate, course.finalDate, 'Recursador' AS situation FROM user_subject_repeat usr LEFT JOIN course ON course.courseId = usr.courseId LEFT JOIN subject ON subject.subjectId = course.subjectId LEFT JOIN major ON major.majorId = subject.tipo WHERE alumnoId = '{$res['userId']}' AND status = 'activo' ORDER BY status ASC";
-			// echo $sql;
-			$this->Util()->DB()->setQuery($sql);
-			$courseId = $this->Util()->DB()->GetResult();
-			if (count($courseId) == 0) {
-				$sql = "SELECT courseId FROM user_subject WHERE alumnoId = " . $res["userId"] . " ORDER BY registrationId DESC LIMIT 1";
-				$this->Util()->DB()->setQuery($sql);
-				$courseId = $this->Util()->DB()->GetResult();
-			}
-			$card["courseId"] = $courseId;
-			$card["lastNameMaterno"] = $this->Util()->DecodeTiny($card["lastNameMaterno"]);
-			$card["lastNamePaterno"] = $this->Util()->DecodeTiny($card["lastNamePaterno"]);
-			$card["names"] = $this->Util()->DecodeTiny($card["names"]);
-
-			if (file_exists(DOC_ROOT . "/alumnos/" . $res["userId"] . ".jpg")) {
-				$card["foto"] = '<a href="#open-' . $res["userId"] . '" id="foto-' . $res["userId"] . '">
-					<img src="' . WEB_ROOT . '/alumnos/' . $res["userId"] . '.jpg" width="40" height="40" style=" height: auto; width: auto; max-width: 80px; max-height: 80px;"/>
-				</a>';
-				$card['photo'] = $res["userId"] . ".jpg";
-			} else {
-				$card["foto"] = '';
-				$card['photo'] = $res['rutaFoto'];
-			}
-			$result[$key] = $card;
-		}
-		$rowsPerPages = 0;
-		$countPageRows = count($result);
-		$arrPages['countPageRows'] = $countPageRows;
-		$arrPages['rowEnd']		= $arrPages['rowBegin'] + $countPageRows - 1;
-		$arrPages['totalTableRows'] = $totalTableRows;
-		$arrPages['rowsPerPages'] = $rowsPerPages;
-		$arrPages['currentPage'] = $currentPage;
-		$arrPages['totalPages']	= $totalPages;
-		$arrPages['startPage'] = '';
-		$arrPages['previusPage'] = '';
-		if ($currentPage > 1) {
-			$arrPages['previusPage'] = $pageLink . '/' . $pageVar . '/' . ($currentPage - 1) . $pageExtra;
-			if ($currentPage > 2)
-				$arrPages['startPage'] = $pageLink . '/' . $pageVar . '/' . '1' . $pageExtra;
-		}
-		$arrPages['nextPage'] = '';
-		$arrPages['endPage'] = '';
-		if ($currentPage < $arrPages['totalPages']) {
-			$arrPages['nextPage'] = $pageLink . '/' . $pageVar . '/' . ($currentPage + 1) . $pageExtra;
-			if ($currentPage < ($arrPages['totalPages'] - 1))
-				$arrPages['endPage'] = $pageLink . '/' . $pageVar . '/' . $arrPages['totalPages'] . $pageExtra;
-		}
-		$arrPages['refreshPage'] = $pageLink . '/' . $pageVar . '/' . $currentPage . $pageExtra;
-		return $result;
-	}
+	} 
 
 	public function CountTotalRows()
 	{
@@ -2678,15 +2577,39 @@ class Student extends User
 		return $resultado;
 	}
 
-	function update()
+	function updateStudent()
 	{
-		$sql = "UPDATE user SET names = '{$this->name}', lastNamePaterno = '{$this->lastNamePaterno}', lastNameMaterno = '{$this->lastNameMaterno}', email = '{$this->email}', phone = '{$this->phone}', password = '{$this->password}', workplace = '{$this->workplace}', workplacePosition = '{$this->workplacePosition}', ciudad = {$this->city}, estado = {$this->state}, estadot = {$this->state}, ciudadt = {$this->city} WHERE userId = {$this->getUserId()}";
+		
+		$fields = [
+			'names' 			=> $this->names,
+			'lastNamePaterno' 	=> $this->lastNamePaterno,
+			'lastNameMaterno' 	=> $this->lastNameMaterno,
+			'email' 			=> $this->email,
+			'phone' 			=> $this->phone,
+			'password' 			=> $this->password,
+			'workplace' 		=> $this->workplace,
+			'workplacePosition' => $this->workplacePosition,
+			'estado' 			=> $this->state,
+			'ciudad'			=> $this->city,
+			'estadot'			=> $this->state,
+			'ciudadt'			=> $this->city,
+			'curp'				=> $this->getCurp(), 
+			'curpDrive'			=> $this->curpDrive,
+			'sexo'				=> $this->sexo, 
+			'workplaceOcupation'=> $this->workplaceOcupation,
+			'academicDegree'	=> $this->academicDegree,
+			'rfc'				=> $this->rfc,
+			'adscripcion'		=> $this->adscripcion,
+			'coordination'		=> $this->coordination,
+			'funcion'			=> $this->funcion
+		]; 
+		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
+		$sql = "UPDATE user SET $updateQuery WHERE userId = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 		$resultado['status'] = true;
 		return $resultado;
 	}
-
 
 	function saveTransparencia()
 	{

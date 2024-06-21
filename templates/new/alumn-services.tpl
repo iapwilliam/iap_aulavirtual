@@ -6,12 +6,8 @@
         <div id="tblContent">
             {if $form == 0}
                 {include file="{$DOC_ROOT}/templates/boxes/new/select-register.tpl"}
-            {/if}
-            {if $form == 1}
-                {include file="{$DOC_ROOT}/templates/forms/new/update-cobach.tpl"}
-            {/if}
-            {if $form == 2} 
-                {include file="{$DOC_ROOT}/templates/forms/new/update-licenciaturas.tpl"}
+            {else}
+                {include file="{$DOC_ROOT}/templates/forms/new/update-student.tpl"}
             {/if}
         </div>
     </div>
