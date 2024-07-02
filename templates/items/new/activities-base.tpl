@@ -47,16 +47,14 @@
                         class="fas fa-pen-square fa-2x text-success pointer spanEdit" data-toggle="tooltip" data-placement="top"
                         title="Editar"></i>
                 </a>
-            {/if}
-            {if $subject.score > 0}
-                {if $configMateria ne 'si'}
-                    <a href="{$WEB_ROOT}/score-activity-new&id={$subject.activityId}&auxTpl=admin&cId={$myModule.courseModuleId}">
-                        <i id="d-{$subject.subjectId}" name="d-{$subject.name}" title="Calificar"
-                            class="fas fa-clipboard-check fa-2x text-info pointer spanEdit" data-toggle="tooltip"
-                            data-placement="top"></i>
-                    </a>
-                {/if}
-            {/if}
+            {/if} 
+            {if $configMateria ne 'si'}
+                <a href="{$WEB_ROOT}/score-activity-new&id={$subject.activityId}&auxTpl=admin&cId={$myModule.courseModuleId}">
+                    <i id="d-{$subject.subjectId}" name="d-{$subject.name}" title="Calificar"
+                        class="fas fa-clipboard-check fa-2x text-info pointer spanEdit" data-toggle="tooltip"
+                        data-placement="top"></i>
+                </a>
+            {/if} 
             {if $subject.activityType == "Foro"}
                 <a href="{$WEB_ROOT}/graybox.php?page=foro-estadisticas&actividad={$subject.activityId}&grupo={$myModule.courseModuleId}"
                     data-target="#ajax" data-toggle="modal">
