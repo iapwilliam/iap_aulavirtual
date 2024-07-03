@@ -17,7 +17,7 @@ $smarty->assign("id", $moduleId);
 
 $module->setCourseModuleId($moduleId);
 $moduleData = $module->getCourseModule();
-$smarty->assign("myModule", $moduleData); 
+$smarty->assign("myModule", $moduleData);
 
 $empleados = $personal->getPersonal();
 $smarty->assign("empleados", $empleados);
@@ -29,7 +29,7 @@ $smarty->assign('actividades', $actividades);
 $resource->setCourseModuleId($_GET["id"]);
 $resources = $resource->Enumerate();
 $smarty->assign('resources', $resources);
- 
+
 $forum->setCourseModuleId($moduleData["courseModuleId"]);
 $forum->setCourseId($moduleData["courseId"]);
 $forum = $forum->Enumerate();
@@ -37,3 +37,6 @@ $smarty->assign('forum', $forum);
 
 $announcements = $announcement->Enumerate($moduleData["courseId"], $_GET["id"]);
 $smarty->assign('announcements', $announcements);
+
+$totalPonderation = $activity->TotalPonderation();
+$smarty->assign('totalPonderation', $totalPonderation);
