@@ -32,8 +32,8 @@
 						href="#collapse{$item.subjectId}">
 						[{$item.majorName}] {$item.name} </div>
 					<div id="collapse{$item.subjectId}" class="collapse" data-parent="#accordion">
-						<div class="col-md-12 py-4">
-							<table class="table w-100 datatable" id="datatable{$item.subjectId}"
+						<div class="col-md-12 py-4 w-100">
+							<table class="table datatable" style="width:100%;" id="datatable{$item.subjectId}"
 								data-url="{$WEB_ROOT}/history-subject/id/{$item.subjectId}">
 								<thead>
 									<tr>

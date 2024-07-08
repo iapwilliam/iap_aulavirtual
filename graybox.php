@@ -210,7 +210,8 @@ $pages = array(
     'foro-estadisticas',
     'conceptos',
     'edit-comment',
-    'constancias'
+    'constancias',
+    'cotejo-conocer'
 );
 
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {

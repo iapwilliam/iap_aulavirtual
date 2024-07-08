@@ -3,10 +3,13 @@ include_once('../../init.php');
 include_once('../../config.php');
 include_once(DOC_ROOT . '/libraries.php');
 session_start();
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 // $students = $student->evaluaciones_diplomado(); 
+$course->setCourseId($_GET['curso']);
+$courseData = $course->getCourse();
 $headings = $course->getHeadersActivities("AND course_module.courseId = {$_GET['curso']}");
 $students = $course->getStudents("AND user_subject.courseId = {$_GET['curso']}");
 $spreadsheet = new Spreadsheet();
@@ -24,7 +27,7 @@ $sheet = $spreadsheet->getActiveSheet();
 $sheet->setCellValue('A1', 'Usuario');
 $sheet->setCellValue('B1', 'Nombre');
 $sheet->setCellValue('C1', 'Apellido Paterno');
-$sheet->setCellValue('D1', 'Apellido Materno'); 
+$sheet->setCellValue('D1', 'Apellido Materno');
 $sheet->setCellValue('E1', 'Telefono');
 $sheet->setCellValue('F1', 'Lugar de Trabajo');
 $sheet->setCellValue('G1', 'Curp');
@@ -35,6 +38,11 @@ foreach ($headings as $item) {
     $sheet->setCellValue("{$auxHeading}1", $item['resumen']);
     $auxHeading++;
 }
+if ($courseData['conocer']) {
+    $sheet->setCellValue("{$auxHeading}1", "Pago");
+    $auxHeading++;
+    $sheet->setCellValue("{$auxHeading}1", "Evaluación");
+}
 
 $auxRow = 2;
 for ($i = 0; $i < (count($students)); $i++) {
@@ -42,26 +50,33 @@ for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("A" . ($i + 2), $students[$i]['controlNumber']);
     $sheet->setCellValue("B" . ($i + 2), mb_strtoupper($students[$i]['names']));
     $sheet->setCellValue("C" . ($i + 2), mb_strtoupper($students[$i]['lastNamePaterno']));
-    $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno'])); 
+    $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno']));
     $sheet->setCellValue("E" . ($i + 2), $students[$i]['mobile']);
     $sheet->setCellValue("F" . ($i + 2), $students[$i]['workplace']);
     $sheet->setCellValue("G" . ($i + 2), $students[$i]['curp']);
     $sheet->setCellValue("H" . ($i + 2), $curp['urlBlank']);
     $sheet->getCell('H' . ($i + 2))->getHyperlink()->setUrl($curp['urlBlank']);
     $auxColumn = "I";
-    foreach ($headings as $heading) { 
+    foreach ($headings as $heading) {
         if ($heading['activityType'] == "Tarea") {
-            $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");  
-            $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : WEB_ROOT."/homework/".$data['path']));
+            $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
+            $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : WEB_ROOT . "/homework/" . $data['path']));
             if (isset($data['homeworkId'])) {
-                $sheet->getCell("{$auxColumn}{$auxRow}")->getHyperlink()->setUrl(WEB_ROOT."/homework/".$data['path']);
+                $sheet->getCell("{$auxColumn}{$auxRow}")->getHyperlink()->setUrl(WEB_ROOT . "/homework/" . $data['path']);
             }
         }
         if ($heading['activityType'] == "Examen") {
-            $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");  
+            $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
             $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['ponderation'] : "NO PRESENTÓ"));
         }
         $auxColumn++;
+    }
+    if ($courseData['conocer']) {
+        $statusPayment = $students[$i]['status_payment'] == 1 ? "Pagado" : "Pendiente";
+        $statusEvaluation = $students[$i]['status_evaluation'] == 1 ? "Sí" : "No";
+        $sheet->setCellValue("{$auxColumn}{$auxRow}", $statusPayment);
+        $auxColumn++;
+        $sheet->setCellValue("{$auxColumn}{$auxRow}", $statusEvaluation);
     }
     $auxRow++;
 }

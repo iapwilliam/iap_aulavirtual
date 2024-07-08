@@ -39,6 +39,13 @@
                     <label for="group"> Grupo:</label>
                     <input type="text" name="group" id="group" value="{$post.group}" class="form-control" />
                 </div>
+                <div class="form-group col-md-4">
+                    <label for="group">¿Tiene cotejo CONOCER?</label>
+                    <select class="form-control" id="conocer" name="conocer">
+                        <option value="0">No</option>
+                        <option value="1">Sí</option>
+                    </select>
+                </div>
                 <div class="form-group col-md-12 text-center">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-success">Guardar</button>

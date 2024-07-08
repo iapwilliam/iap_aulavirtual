@@ -33,6 +33,8 @@ $sheet->getStyle('C')->getFont()->setSize(14)->setBold(true);
 $sheet->getStyle('D')->getAlignment()->setHorizontal('center')->setVertical('center');
 $sheet->getStyle('D')->getFont()->setSize(14)->setBold(true); 
 
+$course->setCourseId($_GET['curso']);
+$courseData = $course->getCourse(); 
 $headings = $course->getHeadersActivities("AND course_module.courseId = 2");
 $students = $course->getStudents("AND user_subject.courseId = 2 AND user_subject.alumnoId <> 2");
 $auxHeading = "E";
@@ -43,6 +45,12 @@ foreach ($headings as $item) {
     }else{
         continue;
     }
+}
+
+if ($courseData['conocer']) {
+    $sheet->setCellValue("{$auxHeading}1", "Pago");
+    $auxHeading++;
+    $sheet->setCellValue("{$auxHeading}1", "Evaluación");
 }
 
 $auxRow = 2;
@@ -65,6 +73,13 @@ for ($i = 0; $i < (count($students)); $i++) {
             $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['ponderation'] : "NO PRESENTÓ"));
         }
         $auxColumn++;
+    }
+    if ($courseData['conocer']) {
+        $statusPayment = $students[$i]['status_payment'] == 1 ? "Pagado" : "Pendiente";
+        $statusEvaluation = $students[$i]['status_evaluation'] == 1 ? "Sí" : "No";
+        $sheet->setCellValue("{$auxColumn}{$auxRow}", $statusPayment);
+        $auxColumn++;
+        $sheet->setCellValue("{$auxColumn}{$auxRow}", $statusEvaluation);
     }
     $auxRow++;
 } 

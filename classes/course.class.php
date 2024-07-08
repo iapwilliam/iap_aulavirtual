@@ -22,7 +22,12 @@ class Course extends Subject
 	private $totalPeriods;
 	private $temporalGroup;
 	private $periodo;
+	private $conocer;
 
+	public function setConocer($value)
+	{
+		$this->conocer = $value;
+	}
 	public function setPeriodo($valor)
 	{
 		$this->periodo = $valor;
@@ -411,6 +416,7 @@ class Course extends Subject
 						 	subjectId,
 							initialDate,
 							finalDate, 
+							conocer,
 							`group`,
 							access
 						)
@@ -418,6 +424,7 @@ class Course extends Subject
 							'" . $this->getSubjectId() . "',
 							'" . $this->initialDate . "',
 							'" . $this->finalDate . "', 
+							'" . $this->conocer . "',
 							'" . $this->group . "',
 							'" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "'
 							)";
@@ -437,6 +444,7 @@ class Course extends Subject
 						initialDate='" 	. $this->initialDate . "',
 						finalDate='" 	. $this->finalDate . "', 
 						`group`='" 	. $this->group . "', 
+						conocer = '" . $this->conocer . "',
 						access='" . $this->personalId . "|" . $this->teacherId . "|" . $this->tutorId . "|" . $this->extraId . "'
 						WHERE courseId='{$this->courseId}'";
 		$this->Util()->DB()->setQuery($sql);
@@ -475,7 +483,7 @@ class Course extends Subject
 
 	function getCourse()
 	{
-		$sql = "SELECT major.name as major_name, subject.subjectId, subject.name as subject_name, course.courseId, `course`.`group`, course.initialDate, course.finalDate, course.access, subject.totalPeriods FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE courseId = {$this->courseId}";
+		$sql = "SELECT major.name as major_name, subject.subjectId, subject.name as subject_name, course.courseId, `course`.`group`, course.initialDate, course.finalDate, course.access, subject.totalPeriods, course.conocer FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE courseId = {$this->courseId}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetRow();
 
@@ -486,7 +494,7 @@ class Course extends Subject
 		return $result;
 	}
 
-	function getCourses($where = "")
+	public function getCourses($where = "")
 	{
 		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, `course`.`group`, subject.icon FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
@@ -494,7 +502,7 @@ class Course extends Subject
 		return $result;
 	}
 
-	function dt_courses_request($subjectId)
+	public function dt_courses_request($subjectId)
 	{
 		$table = 'course INNER JOIN subject ON subject.subjectId = course.subjectId';
 		$primaryKey = 'course.courseId';
@@ -504,6 +512,7 @@ class Course extends Subject
 			array('db' => '`course`.`group`',	'dt' => 'grupo'),
 			array('db' => 'course.initialDate',	'dt' => 'fecha_inicial'),
 			array('db' => 'course.finalDate',	'dt' => 'fecha_final'),
+			array('db' => 'conocer', 			'dt' => 'conocer'),
 			array('db' => 'course.courseId',	'dt' => 'modulos', 'formatter'	=> function ($id, $row) {
 				$id = $row['courseId'];
 				$this->setCourseId($id);
@@ -553,7 +562,17 @@ class Course extends Subject
 				$id = $row['courseId'];
 				if ($_SESSION['User']['perfil'] == "Docente")
 					return "";
-				return "<a class='btn btn-primary' href='" . WEB_ROOT . "/graybox.php?page=edit-course&id=" . $id . "' data-target='#ajax' data-toggle='modal' title='Editar'>Editar</a>";
+				$acciones = $row['conocer'] == 1 ? '<a class="dropdown-item" href="' . WEB_ROOT . '/graybox.php?page=cotejo-conocer&id=' . $id . '" data-target="#ajax" data-toggle="modal" title="Cotejo">Cotejo CONOCER</a>' : "";
+				$html = '<div class="dropdown">
+							<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+								<i class="fas fa-bars"></i>
+							</button>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="' . WEB_ROOT . '/graybox.php?page=edit-course&id=' . $id . '" data-target="#ajax" data-toggle="modal" title="Editar">Editar</a>
+								' . $acciones . '
+							</div>
+						</div>';
+				return $html;
 			}),
 		);
 
@@ -642,7 +661,7 @@ class Course extends Subject
 		return $modulos;
 	}
 
-	function StudentCourseModules()
+	public function StudentCourseModules()
 	{
 		$info = $this->getCourse();
 
@@ -714,15 +733,15 @@ class Course extends Subject
 		return $result;
 	}
 
-	function getStudents($sql)
+	public function getStudents($sql)
 	{
-		$sql = "SELECT user.userId, user.controlNumber, user.names, user.password, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.workplace, user.workplacePosition,(SELECT estado FROM sepomex WHERE sepomex.id_estado = user.estado LIMIT 1) as estado, (SELECT municipio FROM sepomex WHERE sepomex.id_estado = user.estado AND sepomex.id_municipio = user.ciudadt LIMIT 1) as municipio, user.curpDrive, user.curp FROM user_subject INNER JOIN user ON user.userId = user_subject.alumnoId WHERE 1 {$sql}";
+		$sql = "SELECT user.userId, user.controlNumber, user.names, user.password, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.workplace, user.workplacePosition,(SELECT estado FROM sepomex WHERE sepomex.id_estado = user.estado LIMIT 1) as estado, (SELECT municipio FROM sepomex WHERE sepomex.id_estado = user.estado AND sepomex.id_municipio = user.ciudadt LIMIT 1) as municipio, user.curpDrive, user.curp, user_subject.status_payment, user_subject.status_evaluation FROM user_subject INNER JOIN user ON user.userId = user_subject.alumnoId WHERE 1 {$sql}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
 	}
 
-	function AddedCourseModules()
+	public function AddedCourseModules()
 	{
 		$info = $this->getCourse();
 		$this->Util()->DB()->setQuery("
@@ -754,10 +773,69 @@ class Course extends Subject
 		return $result;
 	}
 
-	function getHeadersActivities($where = "") {
-		$sql = "SELECT * FROM `activity` INNER JOIN course_module ON course_module.courseModuleId = activity.courseModuleId WHERE 1 {$where}"; 
+	function getHeadersActivities($where = "")
+	{
+		$sql = "SELECT * FROM `activity` INNER JOIN course_module ON course_module.courseModuleId = activity.courseModuleId WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
+	}
+
+	function dt_cotejo()
+	{
+		$table = 'user INNER JOIN user_subject ON user_subject.alumnoId = user.userId';
+		$primaryKey = 'userId';
+		$columns = array(
+			array('db' => 'userId', 'dt' => 'userId'),
+			array('db' => 'user.controlNumber', 'dt' => 'control'),
+			array('db' => 'CONCAT(user.names, " ", user.lastNamePaterno," ", user.lastNameMaterno)',  'dt' => 'alumno'),
+			array('db' => 'IF(user_subject.status_payment = 1, "PAGADO", "PENDIENTE")', "dt" => "pago"),
+			array('db' => 'IF(user_subject.status_evaluation = 1, "Sí", "No")', "dt" => "evaluacion"),
+			array('db' => 'user_subject.status_payment', "dt" => "status_payment"),
+			array('db' => 'user_subject.status_evaluation', "dt" => "status_evaluation"),
+			array(
+				'db' => 'userId', 'dt' => 'acciones',
+				'formatter' => function ($d, $row) {
+					$html = "";
+					if ($row['status_payment']) {
+						$html .= "<form action='" . WEB_ROOT . "/ajax/new/course.php' method='POST' class='form mb-3' id='form_pago_{$d}'>
+									<input type='hidden' name='option' value='changePayment'>
+									<input type='hidden' name='curso' value='{$_POST['curso']}'>
+									<input type='hidden' name='estudiante' value='{$d}'>
+									<input type='hidden' name='estatus' value='0'>
+									<button class='btn btn-warning'>Cambiar a pago pendiente</button>
+								</form>";
+					} else {
+						$html .= "<form action='" . WEB_ROOT . "/ajax/new/course.php' method='POST' class='form mb-3' id='form_pago_{$d}'>
+									<input type='hidden' name='option' value='changePayment'>
+									<input type='hidden' name='curso' value='{$_POST['curso']}'>
+									<input type='hidden' name='estudiante' value='{$d}'>
+									<input type='hidden' name='estatus' value='1'>
+									<button class='btn btn-primary'>Cambiar a pagado </button>
+								</form>";
+					}
+					if ($row['status_evaluation']) {
+						$html .= "<form action='" . WEB_ROOT . "/ajax/new/course.php' method='POST' class='form mb-3' id='form_evaluation_{$d}'>
+									<input type='hidden' name='option' value='changeEvaluation'>
+									<input type='hidden' name='curso' value='{$_POST['curso']}'>
+									<input type='hidden' name='estudiante' value='{$d}'>
+									<input type='hidden' name='estatus' value='0'>
+									<button class='btn btn-warning'>Cambiar a no la evaluación</button>
+								</form>";
+					} else {
+						$html .= "<form action='" . WEB_ROOT . "/ajax/new/course.php' method='POST' class='form mb-3' id='form_evaluation_{$d}'>
+									<input type='hidden' name='option' value='changeEvaluation'>
+									<input type='hidden' name='curso' value='{$_POST['curso']}'>
+									<input type='hidden' name='estudiante' value='{$d}'>
+									<input type='hidden' name='estatus' value='1'>
+									<button class='btn btn-primary'>Cambiar a si la evaluación</button>
+								</form>";
+					}
+					return $html;
+				},
+			),
+		);
+		$where = "user_subject.courseId = {$_POST['curso']}";
+		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
 	}
 }

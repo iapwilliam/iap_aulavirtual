@@ -448,6 +448,7 @@ function additional() {
         }
     });
 }
+
 $(".datatable").each(function (index, element) {
     $(element).DataTable({
         processing: true,
@@ -466,7 +467,10 @@ $(".datatable").each(function (index, element) {
         },
         columns: [
             { data: "courseId" },
-            { data: "nombre" },
+            { 
+                data: "nombre" ,
+                className: "compact"
+            },
             { data: "grupo" },
             { data: "fecha_inicial" },
             { data: "fecha_final" },
@@ -474,9 +478,14 @@ $(".datatable").each(function (index, element) {
             { data: "alumnos" },
             {
                 data: "acciones",
-                "orderable": false,
+                orderable: false, 
             }
-        ]
+        ],
     });
 });
 
+$(".collapse").on("shown.bs.collapse", function () {
+    $.each($.fn.dataTable.tables(true), function () {
+        $(this).DataTable().columns.adjust().draw();
+    });
+});

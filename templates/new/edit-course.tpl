@@ -19,18 +19,21 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="initialDate">Fecha Inicial:</label>
-                    <input type="date" name="initialDate" id="initialDate" size="10" class="form-control" required value="{$courseData.initialDate}"/>
+                    <input type="date" name="initialDate" id="initialDate" size="10" class="form-control" required
+                        value="{$courseData.initialDate}" />
                 </div>
                 <div class="form-group col-md-4">
                     <label for="finalDate"> Fecha Final:</label>
-                    <input type="date" name="finalDate" id="finalDate" size="10" class="form-control" value="{$courseData.finalDate}"/>
+                    <input type="date" name="finalDate" id="finalDate" size="10" class="form-control"
+                        value="{$courseData.finalDate}" />
                 </div>
                 <div class="form-group col-md-4">
                     <label for="personalId">Personal Administrativo Asignado:</label>
                     <select name="personalId" id="personalId" class="form-control">
                         <option value="-1">Seleccione...</option>
                         {foreach from=$empleados item=personal}
-                            <option value="{$personal.personalId}" {($personal.personalId == $courseData.encargado.personalId) ? "selected" : ""}>
+                            <option value="{$personal.personalId}"
+                                {($personal.personalId == $courseData.encargado.personalId) ? "selected" : ""}>
                                 {$personal.lastname_paterno} {$personal.lastname_materno} {$personal.name}
                             </option>
                         {/foreach}
@@ -39,6 +42,13 @@
                 <div class="form-group col-md-4">
                     <label for="group"> Grupo:</label>
                     <input type="text" name="group" id="group" value="{$courseData.group}" class="form-control" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="group">¿Tiene cotejo CONOCER?</label>
+                    <select class="form-control" id="conocer" name="conocer">
+                        <option value="0">No</option>
+                        <option value="1" {($courseData.conocer == 1) ? "selected" : ""}>Sí</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-12 text-center">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>

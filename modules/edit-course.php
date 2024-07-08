@@ -9,6 +9,7 @@ if ($_POST) {
 	$course->setTutorId($_POST["tutorId"]);
 	$course->setExtraId($_POST["extraId"]);
 	$course->setGroup($_POST["group"]);
+	$course->setConocer($_POST['conocer']);
 	$course->updateCourse();
 	print_r(json_encode([
 		'growl'		=>true,

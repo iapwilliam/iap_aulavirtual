@@ -14,6 +14,7 @@ if ($_POST) {
 	$course->setTutorId($_POST['tutorId']);
 	$course->setExtraId($_POST['extraId']);
 	$course->setGroup($_POST["group"]);
+	$course->setConocer($_POST['conocer']);
 	$curso = $course->Open();
 	echo json_encode([
 		'growl'		=> true,
