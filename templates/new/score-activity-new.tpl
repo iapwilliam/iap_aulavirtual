@@ -1,7 +1,7 @@
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">
         <i class="fas fa-clipboard-check"></i> Calificar Actividad
-        <a href="{$WEB_ROOT}/edit-modules-course/id/{$cId}" class="btn btn-info float-right" id="btnAddMajor">
+        <a href="{$WEB_ROOT}/edit-modules-course/id/{$actividad.courseModuleId}" class="btn btn-info float-right" id="btnAddMajor">
             <i class="fas fa-arrow-left"></i> Regresar al Módulo
         </a>
     </div>

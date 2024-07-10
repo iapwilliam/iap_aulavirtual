@@ -1,42 +1,5 @@
-function saveCalificacion(){
-	
-	$("#type").val("saveCalificacion")
-
-	var fd = new FormData(document.getElementById("frmModal"));
-	$.ajax({
-		url: WEB_ROOT+'/ajax/score-activity-new.php',
-		data: fd,
-		processData: false,
-		contentType: false,
-		type: 'POST',
-		beforeSend: function(){		
-			$("#loader").html(LOADER3);
-			$("#btnEnviar").hide();
-			// $("#erro_"+reqId).hide(0);
-		},
-		success: function(response){
-			
-			console.log(response);
-			var splitResp = response.split("[#]");
-
-			$("#loader").html("");
-			$("#btnEnviar").show();
-			if($.trim(splitResp[0]) == "ok"){
-
-				$("#msjdiv").html(splitResp[1]);
-			}else if($.trim(splitResp[0]) == "fail"){
-				$("#msjdiv").html(splitResp[1]);				
-			}else{
-				alert('Ocurrio un error');
-			}
-		},
-	})
-	
-}//saveCalificacion
-
-
-$(document).on("click",".ajax", function(ev){
-	ev.preventDefault(); 
+$(document).on("click", ".ajax", function (ev) {
+	ev.preventDefault();
 	Swal.fire({
 		title: '¿Está seguro de realizar esta acción?',
 		text: "No podrá ser revertida",
@@ -45,13 +8,13 @@ $(document).on("click",".ajax", function(ev){
 		confirmButtonColor: '#3085d6',
 		cancelButtonColor: '#d33',
 		confirmButtonText: '¡Sí, realizar!'
-		}).then((result) => {
+	}).then((result) => {
 		if (result.isConfirmed) {
 			$.ajax({
-				url:$(this).data("url"),
-				type:"POST",
-				data:{id:$(this).data('id'),type:$(this).data('option'),student:$(this).data('student')}
-			}).done(function(response){
+				url: $(this).data("url"),
+				type: "POST",
+				data: { id: $(this).data('id'), type: $(this).data('option'), student: $(this).data('student') }
+			}).done(function (response) {
 				response = JSON.parse(response);
 				Swal.fire(
 					'Éxito',
@@ -59,9 +22,79 @@ $(document).on("click",".ajax", function(ev){
 					'success'
 				)
 				$(response.selector).html(response.contenido);
-			}).fail(function(response){
+			}).fail(function (response) {
 				console.log(response);
 			});
 		}
-	}) 
+	})
+});
+
+$("#datatable").DataTable({
+	processing: true,
+	serverSide: true,
+	responsive: true,
+	ajax: {
+		url: $("#datatable").data('url'),
+		dataType: "json",
+		type: "POST",
+		data: {
+			_token: $("meta[name='csrf-token'] ").attr('content'),
+			type: 'dt_score',
+			activity: $("#datatable").data("activity"),
+			module: $("#datatable").data("module"),
+			modality: $("#datatable").data("modality"),
+		}
+	},
+	language: {
+		url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+	},
+	columns: [
+		{ data: "control" },
+		{ data: "alumno" },
+		{ data: "tarea" },
+		{ data: "calificacion" },
+		{ data: "retroalimentacion" },
+		{ data: "archivo" },
+	],
+	columnDefs: [
+		{
+			targets: 1, className: 'compact'
+		},
+		{
+			targets: 2, className: 'compact'
+		}
+	],
+	order: [[0, 'asc']]
+});
+
+$("#datatable").on("change", "input, textarea", function () {
+	if ($(this).val() != "") { 
+		var formData = new FormData();
+		formData.append('type', 'addCalification');
+		formData.append('actividad', $(this).data('activity'));
+		formData.append('alumno', $(this).data('student'));
+		if ($(this).attr('type') == 'file') {
+			var file = this.files[0];
+			formData.append($(this).attr('name'), file);
+		} else {
+			formData.append($(this).attr('name'), $(this).val());
+		}
+
+		$.ajax({
+			url: WEB_ROOT + "/ajax/new/activity.php",
+			type: "POST",
+			data: formData,
+			processData: false,  // tell jQuery not to process the data
+			contentType: false,   // tell jQuery not to set contentType
+		}).done(function (response) {
+			response = JSON.parse(response);
+			if (response.dtreload) {
+				$(response.dtreload).DataTable().ajax.reload();
+			}
+		}).fail(function (response) {
+			console.log(response);
+		});
+	}
+
+	console.log($(this).val());
 });

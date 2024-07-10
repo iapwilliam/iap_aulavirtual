@@ -374,6 +374,15 @@ class Group extends Module
 		return $result;
 	}
 
+	private $activityId, $modality;
+	public function setActivityId($value) {
+		$this->activityId = $value;
+	}
+	public function setModality($value)
+	{ 
+		$this->modality = $value;
+	} 
+
 	public function genera()
 	{
 		$sql = "SELECT *, user_subject.status AS status 
@@ -1060,153 +1069,7 @@ class Group extends Module
 		unset($_FILES);
 		return true;
 	}
-
-	function onSendCarta($Id)
-	{
-		$response = $this->Util()->validarSubida(['size' => 5242880, 'types' => ['application/pdf', 'application/msword']]);
-		if ($response['estatus']) {
-			$aux = explode(".", $_FILES['descriptiveLetter']["name"]);
-			$extencion = end($aux);
-			$temporal =  $_FILES['descriptiveLetter']['tmp_name'];
-			$nuevoCodigo = bin2hex(random_bytes(4));
-			$url = DOC_ROOT . "/docentes/carta/";
-			$documento = "carta_" . $nuevoCodigo . "." . $extencion;
-			$response['documento'] = $documento;
-			if (move_uploaded_file($temporal, $url . $documento)) {
-				$sql = "SELECT * FROM course_module WHERE courseModuleId = {$Id}";
-				$this->Util()->DB()->setQuery($sql);
-				$actual = $this->Util()->DB()->getRow();
-				if (!empty($actual['rutaCarta']) && file_exists($url . $actual['rutaCarta'])) {
-					unlink($url . $actual['rutaCarta']);
-				}
-				$sql = 'UPDATE course_module SET rutaCarta = "' . $documento . '", updated_letter = NOW() WHERE courseModuleId = ' . $Id;
-				$this->Util()->DB()->setQuery($sql);
-				$this->Util()->DB()->UpdateData();
-			} else {
-				$response['estatus'] = false;
-				$response['mensaje'] = "Hubo un problema al guardar el archivo, intente de nuevo, por favor.";
-			}
-		} 
-		return $response;
-	}
-
-	function onSendInforme($Id)
-	{
-		$response = $this->Util()->validarSubida(['size' => 5242880, 'types' => ['application/pdf', 'application/msword']]);
-		if ($response['estatus']) {
-			$aux = explode(".", $_FILES['report']["name"]);
-			$extencion = end($aux);
-			$temporal =  $_FILES['report']['tmp_name'];
-			$nuevoCodigo = bin2hex(random_bytes(4));
-			$url = DOC_ROOT . "/docentes/informe/";
-			$documento = "informe_" . $nuevoCodigo . "." . $extencion;
-			$response['documento'] = $documento;
-			if (move_uploaded_file($temporal, $url . $documento)) {
-				$sql = "SELECT * FROM course_module WHERE courseModuleId = {$Id}";
-				$this->Util()->DB()->setQuery($sql);
-				$actual = $this->Util()->DB()->getRow();
-				if (!empty($actual['rutaInforme']) && file_exists($url . $actual['rutaInforme'])) {
-					unlink($url . $actual['rutaInforme']);
-				}
-				$sql = 'UPDATE course_module SET rutaInforme = "' . $documento . '", updated_report = NOW() WHERE courseModuleId = ' . $Id;
-				$this->Util()->DB()->setQuery($sql);
-				$this->Util()->DB()->UpdateData();
-			} else {
-				$response['estatus'] = false;
-				$response['mensaje'] = "Hubo un problema al guardar el archivo, intente de nuevo, por favor.";
-			}
-		} 
-		return $response;
-	}
-
-	function onSendEncuadre($Id)
-	{  
-		$response = $this->Util()->validarSubida(['size' => 5242880, 'types' => ['application/pdf', 'application/msword']]);
-		if ($response['estatus']) {
-			$aux = explode(".", $_FILES['framing']["name"]);
-			$extencion = end($aux);
-			$temporal =  $_FILES['framing']['tmp_name'];
-			$nuevoCodigo = bin2hex(random_bytes(4));
-			$url = DOC_ROOT . "/docentes/encuadre/";
-			$documento = "encuadre_" . $nuevoCodigo . "." . $extencion;
-			$response['documento'] = $documento;
-			if (move_uploaded_file($temporal, $url . $documento)) {
-				$sql = "SELECT * FROM course_module WHERE courseModuleId = {$Id}";
-				$this->Util()->DB()->setQuery($sql);
-				$actual = $this->Util()->DB()->getRow();
-				if (!empty($actual['rutaEncuadre']) && file_exists($url . $actual['rutaEncuadre'])) {
-					unlink($url . $actual['rutaEncuadre']);
-				}
-				$sql = 'UPDATE course_module SET rutaEncuadre = "' . $documento . '", updated_framing= NOW() WHERE courseModuleId = ' . $Id;
-				$this->Util()->DB()->setQuery($sql);
-				$this->Util()->DB()->UpdateData();
-			} else {
-				$response['estatus'] = false;
-				$response['mensaje'] = "Hubo un problema al guardar el archivo, intente de nuevo, por favor.";
-			}
-		} 
-		return $response; 
-	}
-
-	function onSendRubrica($Id)
-	{ 
-		$response = $this->Util()->validarSubida(['size' => 5242880, 'types' => ['application/pdf', 'application/msword']]);
-		if ($response['estatus']) {
-			$aux = explode(".", $_FILES['signature']["name"]);
-			$extencion = end($aux);
-			$temporal =  $_FILES['signature']['tmp_name'];
-			$nuevoCodigo = bin2hex(random_bytes(4));
-			$url = DOC_ROOT . "/docentes/rubrica/";
-			$documento = "rubrica_" . $nuevoCodigo . "." . $extencion;
-			$response['documento'] = $documento;
-			if (move_uploaded_file($temporal, $url . $documento)) {
-				$sql = "SELECT * FROM course_module WHERE courseModuleId = {$Id}";
-				$this->Util()->DB()->setQuery($sql);
-				$actual = $this->Util()->DB()->getRow();
-				if (!empty($actual['rutaRubrica']) && file_exists($url . $actual['rutaRubrica'])) {
-					unlink($url . $actual['rutaRubrica']);
-				}
-				$sql = 'UPDATE course_module SET rutaRubrica = "' . $documento . '", updated_signature = NOW() WHERE courseModuleId = ' . $Id;
-				$this->Util()->DB()->setQuery($sql);
-				$this->Util()->DB()->UpdateData();
-			} else {
-				$response['estatus'] = false;
-				$response['mensaje'] = "Hubo un problema al guardar el archivo, intente de nuevo, por favor.";
-			}
-		} 
-		return $response;
-	}
-
-	function onSendGradeCetificate($Id)
-	{
-		$response = $this->Util()->validarSubida(['size' => 5242880, 'types' => ['application/pdf', 'application/msword']]);
-		if ($response['estatus']) {
-			$aux = explode(".", $_FILES['archivos']["name"]);
-			$extencion = end($aux);
-			$temporal =  $_FILES['archivos']['tmp_name'];
-			$nuevoCodigo = bin2hex(random_bytes(4));
-			$url = DOC_ROOT . "/docentes/calificaciones/";
-			$documento = "acta_" . $nuevoCodigo . "." . $extencion;
-			$response['documento'] = $documento;
-			if (move_uploaded_file($temporal, $url . $documento)) {
-				$sql = "SELECT * FROM course_module WHERE courseModuleId = {$Id}";
-				$this->Util()->DB()->setQuery($sql);
-				$actual = $this->Util()->DB()->getRow();
-				if (!empty($actual['rutaActa']) && file_exists($url . $actual['rutaActa'])) {
-					unlink($url . $actual['rutaActa']);
-				}
-				$sql = 'UPDATE course_module SET rutaActa = "' . $documento . '", updated_grade_certificate = NOW() WHERE courseModuleId = ' . $Id;
-				$this->Util()->DB()->setQuery($sql);
-				$this->Util()->DB()->UpdateData();
-			} else {
-				$response['estatus'] = false;
-				$response['mensaje'] = "Hubo un problema al guardar el archivo, intente de nuevo, por favor.";
-			}
-		} 
-		return $response;
-	}
-
-
+ 
 	function onChangePicture($Id)
 	{
 		$archivo = 'archivos';
@@ -1233,26 +1096,7 @@ class Group extends Module
 		}
 		unset($_FILES);
 		return true;
-	}
-
-	function onSaveCarta($Id)
-	{
-		$sql = 'UPDATE course_module SET 		
-					perfilParticipante = "' . $this->perfilParticipante . '",			      		
-					duracion = "' . $this->duracion . '",			      		
-					numParticipantes = "' . $this->numParticipantes . '",			      		
-					horario = "' . $this->horario . '",			      		
-					objetivoParticular = "' . $this->objetivoParticular . '",				      		
-					estructuraTematica = "' . $this->estructuraTematica . '",			      		
-					criteriosEvaluacion = "' . $this->criteriosEvaluacion . '",		      		
-					tecnicas = "' . $this->tecnicas . '",			      		
-					bibliografias = "' . $this->bibliografias . '"			      		
-				WHERE courseModuleId = ' . $Id . '';
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->UpdateData();
-		return true;
-	}
-
+	} 
 	public function  getGrupo($Id)
 	{
 		$sql = "SELECT * FROM course_module WHERE courseModuleId = '" . $Id . "'";
@@ -1378,195 +1222,9 @@ class Group extends Module
 				$result[$key]["score"] = $infoCc["calificacion"];
 		}
 		return $result;
-	}
-
-	function CertificateIndicator($status)
-	{
-		$sql = "SELECT COUNT(registrationId) 
-					FROM user_subject 
-						INNER JOIN user 
-							ON user_subject.alumnoId = user.userId 
-				WHERE user_subject.courseId = " . $this->getCourseId() . " AND user_subject.status = 'activo' AND user_subject.situation = 'A' AND user.activo = 1";
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-		$sql = "SELECT COUNT(id) 
-					FROM certificate_subject 
-				WHERE courseId = " . $this->getCourseId() . " AND status = " . $status;
-		$this->Util()->DB()->setQuery($sql);
-		$certificates = $this->Util()->DB()->GetSingle();
-		return ['total' => $total, 'certificates' => $certificates];
-	}
-
-	function DesertionIndicator()
-	{
-		$sql = "SELECT COUNT(registrationId) 
-					FROM user_subject 
-						INNER JOIN user 
-							ON user_subject.alumnoId = user.userId 
-				WHERE user_subject.courseId = " . $this->getCourseId() . " AND user.activo = 1";
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-		$sql = "SELECT COUNT(registrationId) 
-					FROM user_subject 
-						INNER JOIN user 
-							ON user_subject.alumnoId = user.userId 
-				WHERE user_subject.courseId = " . $this->getCourseId() . " AND user_subject.status = 'inactivo' AND user.activo = 1";
-		$this->Util()->DB()->setQuery($sql);
-		$desertion = $this->Util()->DB()->GetSingle();
-		return ['total' => $total, 'desertion' => $desertion];
-	}
-
-	function RecursionIndicator()
-	{
-		$sql = "SELECT COUNT(registrationId) 
-					FROM user_subject 
-						INNER JOIN user 
-							ON user_subject.alumnoId = user.userId 
-				WHERE user_subject.courseId = " . $this->getCourseId() . " AND user_subject.status = 'activo' AND user_subject.situation = 'A' AND user.activo = 1";
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-		$sql = "SELECT COUNT(id) 
-					FROM user_subject_repeat 
-						LEFT JOIN user 
-							ON user_subject_repeat.alumnoId = user.userId 
-				WHERE user_subject_repeat.courseId = " . $this->getCourseId() . " AND user_subject_repeat.status = 'activo' AND user.activo = 1";
-		$this->Util()->DB()->setQuery($sql);
-		$recursion = $this->Util()->DB()->GetSingle();
-		return ['total' => $total, 'recursion' => $recursion];
-	}
-
-	function ValidatedEnglish()
-	{
-		$data['is_english'] = 0;;
-		$sql = "SELECT cm.courseId, cm.courseModuleId, sm.subjectModuleId, sm.semesterId, sm.clave, sm.name, IF(sm.clave LIKE '%ING%', 1, 0) AS is_english
-					FROM course_module cm 
-						INNER JOIN subject_module sm 
-							ON cm.subjectModuleId = sm.subjectModuleId
-				WHERE cm.courseModuleId = " . $this->coursemoduleId;
-		$this->Util()->DB()->setQuery($sql);
-		$course_module = $this->Util()->DB()->GetRow();
-		if ($course_module['is_english'] == 1) {
-			$data['is_english'] = 1;
-			$sql = "SELECT * FROM english_levels WHERE courseId = " . $course_module['courseId'] . ' ORDER BY userId, validated_level';
-			$this->Util()->DB()->setQuery($sql);
-			$result = $this->Util()->DB()->GetResult();
-			foreach ($result as $item)
-				$data['validated'][$item['userId']][] = $item['validated_level'];
-		}
-		return $data;
-	}
-
-	/**
-	 * Retorna todos los alumnos activos y graduados de las materias de acuerdo a los rangos de fechas.
-	 */
-	function IndicadorTitulacionFechas($fecha_inicial, $fecha_final, $posgrado = NULL)
-	{
-		$condicion = "";
-		if (!is_null($posgrado) && !empty($posgrado)) {
-			$condicion = "AND course.subjectId = '{$posgrado}' ";
-		}
-		$sql = "SELECT COUNT(*) FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId WHERE user_subject.status = 'activo' AND user_subject.situation = 'A' AND user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' {$condicion};";
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-
-		$sql = "SELECT COUNT(*) FROM certificate_subject INNER JOIN course ON course.courseId = certificate_subject.courseId WHERE certificate_subject.status = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' {$condicion};";
-		$this->Util()->DB()->setQuery($sql);
-		$certificates = $this->Util()->DB()->GetSingle();
-
-		$percentage = $total == 0 ? 0 : ($certificates * 100) / $total;
-
-		return ['total' => $total, 'certificates' => $certificates, 'percentage' => $percentage, 'totalPosgrados'];
-	}
-
-	public function IndicadorDesertoresFechas($fecha_inicial, $fecha_final, $posgrado = NULL)
-	{
-		$condicion = "";
-		if (!is_null($posgrado) && !empty($posgrado)) {
-			$condicion = "AND course.subjectId = '{$posgrado}' ";
-		}
-		$sql = "SELECT COUNT(*) FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId WHERE user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' {$condicion};";
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-
-		$sql = "SELECT COUNT(*) FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId WHERE user_subject.status = 'inactivo'  AND user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' {$condicion};";
-		$this->Util()->DB()->setQuery($sql);
-		$desertion = $this->Util()->DB()->GetSingle();
-
-		$percentageDesertion = $total == 0 ? 0 : ($desertion * 100) / $total;
-		$percentageEffiency = $total == 0 ? 0 : (100 - ($desertion * 100) / $total);
-		return ['total' => $total, 'desertion' => $desertion, 'percentageDesertion' => $percentageDesertion, 'percentageEffiency' => $percentageEffiency];
-	}
-
-	public function IndicadorRecursadoresFechas($fecha_inicial, $fecha_final, $posgrado = NULL)
-	{
-		$condicion = "";
-		if (!is_null($posgrado) && !empty($posgrado)) {
-			$condicion = "AND course.subjectId = '{$posgrado}' ";
-		}
-		$sql = "SELECT COUNT(*) FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId WHERE user_subject.status = 'activo' AND user_subject.situation = 'A' AND user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' {$condicion};";
-		$this->Util()->DB()->setQuery($sql);
-		$total = $this->Util()->DB()->GetSingle();
-
-
-		$sql = "SELECT COUNT(id)  FROM user_subject_repeat  LEFT JOIN user  ON user_subject_repeat.alumnoId = user.userId  INNER JOIN course ON course.courseId = user_subject_repeat.courseId WHERE user_subject_repeat.status = 'activo' AND user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' {$condicion}";
-		$this->Util()->DB()->setQuery($sql);
-		$recursion = $this->Util()->DB()->GetSingle();
-		$percentage = $total == 0 ? 0 : ($recursion * 100) / $total;
-		return ['total' => $total, 'recursion' => $recursion, 'percentage' => $percentage];
-	}
-
-	public function desgloseReporteIndicadores($fecha_inicial, $fecha_final, $posgrado = NULL)
-	{
-		if (!empty($posgrado) && !is_null($posgrado)) {
-			$sql = "SELECT course.courseId, major.name as nivelPosgrado, subject.name as nombrePosgrado, course.group, SUM(IF(user_subject.status = 'activo',1,0)) as totalCursando FROM `user_subject` INNER JOIN user ON user.userId = user_subject.alumnoId INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user_subject.situation = 'A' AND user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' AND course.subjectId = '{$posgrado}' GROUP BY major.majorId, course.group";
-
-			$sql2 = "SELECT course.courseId, course.group, COUNT(*) as totalTitulados FROM certificate_subject INNER JOIN course ON course.courseId = certificate_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE certificate_subject.status = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' AND course.subjectId = '{$posgrado}' GROUP BY major.majorId, course.group";
-
-			$sql3 = "SELECT course.courseId, course.group, COUNT(*) as totalInscritos FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' AND course.subjectId = '{$posgrado}' GROUP BY major.majorId, course.group";
-
-			$sql4 = "SELECT course.courseId, course.group, SUM(IF(user_subject.status = 'inactivo', 1, 0)) as totalDesertores FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' AND course.subjectId = '{$posgrado}' GROUP BY major.majorId, course.group;";
-
-			$sql5 = "SELECT SUM(IF(user_subject_repeat.status = 'activo', 1, 0)) as totalRecursadores, course.group FROM user_subject_repeat  LEFT JOIN user  ON user_subject_repeat.alumnoId = user.userId  INNER JOIN course ON course.courseId = user_subject_repeat.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user.activo = 1 AND (course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}')  AND course.subjectId = '{$posgrado}' GROUP BY major.majorId,course.group;";
-		} else {
-			$sql = "SELECT course.courseId, major.name as nivelPosgrado, subject.name as nombrePosgrado, SUM(IF(user_subject.status = 'activo',1,0)) as totalCursando, GROUP_CONCAT(DISTINCT(course.group)) as grupos FROM `user_subject` INNER JOIN user ON user.userId = user_subject.alumnoId INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user_subject.situation = 'A' AND user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' GROUP BY major.majorId, subject.subjectId;";
-
-			$sql2 = "SELECT course.courseId, COUNT(*) as totalTitulados FROM certificate_subject INNER JOIN course ON course.courseId = certificate_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE certificate_subject.status = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' GROUP BY major.majorId, subject.subjectId;";
-
-			$sql3 = "SELECT course.courseId, COUNT(*) as totalInscritos FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' GROUP BY major.majorId, subject.subjectId;";
-
-			$sql4 = "SELECT course.courseId, SUM(IF(user_subject.status = 'inactivo', 1, 0)) as totalDesertores FROM user_subject INNER JOIN user ON user_subject.alumnoId = user.userId INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' GROUP BY major.majorId, subject.subjectId;";
-
-			$sql5 = "SELECT SUM(IF(user_subject_repeat.status = 'activo', 1, 0)) as totalRecursadores FROM user_subject_repeat  LEFT JOIN user  ON user_subject_repeat.alumnoId = user.userId  INNER JOIN course ON course.courseId = user_subject_repeat.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE user.activo = 1 AND course.finalDate >= '{$fecha_inicial}' AND course.finalDate <= '{$fecha_final}' GROUP BY major.majorId, subject.subjectId;";
-		}
-		$this->Util()->DB()->setQuery($sql);
-		$totalesEnCurso = $this->Util()->DB()->GetResult();
-
-		$this->Util()->DB()->setQuery($sql2);
-		$totalTitulados = $this->Util()->DB()->GetResult();
-
-		$this->Util()->DB()->setQuery($sql3);
-		$totalInscritos = $this->Util()->DB()->GetResult();
-
-		$this->Util()->DB()->setQuery($sql4);
-		$totalDesertores = $this->Util()->DB()->GetResult();
-
-		$this->Util()->DB()->setQuery($sql5);
-		$totalRecursadores = $this->Util()->DB()->GetResult();
-
-		return [
-			'totalesEnCurso' => $totalesEnCurso,
-			'totalTitulados' => $totalTitulados,
-			'totalInscritos' => $totalInscritos,
-			'totalDesertores' => $totalDesertores,
-			'totalRecursadores' => $totalRecursadores
-		];
-	}
-
-	public function posgrados($condicion = "1")
-	{
-		$sql = "SELECT subject.subjectId, major.name as nivelPosgrado, subject.name as posgrado FROM `course` INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE {$condicion} GROUP BY major.majorId, subject.subjectId ORDER BY major.name ASC;";
-		$this->Util()->DB()->setQuery($sql);
-		$resultado = $this->Util()->DB()->GetResult();
-		return $resultado;
+	} 
+ 
+	public function updateScore() { 
+		
 	}
 }

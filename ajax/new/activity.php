@@ -74,4 +74,52 @@ switch ($_POST["type"]) {
             ]));
         }
         break;
+    case 'dt_score':
+        $activity->setCourseModuleId($_POST['module']);
+        $activity->setActivityId($_POST['activity']);
+        $activity->setModality($_POST['modality']);
+        $response = $activity->dt_score_request($_POST);
+        print_r(json_encode($response));
+        break;
+    case 'addCalification':
+        $qualification = $_POST['ponderation'];
+        $retro = $_POST['retro'];
+        $fileRetro = $_FILES['fileRetro'];
+        $actividadId = $_POST['actividad'];
+        $alumnoId = $_POST['alumno'];
+        $activity->setActivityId($actividadId);
+        $activity->setUserId($alumnoId);
+        $actividad = $activity->Score();
+        if ($fileRetro['name'] != "" && $fileRetro['error'] == 0) {
+            $aux = explode(".", $fileRetro['name']);
+            $extencion = end($aux);
+            $temporal = $fileRetro['tmp_name'];
+            $result = bin2hex(random_bytes(4));
+            $foto_name = "doc_" . $result . "." . $extencion;
+            if (move_uploaded_file($temporal, DOC_ROOT . $url . "/alumnos/retroalimentacion/" . $foto_name)) {
+                $activity->setRetroFile($foto_name);
+            }
+        } else {
+            $activity->setRetroFile('');
+        }
+        $activity->setPonderation($qualification);
+        $activity->setRetro($retro);
+        if (!$actividad) {
+            $activity->addScore();
+            if ($fileRetro['name'] != "" && $fileRetro['error'] == 0) {
+                echo json_encode([
+                    'dtreload' => "#datatable"
+                ]);
+                exit;
+            } 
+        } else {
+            $activity->updateScore();
+            if ($fileRetro['name'] != "" && $fileRetro['error'] == 0) {
+                echo json_encode([
+                    'dtreload' => "#datatable"
+                ]);
+                exit;
+            } 
+        }
+        break;
 }

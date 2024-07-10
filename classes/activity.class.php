@@ -538,8 +538,7 @@ class Activity extends Module
 		// print_r($result);
 		// exit;
 		foreach ($result as $key => $res) {
-			if ($res['activityType'] == "Foro" && $res["ponderation"] == 0 && $this->verponderation == 'no')
-			{
+			if ($res['activityType'] == "Foro" && $res["ponderation"] == 0 && $this->verponderation == 'no') {
 				unset($result[$key]);
 				continue;
 			}
@@ -812,9 +811,9 @@ class Activity extends Module
 						opcionD = '" . $this->opcionD . "',
 						opcionE = '" . $this->opcionE . "',
 						answer = '" . $this->respuesta . "'
-					WHERE testId = '" . $this->testId . "'"; 
-		$this->Util()->DB()->setQuery($sql); 
-		$result = $this->Util()->DB()->UpdateData(); 
+					WHERE testId = '" . $this->testId . "'";
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->UpdateData();
 		return $result;
 	}
 
@@ -1012,8 +1011,6 @@ class Activity extends Module
 		return true;
 	}
 
-
-
 	public function deleteAct($Id)
 	{
 		$sql = "DELETE FROM activity_config
@@ -1029,6 +1026,89 @@ class Activity extends Module
 	public function deleteActivityScore($activityScoreId)
 	{
 		$sql = "UPDATE activity_score SET try = 0, ponderation = 0 WHERE activityScoreId = '{$activityScoreId}'";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->UpdateData();
+	}
+
+	function dt_score_request()
+	{  
+		$table = 'activity INNER JOIN course_module ON course_module.courseModuleId = activity.courseModuleId INNER JOIN user_subject ON user_subject.courseId = course_module.courseId INNER JOIN user ON user.userId = user_subject.alumnoId LEFT JOIN activity_score ON activity_score.activityId = activity.activityId AND activity_score.userId = user_subject.alumnoId LEFT JOIN homework ON homework.activityId = activity.activityId AND homework.userId = user_subject.alumnoId';
+		$primaryKey = 'user.userId';
+		$columns = array(
+			array('db' => 'activity.activityId', 	'dt' => 'activityId'),
+			array('db' => 'user.controlNumber', 	'dt' => 'control'),
+			array('db' => 'CONCAT(user.names, " ", user.lastNamePaterno," ", user.lastNameMaterno)',  'dt' => 'alumno'),
+			array('db' => 'homework.homeworkId', 	'dt' => 'homeworkId'),
+			array('db' => 'homework.nombre', 		'dt' => 'nombre'),
+			array('db' => 'activity.activityType',	'dt' => 'activityType'),
+			array('db' => 'user.userId',			'dt' => 'alumnoId'),
+			array('db' => 'activity_score.try',		'dt' => 'try'),
+			array('db' => 'homework.path',  		'dt' => 'tarea', 'formatter' => function ($db, $row) {
+				$html = "";
+				if ($row['tarea'] != "") {
+					$html .= "<a href='" . WEB_ROOT . "/dowload.php?file=homework/" . $row['tarea'] . "' target='_blank'>";
+					$html .= $row['nombre'] != "" ? $row['nombre'] : "Tarea";
+					$html .= "</a>";
+					$User = $_SESSION['User'];
+					if ($row['activityType'] == "Tarea" && in_array($User['userId'], [1, 149])) {
+						$html .= '<br><br>
+								<button class="btn btn-danger p-3 ajax" title="Eliminar tarea" data-id="' . $row['homeworkId'] . '"
+					  				data-url="' . WEB_ROOT . '/ajax/score-activity-new.php" data-option="deleteHomework">
+					  				<i class="fa fa-trash"></i>
+					  			</button>';
+					}
+				} else {
+					$html = "sin entregar";
+				}
+				return $html;
+			}),
+			array('db' => 'activity_score.ponderation',  	'dt' => 'calificacion', 'formatter' => function ($db, $row) {
+				$html = '<input type="text" class="form-control" maxlength="5" size="5" data-activity="'.$row['activityId'].'" data-student="'.$row['alumnoId'].'" name="ponderation" value="' . $row['calificacion'] . '" />';
+				$User = $_SESSION['User'];
+				if ($row['activityType'] == "Examen" && $row['try'] > 0 && in_array($User['userId'], [1, 149])) {
+					$html .= ' <button class="btn btn-danger p-3 ajax" title="Eliminar intento de examen" data-id="' . $row['activityScoreId'] . '" data-student="' . $row['alumnoId'] . '" data-url="' . WEB_ROOT . '/ajax/score-activity-new.php" data-option="deleteScore">
+				        <i class="fa fa-trash"></i>
+				    </button>';
+				}
+				return $html;
+			}),
+			array('db' => 'activity_score.retro',  	'dt' => 'retroalimentacion', 'formatter' => function ($db, $row) {
+				return '<textarea class="form-control" data-activity="'.$row['activityId'].'" data-student="'.$row['alumnoId'].'" name="retro" rows="8" style="width: 200px !important;">' . $row['retroalimentacion'] . '</textarea>';
+			}),
+			array('db' => 'activity_score.rutaArchivoRetro', 'dt' => 'archivo', 'formatter' => function ($db, $row) {
+				$html = "";
+				if ($row['archivo'] != "") {
+					$html.='<a href="'.WEB_ROOT.'/alumnos/retroalimentacion/'.$row['archivo'].'" target="_blank">
+								<i class="fas fa-folder-open fa-3x text-warning"></i>
+							</a><br>';							
+				}
+				$html.= '<input type="file" data-activity="'.$row['activityId'].'" data-student="'.$row['alumnoId'].'" name="fileRetro" id="fileRetro_'.$row['alumnoId'].'">'; 
+				return $html;
+			}),
+
+		);
+		$where = "course_module.courseModuleId = {$this->getCourseModuleId()} AND activity.activityId = {$this->getActivityId()} AND activity.modality = '{$this->getModality()}'";
+		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
+	}
+
+	private $retro;
+	public function setRetro($value) {
+		$this->retro = $value;		
+	}
+
+	private $retroFile;
+	public function setRetroFile($value) {
+		$this->retroFile = $value;		
+	}
+
+	public function addScore(){
+		$sql = "INSERT INTO activity_score(userId, activityId, ponderation, try, retro, rutaArchivoRetro, access) VALUES('{$this->getUserId()}','{$this->getActivityId()}', '{$this->getPonderation()}', 0, '{$this->retro}', '{$this->retroFile}', 1)";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->InsertData();
+	}
+
+	public function updateScore(){
+		$sql = "UPDATE activity_score SET ponderation = '{$this->getPonderation()}', retro = '{$this->retro}', rutaArchivoRetro = '{$this->retroFile}' WHERE userId = {$this->getUserId()} AND activityId = {$this->getActivityId()}";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 	}
