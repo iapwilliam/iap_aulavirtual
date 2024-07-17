@@ -73,7 +73,6 @@ class Activity extends Module
 
 	public function setPonderation($value)
 	{
-		$this->Util()->ValidateInteger($value, 100, 0);
 		$this->ponderation = $value;
 	}
 
@@ -1108,7 +1107,14 @@ class Activity extends Module
 	}
 
 	public function updateScore(){
-		$sql = "UPDATE activity_score SET ponderation = '{$this->getPonderation()}', retro = '{$this->retro}', rutaArchivoRetro = '{$this->retroFile}' WHERE userId = {$this->getUserId()} AND activityId = {$this->getActivityId()}";
+		$fields = [ 
+			'ponderation'		=> $this->getPonderation(),
+			'retro'				=> $this->retro,
+			'rutaArchivoRetro'	=> $this->retroFile
+		];
+		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
+		$sql = "UPDATE activity_score SET $updateQuery WHERE userId = {$this->getUserId()} AND activityId = {$this->getActivityId()}";
+		echo $sql;
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 	}
