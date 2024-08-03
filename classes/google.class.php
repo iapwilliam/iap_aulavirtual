@@ -1,5 +1,5 @@
 <?php
-include_once DOC_ROOT.'/google-api/vendor/autoload.php';
+require_once __DIR__ .'/../vendor/autoload.php';
 class Google
 {
     private $DirID = "";

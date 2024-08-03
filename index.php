@@ -219,14 +219,15 @@ $pages = array(
 	'reporte-transparencia',
 	'registro-primeros-auxilios',
 	'reporte-auxilios',
-	'registro-igualdad'
+	'registro-igualdad',
+	'registro-responsabilidad'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
 }
 
 if (!isset($_SESSION['User'])) { //Si no existe sesión
-	if (!in_array($_GET['page'], ['login', 'registro-cobach', 'recuperacion', 'registro', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad'])) { //Y no está en estas páginas
+	if (!in_array($_GET['page'], ['login', 'registro-cobach', 'recuperacion', 'registro', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad', 'registro-responsabilidad'])) { //Y no está en estas páginas
 		header('Location: ' . WEB_ROOT . "/login"); //Lo mandamos al login
 	}
 } else { //Existe sesión
