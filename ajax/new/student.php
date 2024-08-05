@@ -1068,8 +1068,11 @@ switch ($opcion) {
 				$student->setCourseId(12);
 				$student->updateStudent();
 				$student->addUserCourse();
+				
 
-				$dataCourse = $student->getCourses("AND user_subject.courseId = 12 AND user_subject.alumnoId = " . $alumnoActual['userId']);
+				$dataCourse = $student->getCourses("AND user_subject.courseId = 12 AND user_subject.alumnoId = " . $alumnoActual['userId']); 
+				$student->setSubjectId($dataCourse[0]['subjectId']);
+				$student->AddAcademicHistory('alta', 'A', 1);
 				$details_body = array(
 					'major'		=> $dataCourse[0]['major_name'],
 					'course'	=> $dataCourse[0]['subject_name'],
@@ -1134,6 +1137,8 @@ switch ($opcion) {
 				$student->setCourseId(12);
 				$student->addUserCourse();
 				$dataCourse = $student->getCourses("AND user_subject.courseId = 12 AND user_subject.alumnoId = " . $response['status']);
+				$student->setSubjectId($dataCourse[0]['subjectId']);
+				$student->AddAcademicHistory('alta', 'A', 1);
 				$details_body = array(
 					'major'		=> $dataCourse[0]['major_name'],
 					'course'	=> $dataCourse[0]['subject_name'],

@@ -202,10 +202,6 @@ class Student extends User
 		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(" . $this->subjectId . ", " . $this->courseId . ", " . $this->userId . ", " . $semesterId . ", CURDATE(), '" . $type . "', '" . $situation . "')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
-
-		$sql = "UPDATE pagos SET deleted_at = NOW() WHERE course_id = {$this->courseId} AND alumno_id = {$this->userId} AND periodo >= {$semesterId} AND status <> 2 AND deleted_at IS NULL";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->UpdateData();
 		return true;
 	}
 
@@ -987,7 +983,7 @@ class Student extends User
 
 	function getCourses($where = "")
 	{
-		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group, subject.icon, course.initialDate, course.finalDate FROM user_subject INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
+		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group, subject.icon, course.initialDate, course.finalDate, course.subjectId FROM user_subject INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
@@ -2844,7 +2840,7 @@ class Student extends User
 	function saveResponsability()
 	{
 		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, type, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', '".$this->workplaceOcupation."', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', 'student', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})";
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', '".$this->workplaceOcupation."', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})";
 		$this->Util()->DB()->setQuery($sql); 
 		$resultado['status'] = $this->Util()->DB()->InsertData();
 		$resultado['usuario'] = $controlNumber; 
