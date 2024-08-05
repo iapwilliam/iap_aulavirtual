@@ -2,7 +2,7 @@
 
 $message[1]["subject"] = "Confirmación de inscripción al aula virtual del Instituto de Administración Pública del Estado de Chiapas, A. C.";
 $message[1]["body"] = "
-¡Bienvenido/a al |major|: |course|
+Bienvenido/a al |major|: |course|
 
 Nos complace confirmar que hemos recibido con éxito tu inscripción. Estamos emocionados de tenerte como parte de nuestra comunidad educativa y esperamos proporcionarte una experiencia de aprendizaje enriquecedora y satisfactoria.
 

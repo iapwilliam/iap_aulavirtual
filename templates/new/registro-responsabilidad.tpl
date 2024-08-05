@@ -54,11 +54,12 @@
                     </div>
                 </div>
 
-                <span class="badge badge-dark"><i class="fas fa-user"></i>Fotografía para inscripción</span>
+                <span class="badge badge-dark">
+                    <i class="fas fa-user"></i>Fotografía Digital
+                </span>
                 <hr />
                 <div class="row">
-                    <label class="w-100" for="foto">Fotografía Digital</label>
-                    <label class="w-100">Esta fotografía se utilizará en la emisión de tu certificado</label>
+                    <label class="col-md-12"><strong>Esta fotografía se utilizará en la emisión de tu certificado</strong></label>
                     <div class="form-group col-md-3">
                         <ul>
                             <li>A color, reciente y nítida</li>
@@ -69,7 +70,8 @@
                             <li>Buena iluminación para eliminar sombras.</li>
                             <li>Peso del archivo: Hasta 300 kilobytes.</li>
                             <li>Formato electrónico: jpg, bmp o png.</li>
-                        </ul> 
+                        </ul>
+                        <label class="w-100" for="foto"><strong>Subir fotografía</strong></label>
                         <input type="file" class="form-control" id="foto" name="foto">
                         <span class="invalid-feedback"></span>
                     </div>
@@ -124,7 +126,7 @@
                                 <label class="w-100 pt-3">Con objetos y adornos sobre la cabeza</label>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
 
                 <span class="badge badge-dark"><i class="fas fa-address-book"></i> Datos de Contacto</span>
