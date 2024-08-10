@@ -33,7 +33,7 @@ $sheet->getStyle('C')->getFont()->setSize(14)->setBold(true);
 $sheet->getStyle('D')->getAlignment()->setHorizontal('center')->setVertical('center');
 $sheet->getStyle('D')->getFont()->setSize(14)->setBold(true); 
 
-$course->setCourseId($_GET['curso']);
+$course->setCourseId(2);
 $courseData = $course->getCourse(); 
 $headings = $course->getHeadersActivities("AND course_module.courseId = 2");
 $students = $course->getStudents("AND user_subject.courseId = 2 AND user_subject.alumnoId <> 2");
