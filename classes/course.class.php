@@ -735,7 +735,7 @@ class Course extends Subject
 
 	public function getStudents($sql)
 	{
-		$sql = "SELECT user.userId, user.controlNumber, user.names, user.password, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.workplace, user.workplacePosition,(SELECT estado FROM sepomex WHERE sepomex.id_estado = user.estado LIMIT 1) as estado, (SELECT municipio FROM sepomex WHERE sepomex.id_estado = user.estado AND sepomex.id_municipio = user.ciudadt LIMIT 1) as municipio, user.curpDrive, user.curp, user_subject.status_payment, user_subject.status_evaluation FROM user_subject INNER JOIN user ON user.userId = user_subject.alumnoId WHERE 1 {$sql}";
+		$sql = "SELECT user.userId, user.controlNumber, user.names, user.password, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.workplace, user.workplacePosition,(SELECT estado FROM sepomex WHERE sepomex.id_estado = user.estado LIMIT 1) as estado, (SELECT municipio FROM sepomex WHERE sepomex.id_estado = user.estado AND sepomex.id_municipio = user.ciudadt LIMIT 1) as municipio, user.curpDrive, user.curp, user_subject.status_payment, user_subject.status_evaluation, user.foto FROM user_subject INNER JOIN user ON user.userId = user_subject.alumnoId WHERE 1 {$sql}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;

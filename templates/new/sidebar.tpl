@@ -132,6 +132,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{$WEB_ROOT}/reporte-auxilios">Cursos - Primeros Auxilios</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="white-space:normal;" href="{$WEB_ROOT}/reporte-buen-gobierno">Diplomado - Buen Gobierno</a>
+                        </li>
                     </ul>
                 </div>
             </li>

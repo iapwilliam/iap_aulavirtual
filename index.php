@@ -221,7 +221,8 @@ $pages = array(
 	'reporte-auxilios',
 	'registro-igualdad',
 	'registro-responsabilidad', 
-	'registro-simulador'
+	'registro-simulador',
+	'reporte-buen-gobierno'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";

@@ -17,11 +17,19 @@ switch ($_POST["opcion"]) {
     case 'transparencia':
         if ($_GET['tipo'] == 1) {
             include_once('reportes/transparencia.php');
-        }else{
+        } else {
             include_once('reportes/transparencia-evaluaciones.php');
         }
         break;
     case 'auxilios':
         include_once('reportes/transparencia.php');
+        break;
+    case 'buen-gobierno':
+        if ($_GET['tipo'] == 1) {
+            include_once('reportes/buen-gobierno.php');
+        } else {
+            exit;
+            include_once('reportes/transparencia-evaluaciones.php');
+        }
         break;
 }
