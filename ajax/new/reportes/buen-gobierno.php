@@ -98,24 +98,27 @@ foreach ($cursos as $key => $item) {
     $students = $item['registrados'];
 
     for ($i = 3; $i < (count($students) + 2); $i++) {
-        $curp = json_decode($students[$i]['curpDrive'], true);
-        $foto = json_decode($students[$i]['foto'], true);
-        $sheet->setCellValue("A" . $i, $students[$i]['controlNumber']);
-        $sheet->setCellValue("B" . $i, $students[$i]['password']);
-        $sheet->setCellValue("C" . $i, mb_strtoupper($students[$i]['names']));
-        $sheet->setCellValue("D" . $i, mb_strtoupper($students[$i]['lastNamePaterno']));
-        $sheet->setCellValue("E" . $i, mb_strtoupper($students[$i]['lastNameMaterno']));
-        $sheet->setCellValue("F" . $i, $students[$i]['sexo']);
-        $sheet->setCellValue("G" . $i, $students[$i]['email']);
-        $sheet->setCellValue("H" . $i, $students[$i]['phone']);
-        $sheet->setCellValue("I" . $i, $students[$i]['workplace']);
-        $sheet->setCellValue("J" . $i, $students[$i]['workplacePosition']);
-        $sheet->setCellValue("K" . $i, $students[$i]['curp']);
+        $curp = json_decode($students[($i-3)]['curpDrive'], true);
+        $foto = json_decode($students[($i-3)]['foto'], true);
+        $sheet->setCellValue("A" . $i, $students[($i-3)]['controlNumber']);
+        $sheet->setCellValue("B" . $i, $students[($i-3)]['password']);
+        $sheet->setCellValue("C" . $i, mb_strtoupper($students[($i-3)]['names']));
+        $sheet->setCellValue("D" . $i, mb_strtoupper($students[($i-3)]['lastNamePaterno']));
+        $sheet->setCellValue("E" . $i, mb_strtoupper($students[($i-3)]['lastNameMaterno']));
+        $sheet->setCellValue("F" . $i, $students[($i-3)]['sexo']);
+        $sheet->setCellValue("G" . $i, $students[($i-3)]['email']);
+        $sheet->setCellValue("H" . $i, $students[($i-3)]['phone']);
+        $sheet->setCellValue("I" . $i, $students[($i-3)]['workplace']);
+        $sheet->setCellValue("J" . $i, $students[($i-3)]['workplacePosition']);
+        $sheet->setCellValue("K" . $i, $students[($i-3)]['curp']);
         $sheet->setCellValue("L" . $i, "https://drive.google.com/open?id=".$curp['googleId']);
         $sheet->setCellValue("M" . $i, "https://drive.google.com/open?id=".$foto['googleId']);
-        $sheet->setCellValue("N" . $i, $students[$i]['estado']);
-        $sheet->setCellValue("O" . $i, $students[$i]['municipio']);
-        $sheet->setCellValue("P" . $i, $students[$i]['academicDegree']);
+        $sheet->setCellValue("N" . $i, $students[($i-3)]['estado']);
+        $sheet->setCellValue("O" . $i, $students[($i-3)]['municipio']);
+        $sheet->setCellValue("P" . $i, $students[($i-3)]['academicDegree']);
+
+        $sheet->getCell('L' .$i)->getHyperlink()->setUrl("https://drive.google.com/open?id=".$curp['googleId']);
+        $sheet->getCell('M' .$i)->getHyperlink()->setUrl("https://drive.google.com/open?id=".$foto['googleId']);
     }
 
     $sheet->getStyle("A1:P" . (count($students) + 1))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
