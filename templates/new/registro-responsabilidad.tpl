@@ -38,7 +38,7 @@
                         <label for="curparchivo">Favor de subir su CURP en formato PDF, si no cuenta con ella puede
                             descargarla en el siguiente enlace: <a href="https://www.gob.mx/curp/"
                                 target="_blank">https://www.gob.mx/curp/</a></label>
-                        <input type="file" class="form-control" id="curparchivo" name="curparchivo">
+                        <input type="file" class="form-control" id="curparchivo" name="curparchivo" accept="application/pdf">
                         <span class="invalid-feedback"></span>
                     </div>
                     <div class="form-group col-md-4">
@@ -72,7 +72,7 @@
                             <li>Formato electrónico: jpg, bmp o png.</li>
                         </ul>
                         <label class="w-100" for="foto"><strong>Subir fotografía</strong></label>
-                        <input type="file" class="form-control" id="foto" name="foto">
+                        <input type="file" class="form-control" id="foto" name="foto" accept="image/png, image/jpeg">
                         <span class="invalid-feedback"></span>
                     </div>
                     <div class="col-md-4">

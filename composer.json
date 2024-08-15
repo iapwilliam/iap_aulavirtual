@@ -4,6 +4,7 @@
         "vlucas/phpdotenv": "^3.4",
         "phpoffice/phpspreadsheet": "^1.18",
         "phpoffice/phpword": "^0.18.2",
-        "google/apiclient": "2.5.0"
+        "google/apiclient": "2.5.0",
+        "intervention/image": "2.7.0"
     }
 }

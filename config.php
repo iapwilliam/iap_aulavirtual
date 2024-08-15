@@ -23,3 +23,6 @@ define("BN_CLAVE", getenv('BN_CLAVE'));
 define("ID_TERMINAL", getenv('ID_TERMINAL'));
 define("BN_MODO", getenv('BN_MODO'));
 define("BN_SSL", getenv('BN_SSL')); 
+
+define("GOOGLE_FOLDER_AULA_CURP", getenv('GOOGLE_FOLDER_AULA_CURP'));
+define("GOOGLE_FOLDER_AULA_FOTO", getenv('GOOGLE_FOLDER_AULA_FOTO'));

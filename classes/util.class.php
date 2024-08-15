@@ -1,4 +1,9 @@
 <?php
+// include composer autoload
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManager;
 
 class Util extends ErrorLms
 {
@@ -98,8 +103,6 @@ class Util extends ErrorLms
 		return $this->FormatDateMySql($date);
 	}
 
-
-
 	function ValidateInteger(&$number, $max = 0, $min = 0)
 	{
 		if (!preg_match("/^[0-9]+$/", $number)) $number = 0;
@@ -188,21 +191,6 @@ class Util extends ErrorLms
 		if (strlen($string) > $max_chars) {
 			$string = substr($string, 0, $max_chars);
 		}
-
-		/*		$string = str_replace("�", "&Ntilde;", $string);
-		$string = str_replace("�", "&ntilde;", $string);
-		$string = str_replace("�", "&aacute;", $string);
-		$string = str_replace("�", "&eacute;", $string);
-		$string = str_replace("�", "&iacute;", $string);
-		$string = str_replace("�", "&oacute;", $string);
-		$string = str_replace("�", "&uacute;", $string);
-		$string = str_replace("�", "&Aacute;", $string);
-		$string = str_replace("�", "&Eacute;", $string);
-		$string = str_replace("�", "&Iacute;", $string);
-		$string = str_replace("�", "&Oacute;", $string);
-		$string = str_replace("�", "&Uacute;", $string);
-*/
-		//		$string = utf8_decode($string);
 	}
 
 	function acento($string)
@@ -631,7 +619,6 @@ class Util extends ErrorLms
 		header("location: " . $url);
 	}
 
-
 	function HandleMultipages($page, $total, $link, $items_per_page = 0, $pagevar = "p")
 	{
 
@@ -735,7 +722,6 @@ class Util extends ErrorLms
 		return $text;
 	}
 
-
 	function hs_ereg_replace($var1, $var2, $var3)
 	{
 		return preg_replace('/' . $var1 . '/', $var2, $var3);
@@ -780,6 +766,7 @@ class Util extends ErrorLms
 		}
 		return $sexo;
 	}
+
 	function CalculateIva($price)
 	{
 		return $price * (IVA / 100);
@@ -900,7 +887,6 @@ class Util extends ErrorLms
 
 	function DecodeVal($value)
 	{
-
 		return urldecode($value);
 	} //decodeVal
 
@@ -954,11 +940,9 @@ class Util extends ErrorLms
 
 	function DecodeRow($row)
 	{
-
 		foreach ($row as $key => $val) {
 			$info[$key] = $val;
 		}
-
 		return $info;
 	}
 
@@ -1076,8 +1060,19 @@ class Util extends ErrorLms
 	{
 
 		$months = array(
-			'', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
-			'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+			'',
+			'Enero',
+			'Febrero',
+			'Marzo',
+			'Abril',
+			'Mayo',
+			'Junio',
+			'Julio',
+			'Agosto',
+			'Septiembre',
+			'Octubre',
+			'Noviembre',
+			'Diciembre'
 		);
 
 		return $months[$key];
@@ -1199,7 +1194,7 @@ class Util extends ErrorLms
 
 		return $generation;
 	}
-  
+
 
 	function NormalizeMark($mark)
 	{
@@ -1300,7 +1295,6 @@ class Util extends ErrorLms
 		}
 		return $returnArray;
 	}
-
 
 	function HandlePagesAjax($page, $total, $link, $items_per_page = 0, $pagevar = "p")
 	{
@@ -1604,6 +1598,7 @@ class Util extends ErrorLms
 		$resultado = $this->DBErp()->GetResult();
 		return $resultado;
 	}
+
 	public function localidades($estado, $municipio)
 	{
 		$sql = "SELECT * FROM municipalities WHERE cve_ent = '{$estado}' AND cve_mun = {$municipio} GROUP BY nom_loc ORDER BY nom_loc ASC";
@@ -1619,24 +1614,38 @@ class Util extends ErrorLms
 		return $result;
 	}
 
-	function cobach_coordinaciones($where = "1") {
+	function cobach_coordinaciones($where = "1")
+	{
 		$sql = "SELECT * FROM cobach_coordinacion WHERE $where";
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;
 	}
 
-	function cobach_adscripciones($where = "1") {
+	function cobach_adscripciones($where = "1")
+	{
 		$sql = "SELECT * FROM cobach_adscripcion WHERE $where";
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;
 	}
 
-	function cobach_funciones($where = "1") {
+	function cobach_funciones($where = "1")
+	{
 		$sql = "SELECT * FROM cobach_funciones WHERE $where";
 		$this->DB()->setQuery($sql);
 		$resultado = $this->DB()->GetResult();
 		return $resultado;
-	} 
+	}
+
+	public function resizeImage($url, $width, $height, $quality = 75)
+	{
+		$manager = new ImageManager(['driver' => 'GD']);
+		$image = $manager->make($url); 
+		$image->resize($width, $height, function ($constraint) {
+			$constraint->aspectRatio();
+			$constraint->upsize();
+		})->save($url, $quality); 
+		return $image;
+	}
 }

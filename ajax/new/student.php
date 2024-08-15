@@ -1,4 +1,4 @@
-<?php
+<?php 
 include_once('../../init.php');
 include_once('../../config.php');
 include_once(DOC_ROOT . '/libraries.php');
@@ -1042,8 +1042,8 @@ switch ($opcion) {
 				$student->setCiudadT($municipio);
 				foreach ($_FILES as $key => $archivo) {
 					$carpetaId = [
-						"curparchivo" => "1q0CSI9h9a1IryJn11ZRRbkWAFlvUX8vZ",
-						"foto" => "1Vkm83DjtnSH9mWDrJl5kPiJP_Kxo3bW4"
+						"curparchivo" => GOOGLE_FOLDER_AULA_CURP,
+						"foto" => GOOGLE_FOLDER_AULA_FOTO
 					];
 					$google = new Google($carpetaId[$key]);
 					$ruta = DOC_ROOT . "/tmp/";
@@ -1052,7 +1052,9 @@ switch ($opcion) {
 					$nombre = $key . "_" . $nombreAlumno;
 					$documento =  $nombre . "." . $extension;
 					move_uploaded_file($temporal, $ruta . $documento);
-
+					if ($key == "foto") { 
+						$util->resizeImage($ruta.$documento, Null, 1400);
+					}
 					$google->setArchivoNombre($documento);
 					$google->setArchivo($ruta . $documento);
 					$respuesta = $google->subirArchivo();
@@ -1108,8 +1110,8 @@ switch ($opcion) {
 
 			foreach ($_FILES as $key => $archivo) {
 				$carpetaId = [
-					"curparchivo" => "1q0CSI9h9a1IryJn11ZRRbkWAFlvUX8vZ",
-					"foto" => "1Vkm83DjtnSH9mWDrJl5kPiJP_Kxo3bW4"
+					"curparchivo" => GOOGLE_FOLDER_AULA_CURP,
+					"foto" => GOOGLE_FOLDER_AULA_FOTO
 				];
 				$google = new Google($carpetaId[$key]);
 				$ruta = DOC_ROOT . "/tmp/";
@@ -1118,7 +1120,9 @@ switch ($opcion) {
 				$nombre = $key . "_" . $nombreAlumno;
 				$documento =  $nombre . "." . $extension;
 				move_uploaded_file($temporal, $ruta . $documento);
-
+				if ($key == "foto") { 
+					$util->resizeImage($ruta.$documento, Null, 1400);
+				}
 				$google->setArchivoNombre($documento);
 				$google->setArchivo($ruta . $documento);
 				$respuesta = $google->subirArchivo();
