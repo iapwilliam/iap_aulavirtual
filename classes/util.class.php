@@ -2,8 +2,8 @@
 // include composer autoload
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// import the Intervention Image Manager Class
-use Intervention\Image\ImageManager;
+// import the Intervention Image Manager Class 
+use Intervention\Image\ImageManagerStatic as Image;
 
 class Util extends ErrorLms
 {
@@ -1640,8 +1640,8 @@ class Util extends ErrorLms
 
 	public function resizeImage($url, $width, $height, $quality = 75)
 	{
-		$manager = new ImageManager(['driver' => 'GD']);
-		$image = $manager->make($url); 
+		Image::configure(['driver' => 'gd']);
+		$image = Image::make($url); 
 		$image->resize($width, $height, function ($constraint) {
 			$constraint->aspectRatio();
 			$constraint->upsize();
