@@ -34,7 +34,7 @@ $spreadsheet->getProperties()->setCreator('William Ramírez')
 $ultimo_indice = count($licenciaturas) - 1;
 foreach ($licenciaturas as $key => $item) {
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setTitle($item['subject_name']. " GRUPO: ". $item['group']);
+    $sheet->setTitle($item['subject_name']. " GRUPO ". $item['group']);
     $sheet->setCellValue('A1', 'Usuario');
     $sheet->setCellValue('B1', 'Contraseña');
     $sheet->setCellValue('C1', 'Nombre');
