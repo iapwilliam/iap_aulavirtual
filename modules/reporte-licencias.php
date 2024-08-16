@@ -1,3 +1,3 @@
 <?php
-$licenciaturas = $course->getCourses("AND courseId > 2 AND courseId < 7");
+$licenciaturas = $course->getCourses("AND subject.tipo = 4 GROUP BY subject.subjectId");
 $smarty->assign("licenciaturas", $licenciaturas);

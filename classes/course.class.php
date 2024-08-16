@@ -496,7 +496,7 @@ class Course extends Subject
 
 	public function getCourses($where = "")
 	{
-		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, `course`.`group`, subject.icon FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
+		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, `course`.`group`, subject.icon, subject.subjectId FROM course INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;

@@ -10,11 +10,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 $licenciatura = $_GET['licenciatura'];
+$grupo = $_GET['grupo'];
+ 
 if ($licenciatura == 0) {
-    $licenciaturas = $course->getCourses("AND courseId > 2 AND courseId < 7");
-} else {
-    $licenciaturas = $course->getCourses("AND courseId = $licenciatura");
+    $licenciaturas = $course->getCourses("AND subject.tipo = 4");
+}elseif ($licenciatura != 0 && $grupo == 0) { 
+    $licenciaturas = $course->getCourses("AND subject.subjectId = $licenciatura");
+}else{
+    $licenciaturas = $course->getCourses("AND course.courseId = $grupo");
 }
+
 foreach ($licenciaturas as $key => $licenciatura) {
     $licenciaturas[$key]['registrados'] = $course->getStudents("AND user_subject.courseId = {$licenciatura['courseId']}");
 }
@@ -29,7 +34,7 @@ $spreadsheet->getProperties()->setCreator('William Ramírez')
 $ultimo_indice = count($licenciaturas) - 1;
 foreach ($licenciaturas as $key => $item) {
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setTitle($item['subject_name']);
+    $sheet->setTitle($item['subject_name']. " GRUPO: ". $item['group']);
     $sheet->setCellValue('A1', 'Usuario');
     $sheet->setCellValue('B1', 'Contraseña');
     $sheet->setCellValue('C1', 'Nombre');

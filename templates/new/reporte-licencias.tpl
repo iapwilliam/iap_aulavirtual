@@ -21,15 +21,21 @@
     <div class="card-body">
         <form id="frmGral" action="{$WEB_ROOT}/ajax/new/reportes/licenciaturas.php" method="get" target="_blank"> 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label>Licenciatura</label>
-                    <select class="form-control" id="licenciatura" name="licenciatura">
+                    <select class="form-control" id="licenciatura" name="licenciatura" data-url="{$WEB_ROOT}/ajax/new/course.php">
                         <option value="0">--TODAS--</option>
                         {foreach from=$licenciaturas item=item}
-                            <option value="{$item.courseId}">{$item.subject_name}</option>
+                            <option value="{$item.subjectId}">{$item.subject_name}</option>
                         {/foreach}
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Grupo</label>
+                    <select class="form-control" id="grupo" name="grupo">
+                        <option value="0">--TODOS--</option> 
                     </select>
                 </div>
                 <div class="col-md-12 text-center">

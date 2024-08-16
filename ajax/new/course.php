@@ -39,4 +39,9 @@ switch ($opcion) {
             'dtreload'  => "#datatable"
         ]);
         break;
+    case 'grupos':
+        $subject->setSubjectId($_POST['posgrado']);
+        $grupos = $subject->grupos();
+        print_r(json_encode($grupos));
+        break;
 }
