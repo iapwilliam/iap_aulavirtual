@@ -233,7 +233,7 @@ switch ($opcion) {
 		$student->setCourseId($curso);
 		$student->setSubjectId($dataCourse['subjectId']);
 		$student->setWorkplace($_POST['workplace']);
-		$student->setWorkplaceOcupation($_POST['workplaceOcupation']);
+		$student->setWorkplacePosition($_POST['workplacePosition']);
 		$student->setState($state);
 		$student->setCity($city);
 		$response = $student->save();

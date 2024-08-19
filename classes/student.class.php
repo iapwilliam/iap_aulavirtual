@@ -2496,7 +2496,8 @@ class Student extends User
 		$columns = array(
 			array('db' => 'userId',			'dt' => 'userId'),
 			array(
-				'db' => 'avatar',			'dt' => 'foto',
+				'db' => 'avatar',
+				'dt' => 'foto',
 				'formatter'	=> function ($d) {
 					$imagen = $d != "" ? WEB_ROOT . "/alumnos/avatar/" . $d : WEB_ROOT . "/images/logos/iap_logo.JPG";
 					return "<img src='" . $imagen . "'>";
@@ -2507,7 +2508,8 @@ class Student extends User
 			array('db' => 'lastNameMaterno', 'dt' => 'apellido_materno'),
 			array('db' => 'controlNumber',	'dt' => 'numero_control'),
 			array(
-				'db' => 'userId', 'dt' => 'acciones',
+				'db' => 'userId',
+				'dt' => 'acciones',
 				'formatter' => function ($d, $row) {
 					return '
 					<a href="' . WEB_ROOT . '/graybox.php?page=edit-student&id=' . $d . '" data-target="#ajax" data-toggle="modal" data-width="1000px">
@@ -2555,24 +2557,35 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		$existe = $this->Util()->DB()->getRow();
 		if ($existe) {
-			$resultado['status'] = 0;
-			$resultado['message'] = "Ya existe un registro con este correo.";
-			return $resultado;
+			$this->setUserId($existe['userId']);
+			$sql = "SELECT * FROM user_subject WHERE courseId = {$this->courseId} AND alumnoId = {$existe['userId']}";
+			$this->Util()->DB()->setQuery($sql);
+			$existe = $this->Util()->DB()->getRow();
+			if($existe){
+				$resultado['status'] = 0;
+				$resultado['message'] = "El correo ya se encuentra en el curso.";
+			}else{ 
+				$this->updateStudent();
+				$this->addUserCourse();
+				$this->AddAcademicHistory('Alta', 'A', 1);
+			}
+		} else {
+			$controlNumber = $this->getControlNumber();
+			$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->state}, {$this->city}, '" . $this->schoolNumber . "', 'si', 'student', {$this->state}, {$this->city})";
+			$this->Util()->DB()->setQuery($sql);
+			$resultado['status'] = $this->Util()->DB()->InsertData();
+			$resultado['usuario'] = $controlNumber;
+
+			$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '" . $this->courseId . "')";
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->InsertData();
+
+			$date = date('Y-m-d');
+			$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
+			$this->Util()->DB()->setQuery($sql);
+			$this->Util()->DB()->InsertData();
 		}
-		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, plantel, actualizado, type, estado, ciudad) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', 'OTROS', '" . $this->workplacePosition . "', 1, {$this->state}, {$this->city}, '" . $this->schoolNumber . "', 'si', 'student', {$this->state}, {$this->city})";
-		$this->Util()->DB()->setQuery($sql);
-		$resultado['status'] = $this->Util()->DB()->InsertData();
-		$resultado['usuario'] = $controlNumber;
 
-		$sql = "INSERT INTO user_subject(alumnoId, status, courseId) VALUES('" . $resultado['status'] . "', 'activo' , '" . $this->courseId . "')";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
-
-		$date = date('Y-m-d');
-		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
-		$this->Util()->DB()->setQuery($sql);
-		$this->Util()->DB()->InsertData();
 		return $resultado;
 	}
 
@@ -2834,16 +2847,15 @@ class Student extends User
 		$sql = "INSERT INTO user_subject(alumnoId, courseId,status,situation) VALUES ({$this->getUserId()}, {$this->courseId}, 'activo', 'A')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
-	}
-
+	} 
 
 	function saveResponsability()
 	{
 		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', '".$this->workplaceOcupation."', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})";
-		$this->Util()->DB()->setQuery($sql); 
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', '" . $this->workplaceOcupation . "', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})";
+		$this->Util()->DB()->setQuery($sql);
 		$resultado['status'] = $this->Util()->DB()->InsertData();
-		$resultado['usuario'] = $controlNumber; 
+		$resultado['usuario'] = $controlNumber;
 		return $resultado;
 	}
 }

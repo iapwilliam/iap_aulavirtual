@@ -41,15 +41,12 @@ for ($i = 0; $i < (count($students)); $i++) {
     $sheet->setCellValue("B" . ($i + 2), mb_strtoupper($students[$i]['names']));
     $sheet->setCellValue("C" . ($i + 2), mb_strtoupper($students[$i]['lastNamePaterno']));
     $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno'])); 
-    $auxColumn = "I";
+    $auxColumn = "E";
     foreach ($headings as $heading) {
-        // if ($heading['activityType'] == "Tarea") {
-        //     $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
-        //     // $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : WEB_ROOT . "/homework/" . $data['path']));
-        //     // if (isset($data['homeworkId'])) {
-        //     //     $sheet->getCell("{$auxColumn}{$auxRow}")->getHyperlink()->setUrl(WEB_ROOT . "/homework/" . $data['path']);
-        //     // }
-        // }
+        if ($heading['activityType'] == "Tarea") {
+            $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
+            $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : $data['countUpdate'])); 
+        }
         if ($heading['activityType'] == "Examen") {
             $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
             $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['try'] : 0));
