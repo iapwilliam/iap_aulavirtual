@@ -40,7 +40,7 @@ $ultimo_indice = count($licenciaturas) - 1;
 foreach ($licenciaturas as $key => $item) {
     $course->setCourseId($item['courseId']);
     $courseData = $course->getCourse();
-    $headings = $course->getHeadersActivities("AND course_module.courseId = {$item['courseId']}");
+    $headings = $course->getHeadersActivities("AND course_module.courseId = {$item['courseId']} ORDER BY activity.resumen ASC");
     $students = $course->getStudents("AND user_subject.courseId = {$item['courseId']}");
     $sheet = $spreadsheet->getActiveSheet(); 
     $sheet->getDefaultColumnDimension()->setWidth(30);
