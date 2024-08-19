@@ -32,4 +32,12 @@ switch ($_POST["opcion"]) {
             include_once('reportes/transparencia-evaluaciones.php');
         }
         break;
+    case 'licenciaturas':
+        if ($_GET['tipo'] == 1) {
+            include_once('reportes/licenciaturas.php');
+        } else {
+            include_once('reportes/licenciaturas-evaluaciones.php');
+        }
+        break;
+    
 }

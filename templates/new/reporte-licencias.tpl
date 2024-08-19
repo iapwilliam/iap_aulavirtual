@@ -19,10 +19,10 @@
     <div class="card-header bg-primary text-white">
     </div>
     <div class="card-body">
-        <form id="frmGral" action="{$WEB_ROOT}/ajax/new/reportes/licenciaturas.php" method="get" target="_blank"> 
-            <div class="row">
-                <div class="col-md-2">
-                </div>
+        <form id="frmGral" action="{$WEB_ROOT}/ajax/new/reportes.php" method="get" target="_blank">
+            <input type="hidden" name="opcion" value="licenciaturas">
+            <input type="hidden" name="page" value="export-excel"> 
+            <div class="row"> 
                 <div class="col-md-4 mb-3">
                     <label>Licenciatura</label>
                     <select class="form-control" id="licenciatura" name="licenciatura" data-url="{$WEB_ROOT}/ajax/new/course.php">
@@ -36,6 +36,14 @@
                     <label>Grupo</label>
                     <select class="form-control" id="grupo" name="grupo">
                         <option value="0">--TODOS--</option> 
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="tipo">Tipo</label>
+                    <select class="form-control" id="tipo" name="tipo" required>
+                        <option value="">--Selecciona un tipo--</option>
+                        <option value="1">Registros</option>
+                        <option value="2">Evaluaciones</option>
                     </select>
                 </div>
                 <div class="col-md-12 text-center">
