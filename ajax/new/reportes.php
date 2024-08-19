@@ -28,8 +28,7 @@ switch ($_POST["opcion"]) {
         if ($_GET['tipo'] == 1) {
             include_once('reportes/buen-gobierno.php');
         } else {
-            exit;
-            include_once('reportes/transparencia-evaluaciones.php');
+            include_once('reportes/buen-gobierno-evaluaciones.php');
         }
         break;
     case 'licenciaturas':
