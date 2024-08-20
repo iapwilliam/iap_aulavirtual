@@ -1167,7 +1167,7 @@ class User extends Main
 							$card['avatar'] = '<img class="card-img-top" src="'.WEB_ROOT.'/images/logos/iap_logo.JPG">';
 						}
 					}else{
-						$card['avatar'] = '<img class="card-img-top" src="'.WEB_ROOT.'/alumnos/avatar/{$User.avatar}" alt="" />';
+						$card['avatar'] = '<img class="card-img-top" src="'.WEB_ROOT.'/alumnos/avatar/'.$row['avatar'].'" alt="" />';
 					} 
 					$card['bloqueado'] = $row['bloqueado'];
 					$_SESSION['User'] = $card;
