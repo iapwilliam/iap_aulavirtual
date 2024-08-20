@@ -1,10 +1,6 @@
 <div class="card">
     <div class="card-header position-relative p-0 card-avatar">
-        {if $User.avatar ne ''}
-            <img class="card-img-top" src="{$WEB_ROOT}/alumnos/avatar/{$User.avatar}" alt="" />
-        {else}
-            <img class="card-img-top" src="{$WEB_ROOT}/images/logos/iap_logo.JPG">
-        {/if}
+        {$User.avatar}
         <div class="overlay-avatar" id="changeAvatar">
             <i class="mdi mdi-file-find"></i> 
         </div>

@@ -1142,9 +1142,9 @@ class User extends Main
 			$_SESSION["lastClick"] = time();
 			return true;
 		} else { //Si es un estudiante 
-			$sql = "SELECT * FROM user WHERE controlNumber = '" . $this->username . "'"; 
+			$sql = "SELECT * FROM user WHERE controlNumber = '" . $this->username . "'";
 			$this->Util()->DB()->setQuery($sql);
-			$row = $this->Util()->DB()->GetRow(); 
+			$row = $this->Util()->DB()->GetRow();
 			if ($row) {
 				if ((!empty($row['password']) && $row['password'] == $this->password  && $row['activo'] == 1)) {
 					$card['userId'] = $row['userId'];
@@ -1159,7 +1159,16 @@ class User extends Main
 					$card['activo'] = $row['activo'];
 					$card['actualizado'] = $row['actualizado'];
 					$card['isLogged'] = true;
-					$card['avatar'] = $row['avatar'];
+					if (empty($row['avatar'])) { 
+						$json = json_decode($row['foto'], true);  
+						if (isset($json['googleId'])) {
+							$card['avatar'] = '<img src="https://www.googleapis.com/drive/v3/files/' . $json['googleId'] . '?alt=media&key=AIzaSyDPUxMMPT7P29XC9NTBKlMuR_34xWwt3UE" width="600" class="img-fluid"/>';
+						}else{
+							$card['avatar'] = '<img class="card-img-top" src="'.WEB_ROOT.'/images/logos/iap_logo.JPG">';
+						}
+					}else{
+						$card['avatar'] = '<img class="card-img-top" src="'.WEB_ROOT.'/alumnos/avatar/{$User.avatar}" alt="" />';
+					} 
 					$card['bloqueado'] = $row['bloqueado'];
 					$_SESSION['User'] = $card;
 					$_SESSION["lastClick"] = time();
