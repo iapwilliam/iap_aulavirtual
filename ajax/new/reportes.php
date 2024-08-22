@@ -25,6 +25,7 @@ switch ($_POST["opcion"]) {
         include_once('reportes/transparencia.php');
         break;
     case 'buen-gobierno':
+    case 'gestion-gubernamental':
         if ($_GET['tipo'] == 1) {
             include_once('reportes/buen-gobierno.php');
         } else {
@@ -37,6 +38,6 @@ switch ($_POST["opcion"]) {
         } else {
             include_once('reportes/licenciaturas-evaluaciones.php');
         }
-        break;
-    
+        break; 
+        
 }

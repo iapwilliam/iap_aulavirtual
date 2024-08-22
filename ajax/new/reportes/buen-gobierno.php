@@ -99,7 +99,10 @@ foreach ($cursos as $key => $item) {
 
     for ($i = 3; $i < (count($students) + 2); $i++) {
         $curp = json_decode($students[($i-3)]['curpDrive'], true);
-        $foto = json_decode($students[($i-3)]['foto'], true);
+        $foto = json_decode($students[($i-3)]['foto_curso'], true);
+        if (empty($foto['googleId'])) { 
+            $foto = json_decode($students[($i-3)['foto']], true);
+        }
         $sheet->setCellValue("A" . $i, $students[($i-3)]['controlNumber']);
         $sheet->setCellValue("B" . $i, $students[($i-3)]['password']);
         $sheet->setCellValue("C" . $i, mb_strtoupper($students[($i-3)]['names']));

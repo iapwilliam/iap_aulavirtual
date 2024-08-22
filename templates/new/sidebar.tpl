@@ -135,6 +135,9 @@
                         <li class="nav-item">
                             <a class="nav-link" style="white-space:normal;" href="{$WEB_ROOT}/reporte-buen-gobierno">Diplomado - Buen Gobierno</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="white-space:normal;" href="{$WEB_ROOT}/reporte-gestion-gubernamental">Diplomado - Gestión Gubernamental</a>
+                        </li>
                     </ul>
                 </div>
             </li>
