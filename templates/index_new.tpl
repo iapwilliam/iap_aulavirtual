@@ -110,7 +110,7 @@
 			{if $vistaPrevia eq 1}
 				{include file="new/sidebar_vp.tpl"}
 			{else}
-				{if (($User.type ne "Docente") and ($User.type ne "student") and !in_array($page,['register', 'registro', 'registro-cobach', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad', 'registro-responsabilidad', 'registro-simulador']))}
+				{if (($User.type ne "Docente") and ($User.type ne "student") and !in_array($page,['register', 'registro', 'registro-cobach', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad', 'registro-responsabilidad', 'registro-simulador', 'registro-gestion-gubernamental']))}
 					{include file="new/sidebar.tpl"}
 				{/if}
 			{*if (($User.type eq "Docente") or ($User.type eq "student"))}
@@ -119,7 +119,7 @@
 			{/if}
 			{* End sidebar *}
 			<div class="main-panel"
-				{if (($User.type eq "Docente") or ($User.type eq "student") or in_array($page,['register', 'registro', 'registro-cobach', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad', 'registro-responsabilidad', 'registro-simulador']))}
+				{if (($User.type eq "Docente") or ($User.type eq "student") or in_array($page,['register', 'registro', 'registro-cobach', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad', 'registro-responsabilidad', 'registro-simulador', 'registro-gestion-gubernamental']))}
 				style="width:100% !important;" {/if}>
 				{* Container *}
 				<div class="content-wrapper">

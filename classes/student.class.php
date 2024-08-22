@@ -2844,7 +2844,7 @@ class Student extends User
 
 	function addUserCourse()
 	{
-		$sql = "INSERT INTO user_subject(alumnoId, courseId,status,situation) VALUES ({$this->getUserId()}, {$this->courseId}, 'activo', 'A')";
+		$sql = "INSERT INTO user_subject(alumnoId, courseId,status,situation, foto) VALUES ({$this->getUserId()}, {$this->courseId}, 'activo', 'A', '{$this->foto}')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 	} 
@@ -2852,7 +2852,7 @@ class Student extends User
 	function saveResponsability()
 	{
 		$controlNumber = $this->getControlNumber();
-		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', '" . $this->workplaceOcupation . "', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', {$this->foto})";
+		$sql = "INSERT INTO user(controlNumber, names, lastNamePaterno, lastNameMaterno, email, phone, password, workPlace, workplaceOcupation, workplacePosition, paist, estadot, ciudadt, actualizado, estado, ciudad, curpDrive, curp, foto) VALUES('" . $controlNumber . "', '" . $this->name . "', '" . $this->lastNamePaterno . "', '" . $this->lastNameMaterno . "', '" . $this->email . "', '" . $this->phone . "', '" . $this->password . "', '" . $this->workplace . "', '" . $this->workplaceOcupation . "', '" . $this->workplacePosition . "', 1, {$this->estadoT}, {$this->ciudadT}, 'si', {$this->estadoT}, {$this->ciudadT}, {$this->curpDrive}, '{$this->curp}', '{$this->foto}')";
 		$this->Util()->DB()->setQuery($sql);
 		$resultado['status'] = $this->Util()->DB()->InsertData();
 		$resultado['usuario'] = $controlNumber;

@@ -222,7 +222,8 @@ $pages = array(
 	'registro-igualdad',
 	'registro-responsabilidad', 
 	'registro-simulador',
-	'reporte-buen-gobierno'
+	'reporte-buen-gobierno',
+	'registro-gestion-gubernamental'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
@@ -230,7 +231,7 @@ if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 
 if (!isset($_SESSION['User'])) { //Si no existe sesión
 	if (!in_array($_GET['page'], ['login', 'registro-cobach', 'recuperacion', 'registro', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad', 'registro-responsabilidad', 
-	'registro-simulador'])) { //Y no está en estas páginas
+	'registro-simulador', 'registro-gestion-gubernamental'])) { //Y no está en estas páginas
 		header('Location: ' . WEB_ROOT . "/login"); //Lo mandamos al login
 	}
 } else { //Existe sesión
