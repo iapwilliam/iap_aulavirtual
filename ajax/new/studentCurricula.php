@@ -43,7 +43,7 @@ switch ($_POST["type"]) {
 		$smarty->assign("tip", $_POST['tip']);
 		$smarty->assign("DOC_ROOT", DOC_ROOT);
 		$smarty->assign("students", $students);
-		$smarty->assign("User",$_SESSION['User']);
+		$smarty->assign("User", $_SESSION['User']);
 		echo json_encode([
 			'modal'	=> true,
 			'html'	=> $smarty->fetch(DOC_ROOT . '/templates/boxes/view-studentadmin.tpl')
@@ -138,21 +138,21 @@ switch ($_POST["type"]) {
 		// echo "Módulos totales del curso: $totalModulos\n";
 		// echo "Periodo de baja solicitado: $periodoBaja\n";
 		// print_r($courseInfo);
-		if($_POST['completarBaja']){
+		if ($_POST['completarBaja']) {
 			if ($student->DeleteStudentCurricula($periodoBaja, "BT")) {
 				echo json_encode([
-					'growl'		=>true,
-					'type'		=>'success',
-					'message'	=>'Baja completada.',
-					'modal_close'=>true
+					'growl'		=> true,
+					'type'		=> 'success',
+					'message'	=> 'Baja completada.',
+					'modal_close' => true
 				]);
 				exit;
 			} else {
 				echo json_encode([
-					'growl'		=>true,
-					'type'		=>'error',
-					'message'	=>'Hubo un error con la baja, intente más tarde.',
-					'modal_close'=>true
+					'growl'		=> true,
+					'type'		=> 'error',
+					'message'	=> 'Hubo un error con la baja, intente más tarde.',
+					'modal_close' => true
 				]);
 				exit;
 			}
@@ -175,14 +175,14 @@ switch ($_POST["type"]) {
 		if ($has_history) {
 			foreach ($group_history as $item) {
 				if ($item['type'] == 'baja') {
-					for ($i = 1; $i <= $item['semesterId']; $i++){
-						if(empty($period_course[$i])){
+					for ($i = 1; $i <= $item['semesterId']; $i++) {
+						if (empty($period_course[$i])) {
 							$period_course[$i] = $item['courseId'];
 						}
 					}
 				}
-				if($item['type'] == "alta"){
-					for ($i = $item['semesterId']; $i <= $courseInfo['totalPeriods']; $i++){
+				if ($item['type'] == "alta") {
+					for ($i = $item['semesterId']; $i <= $courseInfo['totalPeriods']; $i++) {
 						$period_course[$i] = $item['courseId'];
 					}
 				}
@@ -216,11 +216,11 @@ switch ($_POST["type"]) {
 				}
 			}
 		}
-		
+
 		// print_r($qualifications);
-		
+
 		$reprobadas = 0;
-		
+
 		// echo "Calificación mínima: $calificacionMinima \n";
 		foreach ($qualifications as $key => $item) {
 			if ($reprobadas >= 2)
@@ -231,23 +231,22 @@ switch ($_POST["type"]) {
 				$evaluados++;
 				if ($item2['score'] < $calificacionMinima) {
 					$reprobadas++;
-				}				
+				}
 			}
 		}
 
-		if($reprobadas < 2){
-			if($periodoBajaSugerido < $periodosMaximos){
-				if($modulosPeriodo == $totalModulos || $evaluados == $totalModulos){
+		if ($reprobadas < 2) {
+			if ($periodoBajaSugerido < $periodosMaximos) {
+				if ($modulosPeriodo == $totalModulos || $evaluados == $totalModulos) {
 					$periodoBajaSugerido++;
 				}
 			}
-
 		}
 
 		// print_r($qualifications); 
 		// echo "Periodo de baja sugerido: $periodoBajaSugerido y número de reprobadas: $reprobadas y materias evaluadas $evaluados";
 		// exit;
-		if($periodoBajaSugerido != $periodoBaja){
+		if ($periodoBajaSugerido != $periodoBaja) {
 			$smarty->assign("calificaciones", $qualifications);
 			$smarty->assign("periodoBaja", $periodoBaja);
 			$smarty->assign("periodoSugerido", $periodoBajaSugerido);
@@ -256,25 +255,24 @@ switch ($_POST["type"]) {
 			$smarty->assign("estudiante", $_POST['userId']);
 			$smarty->assign("calificacionMinima", $calificacionMinima);
 			echo json_encode([
-				"calificaciones"	=>$smarty->fetch(DOC_ROOT."/templates/items/new/materias-baja.tpl"),
-				"periodoValido"		=>false
+				"calificaciones"	=> $smarty->fetch(DOC_ROOT . "/templates/items/new/materias-baja.tpl"),
+				"periodoValido"		=> false
 			]);
-			
-		}else{
+		} else {
 			if ($student->DeleteStudentCurricula($_POST['period'], "BT")) {
 				echo json_encode([
-					'periodoValido'	=>true,
-					'estatus'		=>true,
-					'mensaje'		=>'Baja completada.'
+					'periodoValido'	=> true,
+					'estatus'		=> true,
+					'mensaje'		=> 'Baja completada.'
 				]);
 			} else {
 				echo json_encode([
-					'periodoValido'	=>true,
-					'estatus'		=>false,
-					'mensaje'		=>'Hubo un error con la baja, intente más tarde.'
+					'periodoValido'	=> true,
+					'estatus'		=> false,
+					'mensaje'		=> 'Hubo un error con la baja, intente más tarde.'
 				]);
 			}
-		} 
+		}
 		break;
 
 	case "enableStudentCurricula":
@@ -408,7 +406,7 @@ switch ($_POST["type"]) {
 		$course->setCurricula($_POST['curricula']);
 		$result = $course->EnumerateByPage($viewPage, $rowsPerPage, $pageVar, WEB_ROOT . '/history-subject', $arrPage);
 		$uniqueSubjects = $course->EnumerateSubjectByPage();
-		$smarty->assign('User',$_SESSION['User']);
+		$smarty->assign('User', $_SESSION['User']);
 		$smarty->assign('subjects', $result);
 		$smarty->assign('uniqueSubjects', $uniqueSubjects);
 		$smarty->display(DOC_ROOT . '/templates/lists/new/courses.tpl');
@@ -677,8 +675,8 @@ switch ($_POST["type"]) {
 		//Obtenemos el cuatri de la baja.
 		$baja = $student->bajaCurso($curso);
 		$alta = $student->periodoAltaCurso($curso);
-		if($baja == ""){
-			$baja = $infoCourses['totalPeriods']; 
+		if ($baja == "") {
+			$baja = $infoCourses['totalPeriods'];
 		}
 		//Buscamos si tiene módulos en recursamiento
 		$has_modules_repeat = $student->hasModulesRepeat();
@@ -697,7 +695,7 @@ switch ($_POST["type"]) {
 		//Buscamos si ya tenía historial de materias pasadas
 
 		$qualifications = [];
-		
+
 		for ($period = $alta; $period <= $baja; $period++) {
 			$tmp = $student->BoletaCalificacion($infoCourse['courseId'], $period, true);
 			// print_r($tmp);
@@ -735,19 +733,19 @@ switch ($_POST["type"]) {
 	case "cambiarCorreos": //Modifica los correos personales por correos institucionales
 		$group->setCourseId($_POST['curso']);
 		$students = $group->DefaultGroup();
-		
+
 		foreach ($students as $item) {
-			$buscarCorreo = strpos($item['email'],"@iapchiapas.edu.mx"); 
-			if($buscarCorreo === false){
+			$buscarCorreo = strpos($item['email'], "@iapchiapas.edu.mx");
+			if ($buscarCorreo === false) {
 				$student->setUserId($item['userId']);
-				$student->setCorreoInstitucional($item['controlNumber']."@iapchiapas.edu.mx");
+				$student->setCorreoInstitucional($item['controlNumber'] . "@iapchiapas.edu.mx");
 				$respuesta = $student->cambiarCorreos();
-			} 
+			}
 		}
 		echo json_encode([
-			'modal_close'	=>true,
-			'message'		=>'Correos cambiados',
-			'growl'			=>true
+			'modal_close'	=> true,
+			'message'		=> 'Correos cambiados',
+			'growl'			=> true
 		]);
 		break;
 	case 'cursos':
@@ -755,5 +753,34 @@ switch ($_POST["type"]) {
 		$student->setUserId($alumno);
 		$cursos = $student->StudentCourses();
 		echo json_encode($cursos);
+		break;
+	case 'addStudentGroup':
+		$courseId = $_POST['courseId'];
+		$studentId = $_POST['userId'];
+		$existeEnCurso = $student->getCourses("AND user_subject.courseId = {$courseId} AND user_subject.alumnoId = {$studentId}");
+		if (count($existeEnCurso) > 0) {
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'danger',
+				'message'	=> 'El alumno ya se encuentra en este grupo, intente con otro.',
+			]);
+		} else {
+			$student->setCourseId($courseId);
+			$student->setUserId($studentId);
+			$student->setFoto("{}");
+			$student->addUserCourse();
+			$dataCourse = $student->getCourses("AND user_subject.courseId = {$courseId} AND user_subject.alumnoId = {$studentId}");
+			$student->setSubjectId($dataCourse[0]['subjectId']);
+			$student->AddAcademicHistory('alta', 'A', 1);
+			$activeCoursesStudent = $student->getCourses("AND user_subject.alumnoId = {$studentId}");
+			$smarty->assign("activeCourseStudent", $activeCoursesStudent);
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'success',
+				'message'	=> 'Alumno agregado',
+				'html'		=> $smarty->fetch(DOC_ROOT . "/templates/items/new/curriculas.tpl"),
+				'selector'	=> '#contentCurrent'
+			]);
+		}
 		break;
 }
