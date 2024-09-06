@@ -48,13 +48,13 @@ foreach ($licenciaturas as $key => $item) {
 
     $sheet->mergeCells("A1:{$auxHeading}1")->getStyle("A1:{$auxHeading}1")->getAlignment()->setHorizontal('center')->setVertical('center');
 
-    $auxRow = 2;
+    $auxRow = 3;
     for ($i = 0; $i < (count($students)); $i++) {
         $curp = json_decode($students[$i]['curpDrive'], true);
-        $sheet->setCellValue("A" . ($i + 2), $students[$i]['controlNumber']);
-        $sheet->setCellValue("B" . ($i + 2), mb_strtoupper($students[$i]['names']));
-        $sheet->setCellValue("C" . ($i + 2), mb_strtoupper($students[$i]['lastNamePaterno']));
-        $sheet->setCellValue("D" . ($i + 2), mb_strtoupper($students[$i]['lastNameMaterno']));
+        $sheet->setCellValue("A" . ($i + 3), $students[$i]['controlNumber']);
+        $sheet->setCellValue("B" . ($i + 3), mb_strtoupper($students[$i]['names']));
+        $sheet->setCellValue("C" . ($i + 3), mb_strtoupper($students[$i]['lastNamePaterno']));
+        $sheet->setCellValue("D" . ($i + 3), mb_strtoupper($students[$i]['lastNameMaterno']));
         $auxColumn = "E";
         foreach ($headings as $heading) {
             if ($heading['activityType'] == "Tarea") {
