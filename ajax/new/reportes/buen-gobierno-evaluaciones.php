@@ -63,7 +63,7 @@ foreach ($licenciaturas as $key => $item) {
             }
             if ($heading['activityType'] == "Examen") {
                 $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
-                $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['try'] : 0));
+                $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['ponderation'] : "NO PRESENTÓ"));
             }
             $auxColumn++;
         }

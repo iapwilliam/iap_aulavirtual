@@ -38,6 +38,14 @@
             <label>Límite de intentos</label>
             <input class="form-control" id="intentos" name="intentos" type="number" min="1" value="1">
         </div>
+
+        <div class="form-group col-md-6 d-none" id="seccion_calificacion_opcion">
+            <label>¿Qué calificación se mantiene de los intentos?</label>
+            <select class="form-control" id="calificacion_opcion" name="calificacion_opcion">
+                <option value="0">La calificación más alta</option>
+                <option value="1">La última calificación</option>
+            </select>
+        </div>
     </div>
     <div class="row">
         <div class="form-group col-md-6">
@@ -115,9 +123,6 @@
     editor.e.on('keyup', () => {
         var cadenaCaracteres = editor.__plugins.stat.charCounter.outerText;
         var arregloCadena = cadenaCaracteres.split(" ");
-        console.log(cadenaCaracteres);
-        console.log(arregloCadena);
-        console.log(parseInt(arregloCadena[1]));
         if (parseInt(arregloCadena[1]) >= 2500) {
             $("#descripcionValida").val(false);
         } else {
@@ -151,6 +156,14 @@
         } else {
             $("#seccion_intentos").removeClass("d-none");
             $("#seccion_calificacion").addClass("d-none");
+        }
+    });
+
+    $("#intentos").on("change", function(){
+        if ($(this).val() > 1) {
+            $("#seccion_calificacion_opcion").removeClass("d-none");
+        }else{
+            $("#seccion_calificacion_opcion").addClass("d-none");
         }
     });
 </script>

@@ -137,8 +137,6 @@ class Test extends Activity
 		return $returnArray;
 	}
 
-
-
 	public function TestScore()
 	{
 		$this->Util()->DB()->setQuery("
@@ -249,9 +247,9 @@ class Test extends Activity
 	{
 		//print_r($this);
 		$questionScore = $this->PonderationPerQuestion();
-
 		$score = 0;
 
+		
 		//Eliminamos las respuestas anteriores que haya echo el alumno
 		$sql = "SELECT test_answers.* FROM test_answers INNER JOIN activity_test ON activity_test.testId = test_answers.answer_id WHERE activity_test.activityId = {$this->getActivityId()} AND student_id = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
@@ -261,7 +259,7 @@ class Test extends Activity
 			$this->Util()->DB()->setQuery($sql);
 			$this->Util()->DB()->DeleteData();
 		}
-
+ 
 		if (is_array($answers)) {
 			foreach ($answers as $key => $option) {
 				$sql = "SELECT answer FROM 
@@ -283,20 +281,23 @@ class Test extends Activity
 				$this->Util()->DB()->setQuery($sql);
 				$this->Util()->DB()->InsertData();
 			}
-		}
-
+		} 
+		
 		$this->Util()->DB()->setQuery("
-				SELECT COUNT(*)
-				FROM activity_score
-				WHERE activityId = '" . $this->getActivityId() . "' AND userId = '" . $this->getUserId() . "'");
-		$count = $this->Util()->DB()->GetSingle();
+				SELECT activity_score.*, activity.reintento, activity.tipo, activity.tipoCalificacion
+				FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId
+				WHERE activity_score.activityId = '" . $this->getActivityId() . "' AND activity_score.userId = '" . $this->getUserId() . "'");
+		$activityScore = $this->Util()->DB()->GetRow(); 
 
-		if ($count == 0) {
+		if (!isset($activityScore['userId'])) {
 			$sql = "INSERT INTO  `activity_score` ( `userId` , `activityId` , `try` , `ponderation`)
 				VALUES ('" . $this->getUserId() . "', '" . $this->getActivityId() . "', '1', '" . $score . "');";
 			$this->Util()->DB()->setQuery($sql);
 			$result = $this->Util()->DB()->InsertData();
 		} else {
+			if ($activityScore['reintento'] && !$activityScore['tipo'] && !$activityScore['tipoCalificacion']) {
+				$score = $score < $activityScore['ponderation'] ? $activityScore['ponderation'] : $score;
+			}
 			$this->Util()->DB()->setQuery("
 					UPDATE `activity_score` SET
 						`ponderation` = '" . $score . "',
@@ -340,7 +341,12 @@ class Test extends Activity
 
 	function reiniciarTest()
 	{
-		$sql = "UPDATE activity_score SET access = 1, ponderation = 0 WHERE activityId = {$this->getActivityId()} AND userId = {$this->getUserId()}";
+		$fields = [
+			'ponderation'		=> $this->getPonderation(), 
+			'access'			=> 1
+		];
+		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);  
+		$sql = "UPDATE activity_score SET $updateQuery WHERE activityId = {$this->getActivityId()} AND userId = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 	}

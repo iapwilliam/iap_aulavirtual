@@ -39,10 +39,15 @@ switch ($_POST["type"]) {
     case 'reiniciarExamen':
         $test->setUserId($_SESSION["User"]["userId"]);
         $test->setActivityId($_POST["actividad"]);
-        $test->reiniciarTest();
-
         $activity->setActivityId($_POST["actividad"]);
         $actividad = $activity->Info();
+        if($actividad['reintento'] && !$actividad['tipo'] && !$actividad['tipoCalificacion']){
+            $score = $test->TestScore();
+            $test->setPonderation($score);
+        }else{
+            $test->setPonderation(0);
+        }
+        $test->reiniciarTest(); 
         $_SESSION["timeLimit"] = time() + $actividad["timeLimit"] * 60;
         echo json_encode([
             'growl'     => true,

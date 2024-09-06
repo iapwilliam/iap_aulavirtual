@@ -204,6 +204,11 @@ class Activity extends Module
 	{
 		$this->calificacionMinima = $valor;
 	}
+	private $tipoCalificacion;
+	function setTipoCalificacion($valor)
+	{
+		$this->tipoCalificacion = $valor;
+	}
 
 	public function SaveModule()
 	{
@@ -293,7 +298,8 @@ class Activity extends Module
 							reintento,
 							tipo,
 							tries,
-							calificacion
+							calificacion, 
+							tipoCalificacion
 						)
 					VALUES (
 							'" . $this->getCourseModuleId() . "', 
@@ -309,7 +315,8 @@ class Activity extends Module
 							'" . $this->reintento . "',
 							'" . $this->tipo . "',
 							'" . $this->intentos . "',
-							'" . $this->calificacionMinima . "'
+							'" . $this->calificacionMinima . "',
+							'" . $this->tipoCalificacion . "'
 							)";
 		//configuramos la consulta con la cadena de insercion
 		$this->Util()->DB()->setQuery($sql);
@@ -1030,7 +1037,7 @@ class Activity extends Module
 	}
 
 	function dt_score_request()
-	{  
+	{
 		$table = 'activity INNER JOIN course_module ON course_module.courseModuleId = activity.courseModuleId INNER JOIN user_subject ON user_subject.courseId = course_module.courseId INNER JOIN user ON user.userId = user_subject.alumnoId LEFT JOIN activity_score ON activity_score.activityId = activity.activityId AND activity_score.userId = user_subject.alumnoId LEFT JOIN homework ON homework.activityId = activity.activityId AND homework.userId = user_subject.alumnoId';
 		$primaryKey = 'user.userId';
 		$columns = array(
@@ -1062,7 +1069,7 @@ class Activity extends Module
 				return $html;
 			}),
 			array('db' => 'activity_score.ponderation',  	'dt' => 'calificacion', 'formatter' => function ($db, $row) {
-				$html = '<input type="text" class="form-control" maxlength="5" size="5" data-activity="'.$row['activityId'].'" data-student="'.$row['alumnoId'].'" name="ponderation" value="' . $row['calificacion'] . '" />';
+				$html = '<input type="text" class="form-control" maxlength="5" size="5" data-activity="' . $row['activityId'] . '" data-student="' . $row['alumnoId'] . '" name="ponderation" value="' . $row['calificacion'] . '" />';
 				$User = $_SESSION['User'];
 				if ($row['activityType'] == "Examen" && $row['try'] > 0 && in_array($User['userId'], [1, 149])) {
 					$html .= ' <button class="btn btn-danger p-3 ajax" title="Eliminar intento de examen" data-id="' . $row['activityScoreId'] . '" data-student="' . $row['alumnoId'] . '" data-url="' . WEB_ROOT . '/ajax/score-activity-new.php" data-option="deleteScore">
@@ -1072,16 +1079,16 @@ class Activity extends Module
 				return $html;
 			}),
 			array('db' => 'activity_score.retro',  	'dt' => 'retroalimentacion', 'formatter' => function ($db, $row) {
-				return '<textarea class="form-control" data-activity="'.$row['activityId'].'" data-student="'.$row['alumnoId'].'" name="retro" rows="8" style="width: 200px !important;">' . $row['retroalimentacion'] . '</textarea>';
+				return '<textarea class="form-control" data-activity="' . $row['activityId'] . '" data-student="' . $row['alumnoId'] . '" name="retro" rows="8" style="width: 200px !important;">' . $row['retroalimentacion'] . '</textarea>';
 			}),
 			array('db' => 'activity_score.rutaArchivoRetro', 'dt' => 'archivo', 'formatter' => function ($db, $row) {
 				$html = "";
 				if ($row['archivo'] != "") {
-					$html.='<a href="'.WEB_ROOT.'/alumnos/retroalimentacion/'.$row['archivo'].'" target="_blank">
+					$html .= '<a href="' . WEB_ROOT . '/alumnos/retroalimentacion/' . $row['archivo'] . '" target="_blank">
 								<i class="fas fa-folder-open fa-3x text-warning"></i>
-							</a><br>';							
+							</a><br>';
 				}
-				$html.= '<input type="file" data-activity="'.$row['activityId'].'" data-student="'.$row['alumnoId'].'" name="fileRetro" id="fileRetro_'.$row['alumnoId'].'">'; 
+				$html .= '<input type="file" data-activity="' . $row['activityId'] . '" data-student="' . $row['alumnoId'] . '" name="fileRetro" id="fileRetro_' . $row['alumnoId'] . '">';
 				return $html;
 			}),
 
@@ -1091,30 +1098,33 @@ class Activity extends Module
 	}
 
 	private $retro;
-	public function setRetro($value) {
-		$this->retro = $value;		
+	public function setRetro($value)
+	{
+		$this->retro = $value;
 	}
 
 	private $retroFile;
-	public function setRetroFile($value) {
-		$this->retroFile = $value;		
+	public function setRetroFile($value)
+	{
+		$this->retroFile = $value;
 	}
 
-	public function addScore(){
+	public function addScore()
+	{
 		$sql = "INSERT INTO activity_score(userId, activityId, ponderation, try, retro, rutaArchivoRetro, access) VALUES('{$this->getUserId()}','{$this->getActivityId()}', '{$this->getPonderation()}', 0, '{$this->retro}', '{$this->retroFile}', 1)";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 	}
 
-	public function updateScore(){
-		$fields = [ 
+	public function updateScore()
+	{
+		$fields = [
 			'ponderation'		=> $this->getPonderation(),
 			'retro'				=> $this->retro,
 			'rutaArchivoRetro'	=> $this->retroFile
 		];
 		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
 		$sql = "UPDATE activity_score SET $updateQuery WHERE userId = {$this->getUserId()} AND activityId = {$this->getActivityId()}";
-		echo $sql;
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 	}

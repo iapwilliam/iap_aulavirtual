@@ -19,8 +19,12 @@
 				<ol id="sort-box" class="sorts">
 					{foreach from=$myTest item=subject}
 						<li>
-							<p><b>{$subject.question}</b> <span class="badge badge-info"><b>Valor:
-										{$subject.ponderation}%</b></span></p>
+							<p>
+								<b>{$subject.question}</b>
+								<span class="badge badge-info">
+									<b>Valor: {$subject.ponderation}%</b>
+								</span>
+							</p>
 							<div class="text-left radio-buttons">
 								{if $subject.opcionA}
 									<div class="input-group mb-3 col-md-12 align-items-center form-group">
@@ -119,7 +123,7 @@
 					<input type="hidden" name="actividad" value="{$actividad.activityId}" />
 					<button class="btn btn-danger" type="submit">Volver a hacer el examen</button>
 				</form>
-			{/if} 
+			{/if}
 		</div>
 	</div>
 {/if}

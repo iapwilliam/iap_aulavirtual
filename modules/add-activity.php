@@ -42,11 +42,13 @@
 		$calMinima = 0;
 		$tipo = 0;
 		$reintento = 0;
+		$tipoCalificacion = 0;
 		if ($_POST['reintento'] == 1) {
 			$reintento = 1;
 			$tipo = intval($_POST['oportunidad']);
 			if ($tipo == 0) { //Por número de intentos
 				$intentos = intval($_POST['intentos']);
+				$tipoCalificacion = $intentos > 1 ? $_POST['calificacion_opcion'] : $tipoCalificacion;
 			}else{ //Calificación mínima
 				$calMinima = intval($_POST['calificacion']);
 			}
@@ -55,6 +57,7 @@
 		$activity->setTipo($tipo);
 		$activity->setIntentos($intentos);
 		$activity->setCalificacionMinima($calMinima);
+		$activity->setTipoCalificacion($tipoCalificacion);
 		$actidadCreada = $activity->Save();
 
 		$module->setCourseModuleId($_GET['id']);
