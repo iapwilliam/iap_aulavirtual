@@ -214,7 +214,7 @@ $pages = array(
 	'registro',
 	'reporte-becas',
 	'registro-cobach',
-	'registro-transparencia',
+	//'registro-transparencia',
 	'reporte-licencias',
 	'reporte-transparencia',
 	'registro-primeros-auxilios',
