@@ -70,7 +70,7 @@ foreach ($licenciaturas as $key => $item) {
         $auxRow++;
     }
 
-    $sheet->getStyle("A2:$auxHeading" . (count($students) + 1))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
+    $sheet->getStyle("A2:$auxHeading" . (count($students) + 2))->getAlignment()->setHorizontal('center')->setVertical('center')->setWrapText(true);
     if ($ultimo_indice !== $key) {
         $spreadsheet->createSheet();
         $spreadsheet->setActiveSheetIndex($key + 1);
