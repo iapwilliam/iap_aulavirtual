@@ -9,7 +9,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 $licenciatura = $_GET['licenciatura'];
 $grupo = $_GET['curso'];
-$licenciaturas = $course->getCourses("AND course.courseId = $grupo"); 
+$licenciaturas = $course->getCourses("AND course.courseId = $grupo");
 $spreadsheet = new Spreadsheet();
 
 // Set document properties
@@ -31,15 +31,19 @@ foreach ($licenciaturas as $key => $item) {
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->getDefaultColumnDimension()->setWidth(30);
     $titulo = mb_strtoupper($util->eliminar_acentos($item['subject_name']));
-    $sheet->setTitle(substr($titulo, 0, 27) . "..."); 
+    $sheet->setTitle(substr($titulo, 0, 27) . "...");
     $sheet->setCellValue('A1', $titulo);
     $sheet->getStyle('A1')->getFont()->setSize(14)->setBold(true);
-    
+
     $sheet->setCellValue('A2', 'Usuario');
     $sheet->setCellValue('B2', 'Nombre');
     $sheet->setCellValue('C2', 'Apellido Paterno');
     $sheet->setCellValue('D2', 'Apellido Materno');
-    $auxHeading = "E";
+    $sheet->setCellValue('E2', 'Correo');
+    $sheet->setCellValue('F2', 'Teléfono');
+    $sheet->setCellValue('G2', 'Curp');
+    $sheet->setCellValue('H2', 'Curp Archivo');
+    $auxHeading = "I";
 
     foreach ($headings as $item) {
         $sheet->setCellValue("{$auxHeading}2", $item['resumen']);
@@ -50,12 +54,17 @@ foreach ($licenciaturas as $key => $item) {
 
     $auxRow = 3;
     for ($i = 0; $i < (count($students)); $i++) {
-        $curp = json_decode($students[$i]['curpDrive'], true);
+        $curp = json_decode($students[($i - 3)]['curpDrive'], true);
         $sheet->setCellValue("A" . ($i + 3), $students[$i]['controlNumber']);
         $sheet->setCellValue("B" . ($i + 3), mb_strtoupper($students[$i]['names']));
         $sheet->setCellValue("C" . ($i + 3), mb_strtoupper($students[$i]['lastNamePaterno']));
         $sheet->setCellValue("D" . ($i + 3), mb_strtoupper($students[$i]['lastNameMaterno']));
-        $auxColumn = "E";
+        $sheet->setCellValue("E" . ($i + 3), mb_strtoupper($students[$i]['email']));
+        $sheet->setCellValue("F" . ($i + 3), mb_strtoupper($students[$i]['phone']));
+        $sheet->setCellValue("G" . ($i + 3), mb_strtoupper($students[$i]['curp']));
+        $sheet->setCellValue("H" . ($i + 3), "https://drive.google.com/open?id=" . $curp['googleId']);
+        $sheet->getCell('H' . ($i + 3))->getHyperlink()->setUrl("https://drive.google.com/open?id=" . $curp['googleId']);
+        $auxColumn = "I";
         foreach ($headings as $heading) {
             if ($heading['activityType'] == "Tarea") {
                 $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
