@@ -59,7 +59,7 @@ foreach ($licenciaturas as $key => $item) {
         foreach ($headings as $heading) {
             if ($heading['activityType'] == "Tarea") {
                 $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
-                $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : $data['countUpdate']));
+                $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : 'ENTREGÓ'));
             }
             if ($heading['activityType'] == "Examen") {
                 $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");

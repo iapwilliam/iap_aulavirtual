@@ -223,7 +223,7 @@ $pages = array(
 	//'registro-responsabilidad', 
 	'registro-simulador',
 	'reporte-buen-gobierno',
-	'registro-gestion-gubernamental',
+	//'registro-gestion-gubernamental',
 	'reporte-gestion-gubernamental',
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
