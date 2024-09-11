@@ -27,7 +27,7 @@ foreach ($licenciaturas as $key => $item) {
     $course->setCourseId($item['courseId']);
     $courseData = $course->getCourse();
     $headings = $course->getHeadersActivities("AND course_module.courseId = {$item['courseId']} ORDER BY activity.resumen ASC");
-    $students = $course->getStudents("AND user_subject.courseId = {$item['courseId']}");
+    $students = $course->getStudents("AND user_subject.courseId = {$item['courseId']} AND user.userId <> 1");
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->getDefaultColumnDimension()->setWidth(30);
     $titulo = mb_strtoupper($util->eliminar_acentos($item['subject_name']));
