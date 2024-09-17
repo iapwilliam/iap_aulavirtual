@@ -375,13 +375,14 @@ class Group extends Module
 	}
 
 	private $activityId, $modality;
-	public function setActivityId($value) {
+	public function setActivityId($value)
+	{
 		$this->activityId = $value;
 	}
 	public function setModality($value)
-	{ 
+	{
 		$this->modality = $value;
-	} 
+	}
 
 	public function genera()
 	{
@@ -504,12 +505,48 @@ class Group extends Module
 	}
 
 	public function DefaultGroup()
-	{ 
+	{
 		$sql = "SELECT user.userId, user.controlNumber, user.names, user.lastNamePaterno, user.lastNameMaterno, user.email, user.phone, user.password, user.adscripcion, user.coordination, user.funcion, user.rfc FROM user 
 		INNER JOIN user_subject ON user_subject.alumnoId = user.userId
-		AND user_subject.courseId = {$this->getCourseId()} AND user.userId > 2";
-		$this->Util()->DB()->setQuery($sql); 
-		$result = $this->Util()->DB()->getResult();
+		AND user_subject.courseId = {$this->getCourseId()} AND user.userId > 2"; 
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->getResult(); 
+		foreach ($result as $key => $res) {
+			$activity = new Activity;
+			$activity->setCourseModuleId($this->coursemoduleId);
+			$actividades = $activity->Enumerate();
+			$result[$key]["names"] = $this->Util()->DecodeTiny($result[$key]["names"]);
+			$result[$key]["lastNamePaterno"] = $this->Util()->DecodeTiny($result[$key]["lastNamePaterno"]);
+			$result[$key]["lastNameMaterno"] = $this->Util()->DecodeTiny($result[$key]["lastNameMaterno"]);
+
+			$sql = "SELECT teamNumber
+						FROM team
+					WHERE courseModuleId = '" . $this->coursemoduleId . "' AND userId = '" . $res["userId"] . "'";
+			$this->Util()->DB()->setQuery($sql);
+			$result[$key]["equipo"] = $this->Util()->DB()->GetSingle();
+
+			$sql = "SELECT *, SUM(IF(type = 'alta', 1, 0)) as altas, SUM(IF(type = 'baja', 1, 0)) as bajas, 'revisar' FROM `academic_history` WHERE userId = {$res['userId']}  GROUP BY userId, courseId HAVING altas > 1 OR bajas > 1;";
+			$this->Util()->DB()->setQuery($sql);
+			$result[$key]["historial"] = $this->Util()->DB()->GetRow();
+
+			$result[$key]["addepUp"] = 0;
+			foreach ($actividades as $activity) {
+				if ($activity["score"] <= 0)
+					continue; 
+				$sql = "SELECT ponderation
+							FROM activity_score
+						WHERE activityId = '" . $activity["activityId"] . "' AND userId = '" . $res["userId"] . "'";
+				$this->Util()->DB()->setQuery($sql);
+				$score = $this->Util()->DB()->GetSingle();
+
+				$result[$key]["score"][] = $score;
+				$realScore = $score * $activity["score"] / 100;
+				$result[$key]["realScore"][] = $realScore;
+				$result[$key]["addepUp"] += $realScore;
+			}
+			$result[$key]["addepUp"] = round($result[$key]["addepUp"], 0, PHP_ROUND_HALF_DOWN);;
+		}
+
 		return $result;
 	}
 
@@ -627,9 +664,7 @@ class Group extends Module
 		return $result;
 	}
 
-	public function TeamsScore()
-	{
-	}
+	public function TeamsScore() {}
 
 	public function NoTeam()
 	{
@@ -980,7 +1015,7 @@ class Group extends Module
 		$this->Util()->DB()->setQuery($sql);
 		$lstAdmins = $this->Util()->DB()->GetResult();
 
-		$notificacion = new Notificacion; 
+		$notificacion = new Notificacion;
 
 		// Guardamos notificacion
 		$actividads = "El Docente " . $_SESSION['User']['nombreCompleto'] . " de la materia " . $infoSub['materia'] . " del grupo " . $infoSub['group'] . " del posgrado " . $infoSub['carrera'] . " actualizo el acta de calificaciones";
@@ -1069,7 +1104,7 @@ class Group extends Module
 		unset($_FILES);
 		return true;
 	}
- 
+
 	function onChangePicture($Id)
 	{
 		$archivo = 'archivos';
@@ -1096,7 +1131,7 @@ class Group extends Module
 		}
 		unset($_FILES);
 		return true;
-	} 
+	}
 	public function  getGrupo($Id)
 	{
 		$sql = "SELECT * FROM course_module WHERE courseModuleId = '" . $Id . "'";
@@ -1222,9 +1257,7 @@ class Group extends Module
 				$result[$key]["score"] = $infoCc["calificacion"];
 		}
 		return $result;
-	} 
- 
-	public function updateScore() { 
-		
 	}
+
+	public function updateScore() {}
 }
