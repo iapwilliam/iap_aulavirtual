@@ -129,10 +129,14 @@ class Test extends Activity
 
 	function Randomize($questions, $max)
 	{
-		$keys = array_rand($questions, $max);
 
-		foreach ($keys as $key) {
-			$returnArray[] = $questions[$key];
+		$n = $max;
+		$returnArray = $questions; 
+		for ($i = $n - 1; $i > 0; $i--) { 
+			$j = rand(0, $i);
+			$temp = $returnArray[$i];
+			$returnArray[$i] = $returnArray[$j];
+			$returnArray[$j] = $temp;
 		}
 		return $returnArray;
 	}
@@ -224,12 +228,12 @@ class Test extends Activity
 		$response = ['acceso' => true];
 		if ($examenRealizado) {
 			$response['acceso'] = $examenRealizado['access'];
-			if ($actividad['reintento']) { 
+			if ($actividad['reintento']) {
 				$response['tipo'] = $actividad['tipo'];
 				if (!$actividad['tipo'] && $examenRealizado['try'] < $actividad['tries']) { //Por intentos 
 					$intentosRestantes = $actividad['tries'] - $examenRealizado['try'];
 					$response['mensaje'] = "Puedes volver a realizar el examen, aún cuentas con {$intentosRestantes} intento(s)";
-					$response['intentos'] = $intentosRestantes; 
+					$response['intentos'] = $intentosRestantes;
 					return $response;
 				}
 				if ($actividad['tipo'] && $examenRealizado['ponderation'] < $actividad['calificacion']) { //Por calificacion 
@@ -249,7 +253,7 @@ class Test extends Activity
 		$questionScore = $this->PonderationPerQuestion();
 		$score = 0;
 
-		
+
 		//Eliminamos las respuestas anteriores que haya echo el alumno
 		$sql = "SELECT test_answers.* FROM test_answers INNER JOIN activity_test ON activity_test.testId = test_answers.answer_id WHERE activity_test.activityId = {$this->getActivityId()} AND student_id = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
@@ -259,7 +263,7 @@ class Test extends Activity
 			$this->Util()->DB()->setQuery($sql);
 			$this->Util()->DB()->DeleteData();
 		}
- 
+
 		if (is_array($answers)) {
 			foreach ($answers as $key => $option) {
 				$sql = "SELECT answer FROM 
@@ -281,13 +285,13 @@ class Test extends Activity
 				$this->Util()->DB()->setQuery($sql);
 				$this->Util()->DB()->InsertData();
 			}
-		} 
-		
+		}
+
 		$this->Util()->DB()->setQuery("
 				SELECT activity_score.*, activity.reintento, activity.tipo, activity.tipoCalificacion
 				FROM activity_score INNER JOIN activity ON activity.activityId = activity_score.activityId
 				WHERE activity_score.activityId = '" . $this->getActivityId() . "' AND activity_score.userId = '" . $this->getUserId() . "'");
-		$activityScore = $this->Util()->DB()->GetRow(); 
+		$activityScore = $this->Util()->DB()->GetRow();
 
 		if (!isset($activityScore['userId'])) {
 			$sql = "INSERT INTO  `activity_score` ( `userId` , `activityId` , `try` , `ponderation`)
@@ -342,10 +346,10 @@ class Test extends Activity
 	function reiniciarTest()
 	{
 		$fields = [
-			'ponderation'		=> $this->getPonderation(), 
+			'ponderation'		=> $this->getPonderation(),
 			'access'			=> 1
 		];
-		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);  
+		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
 		$sql = "UPDATE activity_score SET $updateQuery WHERE activityId = {$this->getActivityId()} AND userId = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
