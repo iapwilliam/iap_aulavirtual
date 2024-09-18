@@ -1,5 +1,5 @@
 <?php
 header('Content-disposition: attachment; filename='.$_GET["file"]);
 header('Content-type:application/force-download');
-readfile(urldecode("./".$_GET["file"]));
+readfile(DOC_ROOT."/".$_GET["file"]);
 ?>
