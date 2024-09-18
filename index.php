@@ -7,6 +7,10 @@ include_once(DOC_ROOT . '/libraries.php');
 // print_r($_GET);
 // exit;
 if (!isset($_SESSION)) {
+	if ($_GET['page'] == "make-test") {
+		ini_set('session.gc_maxlifetime', 4600);
+		session_set_cookie_params(4600);
+	}
 	session_start();
 }
 $pages = array(
@@ -231,8 +235,18 @@ if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 }
 
 if (!isset($_SESSION['User'])) { //Si no existe sesión
-	if (!in_array($_GET['page'], ['login', 'registro-cobach', 'recuperacion', 'registro', 'registro-transparencia', 'registro-primeros-auxilios', 'registro-igualdad', 'registro-responsabilidad', 
-	'registro-simulador', 'registro-gestion-gubernamental'])) { //Y no está en estas páginas
+	if (!in_array($_GET['page'], [
+		'login',
+		'registro-cobach',
+		'recuperacion',
+		'registro',
+		'registro-transparencia',
+		'registro-primeros-auxilios',
+		'registro-igualdad',
+		'registro-responsabilidad',
+		'registro-simulador',
+		'registro-gestion-gubernamental'
+	])) { //Y no está en estas páginas
 		header('Location: ' . WEB_ROOT . "/login"); //Lo mandamos al login
 	}
 } else { //Existe sesión

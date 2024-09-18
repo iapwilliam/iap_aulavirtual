@@ -311,10 +311,6 @@ class Test extends Activity
 						`userId` = '" . $this->getUserId() . "' AND activityId = '" . $this->getActivityId() . "' LIMIT 1");
 			$result = $this->Util()->DB()->UpdateData();
 		}
-
-		unset($_SESSION["timeLimit"]);
-		$this->Util()->setError(90000, 'complete', "Has respondido el examen Satisfactoriamente. Tu resultado esta abajo.");
-		$this->Util()->PrintErrors();
 	}
 
 	public function getTestHistory($courseId, $studentId)

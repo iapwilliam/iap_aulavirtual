@@ -2,8 +2,9 @@
 
 include_once('../../init.php');
 include_once('../../config.php');
-include_once(DOC_ROOT . '/libraries.php');
-
+include_once(DOC_ROOT . '/libraries.php'); 
+ini_set('session.gc_maxlifetime', 4600); 
+session_set_cookie_params(4600); 
 session_start();
 
 switch ($_POST["type"]) {
@@ -29,25 +30,26 @@ switch ($_POST["type"]) {
         $test->setUserId($_SESSION["User"]["userId"]);
         $test->setActivityId($_POST["actividad"]);
         $test->SendTest($_POST["anwer"]);
+        unset($_SESSION["timeLimit"]);
         echo json_encode([
             'growl'     => true,
             'message'   => 'Examen contestado',
             'type'      => 'success',
             'reload'    => true
-        ]);
+        ]); 
         break;
     case 'reiniciarExamen':
         $test->setUserId($_SESSION["User"]["userId"]);
         $test->setActivityId($_POST["actividad"]);
         $activity->setActivityId($_POST["actividad"]);
         $actividad = $activity->Info();
-        if($actividad['reintento'] && !$actividad['tipo'] && !$actividad['tipoCalificacion']){
+        if ($actividad['reintento'] && !$actividad['tipo'] && !$actividad['tipoCalificacion']) {
             $score = $test->TestScore();
             $test->setPonderation($score);
-        }else{
+        } else {
             $test->setPonderation(0);
         }
-        $test->reiniciarTest(); 
+        $test->reiniciarTest();
         $_SESSION["timeLimit"] = time() + $actividad["timeLimit"] * 60;
         echo json_encode([
             'growl'     => true,
@@ -116,7 +118,7 @@ switch ($_POST["type"]) {
                     'dtreload' => "#datatable"
                 ]);
                 exit;
-            } 
+            }
         } else {
             $activity->updateScore();
             if ($fileRetro['name'] != "" && $fileRetro['error'] == 0) {
@@ -124,7 +126,7 @@ switch ($_POST["type"]) {
                     'dtreload' => "#datatable"
                 ]);
                 exit;
-            } 
+            }
         }
         break;
 }
