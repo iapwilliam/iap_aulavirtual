@@ -34,8 +34,7 @@ switch($_POST["type"])
 		$homework->deleteHomework($_POST['id'], $User['userId']);
 		echo json_encode([ 
 			'message'	=>'Tarea eliminada',
-			'selector'	=>'#homework'.$_POST['id'],
-			'contenido'	=>'Sin entregar'
+			'dtreload'  => '#datatable'
 		]);
 	break;
 

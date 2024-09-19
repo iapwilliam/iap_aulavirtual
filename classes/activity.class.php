@@ -1038,7 +1038,7 @@ class Activity extends Module
 
 	function dt_score_request()
 	{
-		$table = 'activity INNER JOIN course_module ON course_module.courseModuleId = activity.courseModuleId INNER JOIN user_subject ON user_subject.courseId = course_module.courseId INNER JOIN user ON user.userId = user_subject.alumnoId LEFT JOIN activity_score ON activity_score.activityId = activity.activityId AND activity_score.userId = user_subject.alumnoId LEFT JOIN homework ON homework.activityId = activity.activityId AND homework.userId = user_subject.alumnoId';
+		$table = 'activity INNER JOIN course_module ON course_module.courseModuleId = activity.courseModuleId INNER JOIN user_subject ON user_subject.courseId = course_module.courseId INNER JOIN user ON user.userId = user_subject.alumnoId LEFT JOIN activity_score ON activity_score.activityId = activity.activityId AND activity_score.userId = user_subject.alumnoId LEFT JOIN homework ON homework.activityId = activity.activityId AND homework.userId = user_subject.alumnoId AND homework.deleted_at IS NULL';
 		$primaryKey = 'user.userId';
 		$columns = array(
 			array('db' => 'activity.activityId', 	'dt' => 'activityId'),

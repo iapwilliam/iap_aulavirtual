@@ -21,7 +21,7 @@ $(document).on("click", ".ajax", function (ev) {
 					response.message,
 					'success'
 				)
-				$(response.selector).html(response.contenido);
+				$(response.dtreload).DataTable().ajax.reload();
 			}).fail(function (response) {
 				console.log(response);
 			});
