@@ -197,6 +197,11 @@ class Student extends User
 		$this->foto = $value;
 	}
 
+	private $avatar;
+	public function setAvatar($value) {
+		$this->avatar = $value;
+	}
+
 	public function AddAcademicHistory($type, $situation, $semesterId = 1)
 	{
 		$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES(" . $this->subjectId . ", " . $this->courseId . ", " . $this->userId . ", " . $semesterId . ", CURDATE(), '" . $type . "', '" . $situation . "')";
@@ -983,7 +988,7 @@ class Student extends User
 
 	function getCourses($where = "")
 	{
-		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group, subject.icon, course.initialDate, course.finalDate, course.subjectId FROM user_subject INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}"; 
+		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group, subject.icon, course.initialDate, course.finalDate, course.subjectId FROM user_subject INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
@@ -2561,10 +2566,10 @@ class Student extends User
 			$sql = "SELECT * FROM user_subject WHERE courseId = {$this->courseId} AND alumnoId = {$existe['userId']}";
 			$this->Util()->DB()->setQuery($sql);
 			$existe = $this->Util()->DB()->getRow();
-			if($existe){
+			if ($existe) {
 				$resultado['status'] = 0;
 				$resultado['message'] = "El correo ya se encuentra en el curso.";
-			}else{ 
+			} else {
 				$this->updateStudent();
 				$this->addUserCourse();
 				$this->AddAcademicHistory('Alta', 'A', 1);
@@ -2613,7 +2618,8 @@ class Student extends User
 			'rfc'				=> $this->rfc,
 			'adscripcion'		=> $this->adscripcion,
 			'coordination'		=> $this->coordination,
-			'funcion'			=> $this->funcion
+			'funcion'			=> $this->funcion,
+			'avatar'			=> $this->avatar
 		];
 		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
 		$sql = "UPDATE user SET $updateQuery WHERE userId = {$this->getUserId()}";
@@ -2829,11 +2835,18 @@ class Student extends User
 		$this->status_evaluation = $value;
 	}
 
+	private $fotoCurso;
+	public function setFotoCurso($value)
+	{
+		$this->fotoCurso = $value;
+	}
+
 	function updateUserCourse()
 	{
 		$fields = [
 			'status_payment'	=> $this->status_payment,
-			'status_evaluation'	=> $this->status_evaluation
+			'status_evaluation'	=> $this->status_evaluation,
+			'foto'				=> $this->fotoCurso
 		];
 		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
 		$sql = "UPDATE user_subject SET $updateQuery WHERE alumnoId = {$this->getUserId()} AND courseId = {$this->getCourseId()}";
@@ -2847,7 +2860,7 @@ class Student extends User
 		$sql = "INSERT INTO user_subject(alumnoId, courseId,status,situation, foto) VALUES ({$this->getUserId()}, {$this->courseId}, 'activo', 'A', '{$this->foto}')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
-	} 
+	}
 
 	function saveResponsability()
 	{

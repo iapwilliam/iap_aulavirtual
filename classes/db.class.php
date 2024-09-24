@@ -197,7 +197,11 @@ class DB
         $setParts = [];
         foreach ($fields as $field => $value) {
             if (isset($value) && $value !== '') {
-                $setParts[] = "$field = '{$value}'";
+                if ($value === "NULL") {
+                    $setParts[] = "$field = NULL";
+                } else {
+                    $setParts[] = "$field = '{$value}'";
+                }
             }
         }
         $setQuery = implode(', ', $setParts);

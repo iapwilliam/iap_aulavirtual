@@ -170,8 +170,8 @@ switch ($_POST["option"]) {
 		if ($user->do_login()) {
 			echo "ok[#]";
 		} else {
-			// echo "fail[#]";
-			// echo 'data';
+			echo "fail[#]";
+			echo 'data';
 		}
 
 		break;

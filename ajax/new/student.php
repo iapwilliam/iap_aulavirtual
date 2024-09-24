@@ -271,7 +271,10 @@ switch ($opcion) {
 		$phone = str_replace(' ', '', strip_tags($_POST['mobile']));
 		$password = $_POST['password'];
 		$email = trim(strip_tags($_POST['email']));
-
+		$state = intval($_POST['estadot']);
+		$city = intval($_POST['ciudadt']);
+		$curp = strip_tags($_POST['curp']);
+		$cobach = $student->getCourses("AND user_subject.alumnoId = {$_SESSION['User']['studentId']} AND user_subject.courseId = 2 AND user_subject.status = 'activo' ")[0];
 		$errors = [];
 		if ($name == '') {
 			$errors['name'] = "Por favor, no se olvide de poner el nombre.";
@@ -285,7 +288,16 @@ switch ($opcion) {
 		if ($password == '') {
 			$errors['password'] = "Por favor, no se olvide de poner la contraseña.";
 		}
-		if ($_POST['tipo'] == 1) {
+		if ($state == '') {
+			$errors['estadot'] = "Por favor, no se olvide de seleccionar el estado.";
+		}
+		if ($city == '') {
+			$errors['ciudadt'] = "Por favor, no se olvide de seleccionar la ciudad.";
+		}
+		if ($email == '') {
+			$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
+		}
+		if (!empty($cobach)) {
 			$coordination = intval($_POST['coordination']);
 			$schoolNumber = intval($_POST['schoolNumber']);
 			$adscripcion = intval($_POST['adscripcion']);
@@ -300,15 +312,12 @@ switch ($opcion) {
 			if ($function == '') {
 				$errors['functionWork'] = "Por favor, no se olvide de seleccionar la función que realiza.";
 			}
-			if ($email == '') {
-				$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
-			} else {
+			if ($email != '') {
 				$partes = explode("@", $email);
 				if (count($partes) > 1) {
 					$errors['email'] = "Por favor, no se olvide de solo poner el usuario del correo, no es necesario agregar @cobach.edu.mx";
 				}
 			}
-
 			$regex = '/^([A-ZÑ&]{3,4})(\d{2})(\d{2})(\d{2})([0-9a-z]{3})$/i';
 			if (empty($rfc)) {
 				$errors['rfc'] = "Por favor, no se olvide de poner el RFC";
@@ -317,44 +326,26 @@ switch ($opcion) {
 			} elseif (!empty($rfc) && !preg_match($regex, $rfc)) {
 				$errors['rfc'] = "No contiene un formato válido, revise por favor.";
 			}
-		} else {
-			$state = intval($_POST['estadot']);
-			$city = intval($_POST['ciudadt']);
-			$email = strip_tags($_POST['email']);
-			if ($email == '') {
-				$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
-			}
-			if ($state == '') {
-				$errors['estadot'] = "Por favor, no se olvide de seleccionar el estado.";
-			}
-			if ($city == '') {
-				$errors['ciudadt'] = "Por favor, no se olvide de seleccionar la ciudad.";
-			}
+		}
 
-			if ($_POST['tipo'] == 2) {
-				$curp = $_POST['curp'];
-				$academicDegree = $_POST['academicDegree'];
-				if ($curp == "") {
-					$errors['curp'] = "Por favor, no se olvide de poner la curp";
-				}
-				if ($_FILES["curparchivo"]['error'] != UPLOAD_ERR_NO_FILE) {
-					$nameNonSpace = str_replace(" ", "_", trim($name));
-					$firstSurnameNonSpace = str_replace(" ", "_", trim($firstSurname));
-					$secondSurnameNonSpace = str_replace(" ", "_", trim($secondSurname));
-					$nombreAlumno = $util->eliminar_acentos($nameNonSpace . "_" . $firstSurnameNonSpace . "_" . $secondSurnameNonSpace);
-					$nombreAlumno = strtolower($nombreAlumno);
-					$response = $util->Util()->validarSubidaPorArchivo([
-						"curparchivo" => [
-							'types' 	=> ['application/pdf'],
-							'size' 		=> 5242880,
-						]
-					]);
-					foreach ($response as $key => $value) {
-						if (!$value['status']) {
-							$errors[$key] = $value['mensaje'];
-						}
-					}
-				}
+		$nombreAlumno = $util->eliminar_acentos(str_replace(' ', '_', trim($name . "_" . $firstSurname . "_" . $secondSurname)));
+		$nombreAlumno = strtolower($nombreAlumno);
+		$response = $util->Util()->validarSubidaPorArchivo([
+			"curparchivo" => [
+				'types' 	=> ['application/pdf'],
+				'size' 		=> 5242880,
+				'required'	=> false
+			],
+			'foto'		=> [
+				'types'		=> ['image/png', 'image/jpeg'],
+				'size' 		=> 10485760,
+				'required'	=> false
+			]
+		]);
+
+		foreach ($response as $key => $value) {
+			if (!$value['status']) {
+				$errors[$key] = $value['mensaje'];
 			}
 		}
 
@@ -376,7 +367,7 @@ switch ($opcion) {
 		$student->setCourseId($curso);
 		$student->setSubjectId($dataCourse['subjectId']);
 
-		if ($_POST['tipo'] == 1) {
+		if (!empty($cobach)) {
 			$student->setEmail($email . "@cobach.edu.mx");
 			$student->setRFC($rfc);
 			$student->setFuncion($function);
@@ -384,50 +375,70 @@ switch ($opcion) {
 			$student->setCoordination($coordination);
 		} else {
 			$student->setEmail($email);
-			$student->setWorkplace($_POST['workplace']);
-			$student->setWorkplacePosition($_POST['workplacePosition']);
-			$student->setState($state);
-			$student->setCity($city);
-			if ($_POST['tipo'] == 2) {
-				$student->setCurp($curp);
-				$student->setAcademicDegree($academicDegree);
-				foreach ($_FILES as $key => $archivo) {
-					if ($_FILES[$key]['error'] == UPLOAD_ERR_NO_FILE) {
-						continue;
-					}
-					$carpetaId = "1q0CSI9h9a1IryJn11ZRRbkWAFlvUX8vZ";
-					$google = new Google($carpetaId);
-					$ruta = DOC_ROOT . "/tmp/";
-					$extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
-					$temporal =  $archivo['tmp_name'];
-					$nombre = $key . "_" . $nombreAlumno;
-					$documento =  $nombre . "." . $extension;
-					move_uploaded_file($temporal, $ruta . $documento);
-					$google->setArchivoNombre($documento);
-					$google->setArchivo($ruta . $documento);
-					$respuesta = $google->subirArchivo();
-					$files[$key] = '{
-						"filename": "' . $respuesta['name'] . '",
-						"googleId": "' . $respuesta['id'] . '",
-						"mimeType": "' . $respuesta['mimeType'] . '",
-						"urlBlank": "https://drive.google.com/open?id=' . $respuesta['id'] . '",
-						"urlEmbed": "https://drive.google.com/uc?id=' . $respuesta['id'] . '",
-						"mimeTypeOriginal":"' . $archivo['type'] . '"
-					}';
-					unlink($ruta . $documento);
-				}
-				if ($_FILES["curparchivo"]['error'] != UPLOAD_ERR_NO_FILE) {
-					$student->setCurpDrive("{$files['curparchivo']}");
-				}
-			}
 		}
 
+		$student->setWorkplace($_POST['workplace']);
+		$student->setWorkplacePosition($_POST['workplacePosition']);
+		$student->setState($state);
+		$student->setCity($city);
+		$student->setCurp($curp);
+		$student->setAcademicDegree($academicDegree);
+		if ($_FILES['curparchivo']['error'] != UPLOAD_ERR_NO_FILE) {
+			$carpetaId = GOOGLE_FOLDER_AULA_CURP;
+			$google = new Google($carpetaId);
+			$ruta = DOC_ROOT . "/tmp/";
+			$extension = pathinfo($_FILES['curparchivo']['name'], PATHINFO_EXTENSION);
+			$temporal =  $_FILES['curparchivo']['tmp_name'];
+			$nombre = "curparchivo_" . $nombreAlumno;
+			$documento =  $nombre . "." . $extension; 
+			move_uploaded_file($temporal, $ruta . $documento);
+			$google->setArchivoNombre($documento);
+			$google->setArchivo($ruta . $documento);
+			$respuesta = $google->subirArchivo();
+			$jsonCurp = '{
+							"filename": "' . $respuesta['name'] . '",
+							"googleId": "' . $respuesta['id'] . '"							 
+						}';
+			unlink($ruta . $documento);
+			$student->setCurpDrive("{$jsonCurp}");
+		}
+		if ($_FILES['foto']['error'] != UPLOAD_ERR_NO_FILE) {
+			$carpetaId = GOOGLE_FOLDER_AULA_FOTO;
+			$google = new Google($carpetaId);
+			$ruta = DOC_ROOT . "/tmp/";
+			$extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
+			$temporal =  $_FILES['foto']['tmp_name'];
+			$nombre = "foto_" . $nombreAlumno;
+			$documento =  $nombre . "." . $extension; 
+			move_uploaded_file($temporal, $ruta . $documento);
+			$util->resizeImage($ruta . $documento, NULL, 1400);
+			$google->setArchivoNombre($documento);
+			$google->setArchivo($ruta . $documento);
+			$respuesta = $google->subirArchivo();
+			$jsonFoto = '{
+							"filename": "' . $respuesta['name'] . '",
+							"googleId": "' . $respuesta['id'] . '"							 
+						}';
+			unlink($ruta . $documento); 
+			$student->setFotoCurso("{$jsonFoto}");
+			$student->setUserId($_SESSION['User']['userId']);
+			$alumnoActual = $student->GetInfo();
+
+			$cursosFoto = $student->getCourses("AND course.foto_diploma = 1 AND user_subject.alumnoId = {$_SESSION['User']['userId']}");
+			foreach ($cursosFoto as $item) {
+				$student->setCourseId($item['courseId']);
+				$student->updateUserCourse();
+			} 
+			$student->setFoto("{$jsonFoto}");
+			$student->setAvatar("NULL"); 
+		}
 		$response = $student->updateStudent();
 		if ($response['status']) {
 			echo json_encode([
 				'growl'		=> true,
 				'type'		=> 'success',
-				'message'	=> 'Se ha actualizado la información del perfil.'
+				'message'	=> 'Se ha actualizado la información del perfil.',
+				'reload'	=> true
 			]);
 		} else {
 			echo json_encode([
@@ -1290,7 +1301,7 @@ switch ($opcion) {
 					unlink($ruta . $documento);
 				}
 				$student->setCurpDrive("{$files['curparchivo']}");
-				if (is_null($alumnoActual['foto'])) { 
+				if (is_null($alumnoActual['foto'])) {
 					$student->setFoto("{$files['foto']}");
 				}
 				$student->setAcademicDegree($_POST['academicDegree']);

@@ -63,3 +63,15 @@ function Recuperacion() {
         }
     });
 } 
+
+$("#showPassword").click(function(){
+    if($("#eyePassword").hasClass("show")){
+        $("#eyePassword").attr("src", WEB_ROOT+"/images/new/icons/ojo_abierto.svg");
+        $("#eyePassword").removeClass("show");
+        $("#passwd").attr("type", "password");
+    }else{
+        $("#eyePassword").attr("src", WEB_ROOT+"/images/new/icons/ojo.svg");
+        $("#eyePassword").addClass("show");
+        $("#passwd").attr("type", "text");
+    }
+});

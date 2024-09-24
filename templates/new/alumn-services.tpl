@@ -4,11 +4,7 @@
     </div>
     <div class="card-body">
         <div id="tblContent">
-            {if $form == 0}
-                {include file="{$DOC_ROOT}/templates/boxes/new/select-register.tpl"}
-            {else}
-                {include file="{$DOC_ROOT}/templates/forms/new/update-student.tpl"}
-            {/if}
+            {include file="{$DOC_ROOT}/templates/forms/new/update-student.tpl"}
         </div>
     </div>
 </div>

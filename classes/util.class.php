@@ -1515,63 +1515,58 @@ class Util extends ErrorLms
 	public function validarSubidaPorArchivo($archivos = [])
 	{
 		$response = [];
-		// print_r($_FILES);
-		foreach ($archivos as $archivo => $validaciones) {
-			// echo $archivo;
-			// print_r($validaciones);
-			// echo "<br>\n";
-			$response[$archivo]['status'] = true;
-			switch ($_FILES[$archivo]['error']) {  //Checamos que no exista ningún problema con la subida de archivo
+		foreach ($_FILES as $key => $archivo) {
+			$response[$key]['status'] = true;
+			switch ($archivo['error']) {  //Checamos que no exista ningún problema con la subida de archivo
 				case UPLOAD_ERR_INI_SIZE:
-					$response[$archivo]['status'] = false;
-					$response[$archivo]['mensaje'] = "Error, el archivo excede el tamaño máximo permitido por el sistema.";
+					$response[$key]['status'] = false;
+					$response[$key]['mensaje'] = "Error, el archivo excede el tamaño máximo permitido por el sistema.";
 					break;
 				case UPLOAD_ERR_FORM_SIZE:
-					$response[$archivo]['status'] = false;
-					$response[$archivo]['mensaje'] = "Error, el archivo excede el tamaño máximo permitido por el formulario.";
+					$response[$key]['status'] = false;
+					$response[$key]['mensaje'] = "Error, el archivo excede el tamaño máximo permitido por el formulario.";
 					break;
 				case UPLOAD_ERR_PARTIAL:
-					$response[$archivo]['status'] = false;
-					$response[$archivo]['mensaje'] = "Error, el archivo fue subido parcialmente.";
+					$response[$key]['status'] = false;
+					$response[$key]['mensaje'] = "Error, el archivo fue subido parcialmente.";
 					break;
 				case UPLOAD_ERR_NO_FILE:
-					if (isset($validaciones['required']) && $validaciones['required']) {
-						$response[$archivo]['status'] = false;
-						$response[$archivo]['mensaje'] = "Error, falta seleccionar el archivo.";
+					if (isset($archivos[$key]['required']) && $archivos[$key]['required']) {
+						$response[$key]['status'] = false;
+						$response[$key]['mensaje'] = "Error, falta seleccionar el archivo.";
 					}
 					break;
 				case UPLOAD_ERR_NO_TMP_DIR:
-					$response[$archivo]['status'] = false;
-					$response[$archivo]['mensaje'] = "Error, hubo un problema con la carpeta temporal.";
+					$response[$key]['status'] = false;
+					$response[$key]['mensaje'] = "Error, hubo un problema con la carpeta temporal.";
 					break;
 				case UPLOAD_ERR_CANT_WRITE:
-					$response[$archivo]['status'] = false;
-					$response[$archivo]['mensaje'] = "Error, hubo un problema con los permisos del archivo.";
+					$response[$key]['status'] = false;
+					$response[$key]['mensaje'] = "Error, hubo un problema con los permisos del archivo.";
 					break;
 				case UPLOAD_ERR_EXTENSION:
-					$response[$archivo]['status'] = false;
-					$response[$archivo]['mensaje'] = "Error, hubo un problema una extensión del sistema que paró la subida del archivo.";
+					$response[$key]['status'] = false;
+					$response[$key]['mensaje'] = "Error, hubo un problema una extensión del sistema que paró la subida del archivo.";
 					break;
 				default:
-					foreach ($validaciones as $validacion => $valor) {
+					foreach ($archivos[$key] as $validacion => $valor) {
 						switch ($validacion) { //Validamos que no exista ningún error con la validación de archivos después de la subida.
 							case "size": //Validamos el máximo tamaño permitido
 								$maxValue = round($valor / 1048576);
-								if ($_FILES[$archivo]['size'] > $valor) {
-									$response[$archivo]['mensaje'] = "Error, el tamaño máximo del archivo debe ser de $maxValue MB";
-									$response[$archivo]['status'] = false; //Existe error en las validaciones
+								if ($archivo['size'] > $valor) {
+									$response[$key]['mensaje'] = "Error, el tamaño máximo del archivo debe ser de $maxValue MB";
+									$response[$key]['status'] = false; //Existe error en las validaciones
 								}
 								break;
 							case 'types':
-								// print_r($valor);
-								if (!in_array($_FILES[$archivo]['type'], $valor)) {
+								if (!in_array($archivo['type'], $valor)) {
 									$permitidos = "";
 									foreach ($valor as $extension) {
 										$permitidos .= $extension . ", ";
 									}
 									$permitidos = trim($permitidos, ', ');
-									$response[$archivo]['mensaje'] = "Error, solo se permiten archivos: {$permitidos}";
-									$response[$archivo]['status'] = false;
+									$response[$key]['mensaje'] = "Error, solo se permiten archivos: {$permitidos}";
+									$response[$key]['status'] = false;
 								}
 								break;
 						}
@@ -1579,7 +1574,6 @@ class Util extends ErrorLms
 					break;
 			}
 		}
-		// print_r($response);
 		return $response;
 	}
 
@@ -1641,11 +1635,11 @@ class Util extends ErrorLms
 	public function resizeImage($url, $width, $height, $quality = 75)
 	{
 		Image::configure(['driver' => 'gd']);
-		$image = Image::make($url); 
+		$image = Image::make($url);
 		$image->resize($width, $height, function ($constraint) {
 			$constraint->aspectRatio();
 			$constraint->upsize();
-		})->save($url, $quality); 
+		})->save($url, $quality);
 		return $image;
 	}
 }
