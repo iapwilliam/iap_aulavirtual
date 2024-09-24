@@ -383,7 +383,7 @@ switch ($opcion) {
 		$student->setCity($city);
 		$student->setCurp($curp);
 		$student->setAcademicDegree($academicDegree);
-		if ($_FILES['curparchivo']['error'] != UPLOAD_ERR_NO_FILE) {
+		if (isset($_FILES['curparchivo']) && $_FILES['curparchivo']['error'] != UPLOAD_ERR_NO_FILE) {
 			$carpetaId = GOOGLE_FOLDER_AULA_CURP;
 			$google = new Google($carpetaId);
 			$ruta = DOC_ROOT . "/tmp/";
@@ -402,7 +402,7 @@ switch ($opcion) {
 			unlink($ruta . $documento);
 			$student->setCurpDrive("{$jsonCurp}");
 		}
-		if ($_FILES['foto']['error'] != UPLOAD_ERR_NO_FILE) {
+		if (isset($_FILES['foto']) && $_FILES['foto']['error'] != UPLOAD_ERR_NO_FILE) {
 			$carpetaId = GOOGLE_FOLDER_AULA_FOTO;
 			$google = new Google($carpetaId);
 			$ruta = DOC_ROOT . "/tmp/";
