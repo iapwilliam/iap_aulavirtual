@@ -351,7 +351,8 @@ class Activity extends Module
 							reintento = '" . $this->reintento . "',
 							tipo = '" . $this->tipo . "',
 							tries = '" . $this->intentos . "',
-							calificacion = '" . $this->calificacionMinima . "'
+							calificacion = '" . $this->calificacionMinima . "',
+							tipoCalificacion = '" . $this->tipoCalificacion . "'
 						WHERE activityId = '" . $this->activityId . "'";
 
 		//configuramos la consulta con la cadena de insercion

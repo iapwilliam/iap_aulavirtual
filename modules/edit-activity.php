@@ -24,6 +24,18 @@ if ($_POST) {
 		exit;
 	}
 
+	$tipoCalificacion = 0;
+	if ($_POST['reintento'] == 1) {
+		$reintento = 1;
+		$tipo = intval($_POST['oportunidad']);
+		if ($tipo == 0) { //Por número de intentos
+			$intentos = intval($_POST['intentos']);
+			$tipoCalificacion = $intentos > 1 ? $_POST['calificacion_opcion'] : $tipoCalificacion;
+		} else { //Calificación mínima
+			$calMinima = intval($_POST['calificacion']);
+		}
+	}
+
 	$activity->setActivityType($_POST["activityType"]);
 
 	$activity->setInitialDate($_POST["initialDate"]);
@@ -40,6 +52,7 @@ if ($_POST) {
 	$activity->setTipo($_POST['oportunidad']);
 	$activity->setIntentos($_POST['intentos']);
 	$activity->setCalificacionMinima($_POST['calificacion']); 
+	$activity->setTipoCalificacion($tipoCalificacion);
 	$activity->Edit();
 
 	if ($_POST["auxTpl"] == "admin") {
@@ -49,7 +62,7 @@ if ($_POST) {
 			'type'		=> 'success',
 			'duracion'	=> 3000,
 			'reload'	=> true
-		]); 
+		]);
 		exit;
 	}
 }
