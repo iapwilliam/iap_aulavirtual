@@ -257,6 +257,7 @@ class Test extends Activity
 		//Eliminamos las respuestas anteriores que haya echo el alumno
 		$sql = "SELECT test_answers.* FROM test_answers INNER JOIN activity_test ON activity_test.testId = test_answers.answer_id WHERE activity_test.activityId = {$this->getActivityId()} AND student_id = {$this->getUserId()}";
 		$this->Util()->DB()->setQuery($sql);
+		error_log($sql);
 		$currentAnswers = $this->Util()->DB()->GetResult();
 		foreach ($currentAnswers as $item) {
 			$sql = "DELETE FROM test_answers WHERE id = " . $item['id'];
@@ -270,6 +271,7 @@ class Test extends Activity
 								activity_test 
 							WHERE
 									testId='" . $key . "'";
+				error_log($sql);
 				$this->Util()->DB()->setQuery($sql);
 				$result = $this->Util()->DB()->GetSingle();
 
@@ -282,6 +284,7 @@ class Test extends Activity
 				}
 
 				$sql = "INSERT INTO test_answers(student_id, answer_id, answer) VALUES({$this->getUserId()},{$key}, '{$option}')";
+				error_log($sql);
 				$this->Util()->DB()->setQuery($sql);
 				$this->Util()->DB()->InsertData();
 			}
@@ -297,18 +300,21 @@ class Test extends Activity
 			$sql = "INSERT INTO  `activity_score` ( `userId` , `activityId` , `try` , `ponderation`)
 				VALUES ('" . $this->getUserId() . "', '" . $this->getActivityId() . "', '1', '" . $score . "');";
 			$this->Util()->DB()->setQuery($sql);
+			error_log($sql);
 			$result = $this->Util()->DB()->InsertData();
 		} else {
 			if ($activityScore['reintento'] && !$activityScore['tipo'] && !$activityScore['tipoCalificacion']) {
 				$score = $score < $activityScore['ponderation'] ? $activityScore['ponderation'] : $score;
 			}
-			$this->Util()->DB()->setQuery("
+			$sql = "
 					UPDATE `activity_score` SET
 						`ponderation` = '" . $score . "',
 						try = try + 1,
 						access = 0
 					WHERE
-						`userId` = '" . $this->getUserId() . "' AND activityId = '" . $this->getActivityId() . "' LIMIT 1");
+						`userId` = '" . $this->getUserId() . "' AND activityId = '" . $this->getActivityId() . "' LIMIT 1";
+			$this->Util()->DB()->setQuery($sql);
+			error_log($sql);
 			$result = $this->Util()->DB()->UpdateData();
 		}
 	}
