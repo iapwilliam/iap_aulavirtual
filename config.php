@@ -26,3 +26,4 @@ define("BN_SSL", getenv('BN_SSL'));
 
 define("GOOGLE_FOLDER_AULA_CURP", getenv('GOOGLE_FOLDER_AULA_CURP'));
 define("GOOGLE_FOLDER_AULA_FOTO", getenv('GOOGLE_FOLDER_AULA_FOTO'));
+define("KEY_ENCRYPT", getenv('KEY_ENCRYPT'));

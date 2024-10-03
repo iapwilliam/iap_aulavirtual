@@ -3,6 +3,7 @@
 		<input type="hidden" name="modality" id="modality" value="{$actividad.modality}" />
 		<input type="hidden" id="type" name="type" value="completarExamen" />
 		<input type="hidden" name="actividad" value="{$actividad.activityId}" />
+		<input type="hidden" name="alumno" value="{$alumno}">
 		<div class="row">
 			<div class="col-md-12 text-center display-4 mb-3">
 				Tiempo Restante: <span id="countdownJobs" class="bg-primary px-1 py-1 text-white rounded">{$timeLeft}</span>

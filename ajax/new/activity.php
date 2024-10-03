@@ -2,9 +2,9 @@
 
 include_once('../../init.php');
 include_once('../../config.php');
-include_once(DOC_ROOT . '/libraries.php'); 
-ini_set('session.gc_maxlifetime', 4600); 
-session_set_cookie_params(4600); 
+include_once(DOC_ROOT . '/libraries.php');
+ini_set('session.gc_maxlifetime', 4600);
+session_set_cookie_params(4600);
 session_start();
 
 switch ($_POST["type"]) {
@@ -27,16 +27,19 @@ switch ($_POST["type"]) {
 
         break;
     case 'completarExamen':
-        $test->setUserId($_SESSION["User"]["userId"]);
+        $alumno = $util->decrypt($_POST['alumno'], KEY_ENCRYPT);
+        $test->setUserId($alumno);
         $test->setActivityId($_POST["actividad"]);
         $test->SendTest($_POST["anwer"]);
-        unset($_SESSION["timeLimit"]);
+        if (isset($_SESSION['timeLimit'])) {
+            unset($_SESSION["timeLimit"]);
+        }
         echo json_encode([
             'growl'     => true,
             'message'   => 'Examen contestado',
             'type'      => 'success',
             'reload'    => true
-        ]); 
+        ]);
         break;
     case 'reiniciarExamen':
         $test->setUserId($_SESSION["User"]["userId"]);

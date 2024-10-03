@@ -2,7 +2,9 @@
 	if(!isset($_SESSION["User"]["userId"]) or $_SESSION["User"]["userId"]==null or $_SESSION["User"]["userId"]==""){
 		header('Location: '.WEB_ROOT);
 		exit;
-	}  
+	}   
+	$alumno = $util->encrypt($User['userId'], KEY_ENCRYPT);
+	$smarty->assign("alumno", $alumno);
 	if($_POST)
 	{
 		$test->setUserId($_SESSION["User"]["userId"]);

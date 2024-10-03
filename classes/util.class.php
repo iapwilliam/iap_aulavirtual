@@ -1642,4 +1642,28 @@ class Util extends ErrorLms
 		})->save($url, $quality);
 		return $image;
 	}
+
+	public function encrypt($toEncrypted, $key)
+	{
+		$cipher = "AES-128-CTR"; // Algoritmo de cifrado
+		$ivlen = openssl_cipher_iv_length($cipher); // Longitud del IV
+		$iv = openssl_random_pseudo_bytes($ivlen); // Generar IV aleatorio
+
+		$encrypted = openssl_encrypt($toEncrypted, $cipher, $key, 0, $iv);
+
+		// Para almacenar IV junto con el cifrado, concatenamos ambos (por ejemplo, en base64)
+		return base64_encode($iv . $encrypted);
+	}
+
+	public function decrypt($encrypte, $key)
+	{
+		$cipher = "AES-128-CTR";
+		$data = base64_decode($encrypte);
+
+		$ivlen = openssl_cipher_iv_length($cipher);
+		$iv = substr($data, 0, $ivlen); // Extraer el IV
+		$encrypted = substr($data, $ivlen); // Extraer el texto cifrado
+
+		return openssl_decrypt($encrypted, $cipher, $key, 0, $iv);
+	}
 }
