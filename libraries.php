@@ -82,7 +82,7 @@ include_once(DOC_ROOT . "/classes/notificacion.class.php");
 include_once(DOC_ROOT . "/classes/bank.class.php");
 include_once(DOC_ROOT . "/classes/solicitud.class.php");
 include_once(DOC_ROOT . '/libs/pdf/dompdf_config.inc.php');
-include_once(DOC_ROOT . '/libs/phpqrcode/qrlib.php');
+// include_once(DOC_ROOT . '/libs/phpqrcode/qrlib.php');
 include_once(DOC_ROOT . '/classes/docente.class.php');
 include_once(DOC_ROOT . '/classes/calendar.class.php');
 include_once(DOC_ROOT . '/classes/certificates.class.php');

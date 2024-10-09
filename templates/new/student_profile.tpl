@@ -127,14 +127,21 @@
                             <p class="mb-3">
                                 {$subject.subject_name}<br>
                                 <small>
-                                    Grupo: {$subject.group} 
+                                    Grupo: {$subject.group}
                                     Periodo: {$subject.initialDate|date_format:"%d-%m-%Y"} -
                                     {$subject.finalDate|date_format:"%d-%m-%Y"}
                                 </small><br>
                                 {if $subject.situation eq 'Ordinario'}
                                     <small>Módulos: {$subject.courseModule}</small>
-                                {/if} 
+                                {/if}
                             </p>
+                            {if in_array($subject.courseId, [7,8])}
+                                <br><br>
+                                <a href="{$WEB_ROOT}/pdf/diploma-500-1057.php?alumno={$User.userId}" target="_blank"
+                                    class="btn btn-outline-light btn-fw btn-sm">
+                                    <i class="far fa-list-alt"></i> Diploma
+                                </a>
+                            {/if}
                         </div>
                     </div>
                 </div>

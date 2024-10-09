@@ -229,6 +229,7 @@ $pages = array(
 	'reporte-buen-gobierno',
 	//'registro-gestion-gubernamental',
 	'reporte-gestion-gubernamental',
+	'verificar'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
@@ -245,7 +246,8 @@ if (!isset($_SESSION['User'])) { //Si no existe sesión
 		'registro-igualdad',
 		'registro-responsabilidad',
 		'registro-simulador',
-		'registro-gestion-gubernamental'
+		'registro-gestion-gubernamental',
+		'verificar'
 	])) { //Y no está en estas páginas
 		header('Location: ' . WEB_ROOT . "/login"); //Lo mandamos al login
 	}
