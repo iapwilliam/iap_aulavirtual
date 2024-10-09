@@ -97,7 +97,7 @@ foreach ($cursos as $key => $item) {
 
     $students = $item['registrados'];
 
-    for ($i = 3; $i < (count($students) + 2); $i++) {
+    for ($i = 3; $i < (count($students) + 3); $i++) {
         $curp = json_decode($students[($i-3)]['curpDrive'], true);
         $foto = json_decode($students[($i-3)]['foto_curso'], true);
         if (empty($foto['googleId'])) { 
