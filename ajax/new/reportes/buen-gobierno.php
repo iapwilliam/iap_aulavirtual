@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 $curso = $_GET['curso']; 
 $cursos = $course->getCourses("AND courseId = $curso");
 foreach ($cursos as $key => $curso) {
-    $cursos[$key]['registrados'] = $course->getStudents("AND user_subject.courseId = {$curso['courseId']}");
+    $cursos[$key]['registrados'] = $course->getStudents("AND user_subject.courseId = {$curso['courseId']} AND user_subject.alumnoId <> 1");
 }
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getProperties()->setCreator('William Ramírez')
