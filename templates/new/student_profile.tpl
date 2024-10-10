@@ -135,13 +135,13 @@
                                     <small>Módulos: {$subject.courseModule}</small>
                                 {/if}
                             </p>
-                            {* {if in_array($subject.courseId, [7,8])}
+                            {if in_array($subject.courseId, [7,8])}
                                 <br><br>
                                 <a href="{$WEB_ROOT}/pdf/diploma-500-1057.php?alumno={$User.userId}" target="_blank"
                                     class="btn btn-outline-light btn-fw btn-sm">
                                     <i class="far fa-list-alt"></i> Diploma
                                 </a>
-                            {/if} *}
+                            {/if}
                         </div>
                     </div>
                 </div>

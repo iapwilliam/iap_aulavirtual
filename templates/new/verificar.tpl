@@ -8,12 +8,10 @@
                 <strong>DOCUMENTO VÁLIDO</strong>
             </h3>
             <p style="font-size:1.2rem"><strong>Tipo de documento:</strong> Diplomado</p>
-            <p style="font-size:1.2rem"><strong>Programa:</strong> {$diploma.curso.name}</p>
+            <p style="font-size:1.2rem"><strong>Programa:</strong> {$diploma.curso}</p>
             <p style="font-size:1.2rem"><strong>Nombre del o la estudiante:</strong> {$diploma.alumno.names}
                 {$diploma.alumno.lastNamePaterno}
-                {$diploma.alumno.lastNameMaterno}</p>
-            <p style="font-size:1.2rem"><strong>Fecha de emisión:</strong> {date("Y-m-d", strtotime($diploma.created_at))}
-            </p>
+                {$diploma.alumno.lastNameMaterno}</p> 
         {else}
             <h3 class="text-center">
                 <strong>DOCUMENTO NO VÁLIDO</strong>
