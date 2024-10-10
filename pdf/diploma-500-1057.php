@@ -121,8 +121,13 @@ $pdf->AddPage();
 $nombreAlumno = $infoAlumno['names'] . ' ' . $infoAlumno['lastNamePaterno'] . ' ' . $infoAlumno['lastNameMaterno'];
 $nombreAlumno = $util->eliminar_acentos($nombreAlumno);
 $nombreAlumno = mb_strtoupper($nombreAlumno, 'UTF-8');
-$token = $util->encrypt($infoAlumno['controlNumber'], KEY_ENCRYPT);
-$pdf->setToken($token);
+
+$course->setCourseId(7);
+$dataCourse = $student->getCourses("AND user_subject.courseId = 7 AND user_subject.alumnoId = {$infoAlumno['userId']}");
+// echo "<pre>";
+// print_r($dataCourse);
+// exit; 
+$pdf->setToken($dataCourse[0]['token']);
 
 $html = '<div style="width:100%; text-align:center;">' . $nombreAlumno . '</div>';
 $pdf->writeHTMLCell('', '', 15, 135, $html, 0, 0, 0, true, 'C', false);
