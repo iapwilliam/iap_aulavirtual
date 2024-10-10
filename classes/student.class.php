@@ -988,7 +988,7 @@ class Student extends User
 
 	function getCourses($where = "")
 	{
-		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group, subject.icon, course.initialDate, course.finalDate, course.subjectId, user_subject.token FROM user_subject INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
+		$sql = "SELECT major.name as major_name, subject.name as subject_name, course.courseId, course.group, subject.icon, course.initialDate, course.finalDate, course.subjectId, user_subject.token, user_subject.alumnoId FROM user_subject INNER JOIN course ON course.courseId = user_subject.courseId INNER JOIN subject ON subject.subjectId = course.subjectId INNER JOIN major ON major.majorId = subject.tipo WHERE 1 {$where}";
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 		return $result;
