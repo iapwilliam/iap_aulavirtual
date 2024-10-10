@@ -135,8 +135,7 @@
                                     <small>Módulos: {$subject.courseModule}</small>
                                 {/if}
                             </p>
-                            {if in_array($subject.courseId, [7,8])}
-                                {$subject.courseId}
+                            {if in_array($subject.courseId, [7,8])} 
                                 {if $subject.courseId == 7 && in_array($User.numControl,[ 20242510, 20242519, 20242526, 20242527, 20242529, 20242574, 20242575, 20242585, 20242589, 20242590, 20242617, 20242618, 20242620, 20242627, 20242629, 20242631, 20242636, 20242641, 20242645, 20242646, 20242647, 20242662, 20242680])}
                                     <br><br>
                                     <a href="{$WEB_ROOT}/pdf/diploma-500-1057.php?alumno={$User.userId}" target="_blank"
