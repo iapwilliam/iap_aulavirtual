@@ -28,8 +28,10 @@ switch ($_POST["opcion"]) {
     case 'gestion-gubernamental':
         if ($_GET['tipo'] == 1) {
             include_once('reportes/buen-gobierno.php');
-        } else {
+        } elseif($_GET['tipo'] == 2) {
             include_once('reportes/buen-gobierno-evaluaciones.php');
+        }else{
+            include_once('reportes/buen-gobierno-promedios.php');
         }
         break;
     case 'licenciaturas':
