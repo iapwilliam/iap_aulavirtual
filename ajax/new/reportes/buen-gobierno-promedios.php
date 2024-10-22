@@ -26,7 +26,8 @@ $ultimo_indice = count($licenciaturas) - 1;
 foreach ($licenciaturas as $key => $item) {
     $course->setCourseId($item['courseId']);
     $courseData = $course->getCourse();
-    $headings = $course->getHeadersActivities("AND course_module.courseId = {$item['courseId']} ORDER BY activity.resumen ASC");
+    $headings = $course->getModulesCourse("AND course_module.courseId = {$item['courseId']}");
+    
     $students = $course->getStudents("AND user_subject.courseId = {$item['courseId']} AND user.userId <> 1");
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->getDefaultColumnDimension()->setWidth(30);
@@ -46,7 +47,7 @@ foreach ($licenciaturas as $key => $item) {
     $auxHeading = "I";
 
     foreach ($headings as $item) {
-        $sheet->setCellValue("{$auxHeading}2", $item['resumen']);
+        $sheet->setCellValue("{$auxHeading}2", $item['name']);
         $auxHeading++;
     }
 
@@ -66,14 +67,9 @@ foreach ($licenciaturas as $key => $item) {
         $sheet->getCell('H' . ($i + 3))->getHyperlink()->setUrl("https://drive.google.com/open?id=" . $curp['googleId']);
         $auxColumn = "I";
         foreach ($headings as $heading) {
-            if ($heading['activityType'] == "Tarea") {
-                $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
-                $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : 'ENTREGÓ'));
-            }
-            if ($heading['activityType'] == "Examen") {
-                $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
-                $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['ponderation'] : "NO PRESENTÓ"));
-            }
+            $where = "AND activity.courseModuleId = {$heading['courseModuleId']} AND activity_score.userId = {$students[$i]['userId']};";
+            $total = $student->getModuleCalification($where);
+            $sheet->setCellValue("{$auxColumn}{$auxRow}", number_format($total,2));
             $auxColumn++;
         }
         $auxRow++;

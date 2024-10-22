@@ -198,7 +198,8 @@ class Student extends User
 	}
 
 	private $avatar;
-	public function setAvatar($value) {
+	public function setAvatar($value)
+	{
 		$this->avatar = $value;
 	}
 
@@ -2871,5 +2872,12 @@ class Student extends User
 		$resultado['status'] = $this->Util()->DB()->InsertData();
 		$resultado['usuario'] = $controlNumber;
 		return $resultado;
+	}
+
+	public function getModuleCalification($where = "")
+	{
+		$sql = "SELECT SUM(((activity_score.ponderation * activity.ponderation)/100)) as total FROM `activity` INNER JOIN activity_score ON activity_score.activityId = activity.activityId WHERE 1 {$where}";
+		$this->Util()->DB()->setQuery($sql);
+		return $this->Util()->DB()->GetSingle();
 	}
 }

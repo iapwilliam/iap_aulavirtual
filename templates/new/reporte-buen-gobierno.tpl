@@ -37,6 +37,7 @@
                         <option value="">--Tipo de reporte--</option>
                         <option value="1">Registros</option>
                         <option value="2">Evaluaciones</option>
+                        <option value="3">Promedios</option>
                     </select>
                 </div>
                 <div class="col-md-12 text-center">
