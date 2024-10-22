@@ -24,10 +24,11 @@
                 <tr>
                     <td>ID</td>
                     <td>Foto</td>
+                    <td>Nombre</td>
                     <td>Apellido Paterno</td>
                     <td>Apellido Materno</td>
-                    <td>Nombre</td>
                     <td>Número de control</td>
+                    <td>Nombre completo</td>
                     <td>Acciones</td>
                 </tr>
             </thead>

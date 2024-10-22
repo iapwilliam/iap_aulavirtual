@@ -2512,6 +2512,7 @@ class Student extends User
 			array('db' => 'lastNamePaterno', 'dt' => 'apellido_paterno'),
 			array('db' => 'lastNameMaterno', 'dt' => 'apellido_materno'),
 			array('db' => 'controlNumber',	'dt' => 'numero_control'),
+			array('db' => 'CONCAT(names," ", lastNamePaterno, " ", lastNameMaterno)',	'dt' => 'nombre_completo'),
 			array(
 				'db' => 'userId',
 				'dt' => 'acciones',

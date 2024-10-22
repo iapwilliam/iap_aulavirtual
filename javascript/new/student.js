@@ -268,6 +268,7 @@ $("#datatable").DataTable({
 		{ data: "apellido_paterno" },
 		{ data: "apellido_materno" },
 		{ data: "numero_control" },
+		{ data: "nombre_completo" },
 		{
 			data: "acciones",
 			"orderable": false,
@@ -275,7 +276,13 @@ $("#datatable").DataTable({
 	],
 	columnDefs: [
 		{
-			targets: 3, className: 'compact'
+			targets: [2, 3, 4], className: 'compact'
 		},
+		{
+			searchable: false, targets: [0, 1, 2, 3, 4, 5]
+		},
+		{
+			targets: [6], visible: false
+		}
 	]
 });
