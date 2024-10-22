@@ -2599,7 +2599,7 @@ class Student extends User
 	function updateStudent()
 	{
 		$fields = [
-			'names' 			=> $this->names,
+			'names' 			=> $this->name,
 			'lastNamePaterno' 	=> $this->lastNamePaterno,
 			'lastNameMaterno' 	=> $this->lastNameMaterno,
 			'email' 			=> $this->email,
