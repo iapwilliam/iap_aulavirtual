@@ -279,7 +279,7 @@ $("#datatable").DataTable({
 			targets: [2, 3, 4], className: 'compact'
 		},
 		{
-			searchable: false, targets: [0, 1, 2, 3, 4, 5]
+			searchable: false, targets: [0, 1, 2, 3, 4]
 		},
 		{
 			targets: [6], visible: false
