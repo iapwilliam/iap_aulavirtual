@@ -2513,6 +2513,7 @@ class Student extends User
 			array('db' => 'lastNamePaterno', 'dt' => 'apellido_paterno'),
 			array('db' => 'lastNameMaterno', 'dt' => 'apellido_materno'),
 			array('db' => 'controlNumber',	'dt' => 'numero_control'),
+			array('db' => 'CONCAT(names," ", lastNamePaterno, " ", lastNameMaterno)',	'dt' => 'nombre_completo'),
 			array(
 				'db' => 'userId',
 				'dt' => 'acciones',
@@ -2598,7 +2599,7 @@ class Student extends User
 	function updateStudent()
 	{
 		$fields = [
-			'names' 			=> $this->names,
+			'names' 			=> $this->name,
 			'lastNamePaterno' 	=> $this->lastNamePaterno,
 			'lastNameMaterno' 	=> $this->lastNameMaterno,
 			'email' 			=> $this->email,
