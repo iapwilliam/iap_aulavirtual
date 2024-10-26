@@ -1031,7 +1031,7 @@ switch ($opcion) {
 
 		$alumnoActual = $student->GetInfo("AND email = '$email'");
 		if ($alumnoActual['userId']) { //Ya existe un alumno con este correo, hay que actualizarlo. 
-			$existeEnCurso = $student->getCourses("AND user_subject.courseId = 12 AND user_subject.alumnoId = " . $alumnoActual['userId']);
+			$existeEnCurso = $student->getCourses("AND user_subject.courseId = 17 AND user_subject.alumnoId = " . $alumnoActual['userId']);
 			if (count($existeEnCurso) > 0) { //Verificamos que no exista en el curso actual
 				echo json_encode([
 					'growl'		=> true,
@@ -1078,11 +1078,11 @@ switch ($opcion) {
 				$student->setFoto("{$files['foto']}");
 				$student->setAcademicDegree($_POST['academicDegree']);
 				$student->setUserId($alumnoActual['userId']);
-				$student->setCourseId(12);
+				$student->setCourseId(17);
 				$student->updateStudent();
 				$student->addUserCourse();
 
-				$dataCourse = $student->getCourses("AND user_subject.courseId = 12 AND user_subject.alumnoId = " . $alumnoActual['userId']);
+				$dataCourse = $student->getCourses("AND user_subject.courseId = 17 AND user_subject.alumnoId = " . $alumnoActual['userId']);
 				$student->setSubjectId($dataCourse[0]['subjectId']);
 				$student->AddAcademicHistory('alta', 'A', 1);
 				$details_body = array(
@@ -1148,9 +1148,9 @@ switch ($opcion) {
 			$response = $student->saveResponsability();
 			if ($response['status']) {
 				$student->setUserId($response['status']);
-				$student->setCourseId(12);
+				$student->setCourseId(17);
 				$student->addUserCourse();
-				$dataCourse = $student->getCourses("AND user_subject.courseId = 12 AND user_subject.alumnoId = " . $response['status']);
+				$dataCourse = $student->getCourses("AND user_subject.courseId = 17 AND user_subject.alumnoId = " . $response['status']);
 				$student->setSubjectId($dataCourse[0]['subjectId']);
 				$student->AddAcademicHistory('alta', 'A', 1);
 				$details_body = array(
