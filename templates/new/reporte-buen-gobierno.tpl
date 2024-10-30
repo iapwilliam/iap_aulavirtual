@@ -27,7 +27,7 @@
                     <label>Diplomado</label>
                     <select class="form-control" id="curso" name="curso" required> 
                         {foreach from=$cursos item=item}
-                            <option value="{$item.courseId}">{$item.subject_name}</option>
+                            <option value="{$item.courseId}">{$item.subject_name} {$item.group}</option>
                         {/foreach}
                     </select>
                 </div>
