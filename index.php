@@ -224,9 +224,9 @@ $pages = array(
 	'registro-primeros-auxilios',
 	'reporte-auxilios',
 	'registro-igualdad',
-	'registro-responsabilidad', 
+	//'registro-responsabilidad', 
 	'registro-simulador',
-	//'reporte-buen-gobierno',
+	'reporte-buen-gobierno',
 	//'registro-gestion-gubernamental',
 	'reporte-gestion-gubernamental',
 	'verificar'
