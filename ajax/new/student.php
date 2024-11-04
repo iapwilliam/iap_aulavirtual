@@ -390,7 +390,7 @@ switch ($opcion) {
 			$extension = pathinfo($_FILES['curparchivo']['name'], PATHINFO_EXTENSION);
 			$temporal =  $_FILES['curparchivo']['tmp_name'];
 			$nombre = "curparchivo_" . $nombreAlumno;
-			$documento =  $nombre . "." . $extension; 
+			$documento =  $nombre . "." . $extension;
 			move_uploaded_file($temporal, $ruta . $documento);
 			$google->setArchivoNombre($documento);
 			$google->setArchivo($ruta . $documento);
@@ -409,7 +409,7 @@ switch ($opcion) {
 			$extension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
 			$temporal =  $_FILES['foto']['tmp_name'];
 			$nombre = "foto_" . $nombreAlumno;
-			$documento =  $nombre . "." . $extension; 
+			$documento =  $nombre . "." . $extension;
 			move_uploaded_file($temporal, $ruta . $documento);
 			$util->resizeImage($ruta . $documento, NULL, 1400);
 			$google->setArchivoNombre($documento);
@@ -419,7 +419,7 @@ switch ($opcion) {
 							"filename": "' . $respuesta['name'] . '",
 							"googleId": "' . $respuesta['id'] . '"							 
 						}';
-			unlink($ruta . $documento); 
+			unlink($ruta . $documento);
 			$student->setFotoCurso("{$jsonFoto}");
 			$student->setUserId($_SESSION['User']['userId']);
 			$alumnoActual = $student->GetInfo();
@@ -428,9 +428,9 @@ switch ($opcion) {
 			foreach ($cursosFoto as $item) {
 				$student->setCourseId($item['courseId']);
 				$student->updateUserCourse();
-			} 
+			}
 			$student->setFoto("{$jsonFoto}");
-			$student->setAvatar("NULL"); 
+			$student->setAvatar("NULL");
 		}
 		$response = $student->updateStudent();
 		if ($response['status']) {
@@ -456,12 +456,13 @@ switch ($opcion) {
 		$secondSurname = trim(strip_tags($_POST['secondSurname']));
 		$phone = str_replace(' ', '', strip_tags($_POST['phone']));
 		$password = $_POST['password'];
-
+		$sexo = $_POST['sexo'] == "Masculino" ? "m" : "f";
 		$email = trim(strip_tags($_POST['email']));
 		$coordination = intval($_POST['coordination']);
 		$schoolNumber = intval($_POST['schoolNumber']);
 		$adscripcion = intval($_POST['adscripcion']);
 		$function = intval($_POST['functionWork']);
+		$workplaceOcupation = strip_tags($_POST['workplaceOcupation']);
 		$rfc = $_POST['rfc'];
 		$state = intval($_POST['estadot']);
 		$city = intval($_POST['ciudadt']);
@@ -526,6 +527,7 @@ switch ($opcion) {
 		$student->setCourseId($curso);
 		$student->setSubjectId($dataCourse['subjectId']);
 
+		$student->setSexo($sexo);
 		$student->setEmail($email);
 		$student->setRFC($rfc);
 		$student->setFuncion($function);
@@ -537,6 +539,7 @@ switch ($opcion) {
 		$student->setCity($city);
 		$student->setCurp($curp);
 		$student->setAcademicDegree($academicDegree);
+		$student->setWorkplaceOcupation($workplaceOcupation);
 		foreach ($_FILES as $key => $archivo) {
 			if ($_FILES[$key]['error'] == UPLOAD_ERR_NO_FILE) {
 				continue;

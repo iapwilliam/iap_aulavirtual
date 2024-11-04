@@ -116,13 +116,13 @@
                     <label>Ocupación</label>
                     <select name="workplaceOcupation" id="workplaceOcupation" class="form-control">
                         <option value="">--Selecciona la ocupación--</option>
-                        <option {($alumno.workplaceOcupation == "FUNCIONARIO PÚBLICO MUNICIPAL") ? "selected" : ""}>
+                        <option value="FUNCIONARIO PUBLICO MUNICIPAL" {($alumno.workplaceOcupation == "FUNCIONARIO PUBLICO MUNICIPAL") ? "selected" : ""}>
                             FUNCIONARIO PÚBLICO MUNICIPAL</option>
-                        <option {($alumno.workplaceOcupation == "FUNCIONARIO PÚBLICO ESTATAL") ? "selected" : ""}>
+                        <option value="FUNCIONARIO PUBLICO ESTATAL" {($alumno.workplaceOcupation == "FUNCIONARIO PUBLICO ESTATAL") ? "selected" : ""}>
                             FUNCIONARIO PÚBLICO ESTATAL</option>
-                        <option {($alumno.workplaceOcupation == "FUNCIONARIO PÚBLICO FEDERAL") ? "selected" : ""}>
+                        <option value="FUNCIONARIO PUBLICO FEDERAL" {($alumno.workplaceOcupation == "FUNCIONARIO PUBLICO FEDERAL") ? "selected" : ""}>
                             FUNCIONARIO PÚBLICO FEDERAL</option>
-                        <option {($alumno.workplaceOcupation == "OTROS") ? "selected" : ""}>OTROS</option>
+                        <option value="OTROS" {($alumno.workplaceOcupation == "OTROS") ? "selected" : ""}>OTROS</option>
                     </select>
                 </div>
                 <div class="form-group col-md-4">
@@ -136,7 +136,7 @@
                         <option value="">--Selecciona el grado académico--</option>
                         <option {($alumno.academicDegree == "UNIVERSITARIO") ? "selected" : ""}>UNIVERSITARIO</option>
                         <option {($alumno.academicDegree == "LICENCIATURA") ? "selected" : ""}>LICENCIATURA</option>
-                        <option {($alumno.academicDegree == "MAESTRÍA") ? "selected" : ""}>MAESTRÍA</option>
+                        <option {($alumno.academicDegree == "MAESTRIA") ? "selected" : ""}>MAESTRÍA</option>
                         <option {($alumno.academicDegree == "DOCTORADO") ? "selected" : ""}>DOCTORADO</option>
                         <option {($alumno.academicDegree == "OTROS") ? "selected" : ""}>OTROS</option>
                     </select>
