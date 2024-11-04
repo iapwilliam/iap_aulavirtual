@@ -131,14 +131,14 @@ class Test extends Activity
 	{
 
 		$n = $max;
-		$returnArray = $questions; 
-		for ($i = $n - 1; $i > 0; $i--) { 
+		$returnArray = $questions;
+		for ($i = $n - 1; $i > 0; $i--) {
 			$j = rand(0, $i);
 			$temp = $returnArray[$i];
 			$returnArray[$i] = $returnArray[$j];
 			$returnArray[$j] = $temp;
 		}
-		return $returnArray;
+		return array_slice($returnArray, 0, $max);
 	}
 
 	public function TestScore()
