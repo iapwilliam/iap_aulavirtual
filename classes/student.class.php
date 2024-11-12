@@ -2880,4 +2880,11 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		return $this->Util()->DB()->GetSingle();
 	}
+
+	public function getDiplomas($alumnoId, $cursoId)
+	{
+		$sql = "SELECT diplomas.id FROM `diplomas_alumnos` INNER JOIN diplomas ON diplomas.id = diplomas_alumnos.diploma_id INNER JOIN diplomas_cursos ON diplomas_cursos.diploma_id = diplomas.id WHERE diplomas_cursos.course_id = {$cursoId} AND diplomas_alumnos.alumno_id = {$alumnoId}";
+		$this->Util()->DB()->setQuery($sql);
+		return $this->Util()->DB()->GetSingle();
+	}
 }

@@ -149,6 +149,13 @@
                                         <i class="far fa-list-alt"></i> Diploma
                                     </a>
                                 {/if}
+                            {/if} 
+                            {if $subject.diploma}
+                                <br><br>
+                                <a href="{$WEB_ROOT}/pdf/diploma.php?alumno={$User.userId}&curso={$subject.courseId}&diploma={$subject.diploma}"
+                                    target="_blank" class="btn btn-outline-light btn-fw btn-sm btn-block">
+                                    <i class="far fa-list-alt"></i> Diploma
+                                </a>
                             {/if}
                         </div>
                     </div>

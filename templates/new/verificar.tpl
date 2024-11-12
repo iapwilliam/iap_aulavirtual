@@ -7,11 +7,27 @@
             <h3 class="text-center">
                 <strong>DOCUMENTO VÁLIDO</strong>
             </h3>
-            <p style="font-size:1.2rem"><strong>Tipo de documento:</strong> Diplomado</p>
-            <p style="font-size:1.2rem"><strong>Programa:</strong> {$diploma.curso}</p>
+            <p style="font-size:1.2rem"><strong>Tipo de documento:</strong> {$diploma.curso[0]['major_name']}</p>
+            <p style="font-size:1.2rem">
+                {if count($diploma.curso) > 1}
+                    <strong>En los programas:</strong>
+                    <ol>
+                        {foreach from=$diploma.curso item=item}
+                            <li>{$item.subject_name}</li>
+                        {/foreach}
+                    </ol>
+                {else}
+                    <strong>Programa:</strong>
+                    {$diploma.curso[0]['subject_name']}
+                {/if}
+            </p>
             <p style="font-size:1.2rem"><strong>Nombre del o la estudiante:</strong> {$diploma.alumno.names}
                 {$diploma.alumno.lastNamePaterno}
-                {$diploma.alumno.lastNameMaterno}</p> 
+                {$diploma.alumno.lastNameMaterno}</p>
+            {if $diploma.created_at}
+                <p style="font-size:1.2rem"><strong>Fecha de emisión:</strong> {date("Y-m-d", strtotime($diploma.created_at))}
+                </p>
+            {/if}
         {else}
             <h3 class="text-center">
                 <strong>DOCUMENTO NO VÁLIDO</strong>

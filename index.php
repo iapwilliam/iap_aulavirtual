@@ -229,7 +229,8 @@ $pages = array(
 	'reporte-buen-gobierno',
 	//'registro-gestion-gubernamental',
 	'reporte-gestion-gubernamental',
-	'verificar'
+	'verificar',
+	'diplomas'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
