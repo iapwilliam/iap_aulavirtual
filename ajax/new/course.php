@@ -54,8 +54,12 @@ switch ($opcion) {
         break;
     case 'newDiplomaMultiple':
         $nombreDiploma = strip_tags($_POST['nombre']);
+        $tipoDocumento = intval($_POST['tipo']);
         if (empty($nombreDiploma)) {
             $errors['nombre'] = 'Error, falta completar el campo nombre';
+        }
+        if (empty($tipoDocumento)) {
+            $errors['tipo'] = 'Error, falta seleccionar el tipo de documento';
         }
         $response = $util->Util()->validarSubidaPorArchivo([
             "imagen_portada" => [
@@ -113,13 +117,13 @@ switch ($opcion) {
         $googleIdContraPortada = $respuesta['id'];
         unlink($ruta . $documento);
 
-        $diplomaId = $course->addDiploma($nombreDiploma, $googleIdPortada, $googleIdContraPortada);
+        $diplomaId = $course->addDiploma($tipoDocumento, $nombreDiploma, $googleIdPortada, $googleIdContraPortada);
         foreach ($_POST['curso'] as $curso) {
             $course->addDiplomaCurso($diplomaId, $curso);
         }
         echo json_encode([
             'growl'        => true,
-            'message'      => 'Diploma/Certificado guardado con éxito',
+            'message'      => 'Documento digital guardado con éxito',
             'modal_close'  => true,
             'dtreload'     => '#datatable'
         ]);

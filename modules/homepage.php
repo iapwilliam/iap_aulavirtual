@@ -9,13 +9,9 @@ $inactiveCourses = $student->getCourses("AND user_subject.status = 'inactivo' AN
 $finishedCourses = $student->getCourses("AND course.finalDate < DATE_FORMAT(NOW(),'%Y-%m-%d') AND user_subject.status = 'activo' AND user_subject.alumnoId = {$_SESSION["User"]["userId"]}");
 
 foreach ($finishedCourses as $key => $value) {
-	$finishedCourses[$key]['diploma'] = $student->getDiplomas($_SESSION["User"]["userId"], $value['courseId']);
-	if (in_array($_SESSION['User']['userId'], [3462, 3463, 3464]) && date('Y-m-d') < "2024-11-30") {
-		$activeCourses[] = $finishedCourses[$key];
-		unset($finishedCourses[$key]);
-	}
+	$finishedCourses[$key]['documentos_digitales'] = $student->getDiplomas($_SESSION["User"]["userId"], $value['courseId']);
 }
-
+$smarty->assign("tipoDigital", ["", "Diploma", "Constancia"]);
 $smarty->assign("activeCourses", $activeCourses);
 $smarty->assign("inactiveCourses", $inactiveCourses);
 $smarty->assign("finishedCourses", $finishedCourses);

@@ -102,8 +102,8 @@ $pdf->SetFont('times', '', 18);
 
 $course->setUserId($_GET['alumno']);
 $course->setCourseId($_GET['curso']); 
-if ($_GET['diploma']) {
-    $sql = "SELECT diplomas.* FROM diplomas WHERE id = {$_GET['diploma']}";
+if ($_GET['documento']) {
+    $sql = "SELECT diplomas.* FROM diplomas WHERE id = {$_GET['documento']}";
     $util->DB()->setQuery($sql);
     $infoDiploma = $util->DB()->GetRow();
     $backgroundImages = [
@@ -111,7 +111,7 @@ if ($_GET['diploma']) {
         2 => "https://drive.google.com/uc?id=".$infoDiploma['imagen_contraportada']
     ];
 
-    $sql = "SELECT token FROM diplomas_alumnos WHERE diploma_id = {$_GET['diploma']} AND alumno_id = {$_GET['alumno']}";
+    $sql = "SELECT token FROM diplomas_alumnos WHERE diploma_id = {$_GET['documento']} AND alumno_id = {$_GET['alumno']}";
     $util->DB()->setQuery($sql);
     $diploma['token'] = $util->DB()->GetSingle(); 
     if (!$diploma['token']) {

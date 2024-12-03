@@ -878,9 +878,9 @@ class Course extends Subject
 		return SSP::complex($_POST, $table, $primaryKey, $columns, $where);
 	}
 
-	public function addDiploma($nombre, $imagen_portada, $imagen_contraportada)
+	public function addDiploma($tipo, $nombre, $imagen_portada, $imagen_contraportada)
 	{
-		$sql = "INSERT INTO diplomas(nombre, imagen_portada, imagen_contraportada) VALUES('$nombre', '$imagen_portada', '$imagen_contraportada')";
+		$sql = "INSERT INTO diplomas(tipo, nombre, imagen_portada, imagen_contraportada) VALUES('$tipo', '$nombre', '$imagen_portada', '$imagen_contraportada')";
 		$this->Util()->DB()->setQuery($sql);
 		return $this->Util()->DB()->InsertData();
 	}
@@ -907,17 +907,17 @@ class Course extends Subject
 				'dt' => 'acciones',
 				'formatter' => function ($d, $row) {
 					if ($row['existe'] == 0) {
-						return "<form id='form_generateDiploma".$row['id']."' class='form' method='POST' action='".WEB_ROOT."/ajax/new/course.php'>
+						return "<form id='form_generateDiploma" . $row['id'] . "' class='form' method='POST' action='" . WEB_ROOT . "/ajax/new/course.php'>
 								<input type='hidden' name='option' value='generateDiploma'>
-								<input type='hidden' name='diploma' value='".$_POST['diploma']."'>
-								<input type='hidden' name='student' value='".$row['id']."'>
+								<input type='hidden' name='diploma' value='" . $_POST['diploma'] . "'>
+								<input type='hidden' name='student' value='" . $row['id'] . "'>
 								<button class='btn btn-success' type='submit'>Generar documento</button>
 							</form>";
 					}
-					return "<form id='form_generateDiploma".$row['id']."' class='form' method='POST' action='".WEB_ROOT."/ajax/new/course.php'>
+					return "<form id='form_generateDiploma" . $row['id'] . "' class='form' method='POST' action='" . WEB_ROOT . "/ajax/new/course.php'>
 								<input type='hidden' name='option' value='deleteDiploma'>
-								<input type='hidden' name='diploma' value='".$_POST['diploma']."'>
-								<input type='hidden' name='student' value='".$row['id']."'>
+								<input type='hidden' name='diploma' value='" . $_POST['diploma'] . "'>
+								<input type='hidden' name='student' value='" . $row['id'] . "'>
 								<button class='btn btn-danger' type='submit'>Quitar documento</button>
 							</form>";
 				},
@@ -927,13 +927,15 @@ class Course extends Subject
 		return SSP::complex($_POST, $table, $primaryKey, $columns, $where, null);
 	}
 
-	public function generateDiploma($diploma, $alumno, $token) {
+	public function generateDiploma($diploma, $alumno, $token)
+	{
 		$sql = "INSERT INTO diplomas_alumnos(diploma_id, alumno_id, token) VALUES($diploma, $alumno, '{$token}')";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
 	}
 
-	public function deleteDiploma($diploma, $alumno) {
+	public function deleteDiploma($diploma, $alumno)
+	{
 		$sql = "DELETE FROM diplomas_alumnos WHERE diploma_id = '{$diploma}' AND alumno_id = '{$alumno}'";
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->InsertData();
