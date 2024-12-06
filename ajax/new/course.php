@@ -151,10 +151,10 @@ switch ($opcion) {
             'dtreload'  => '#datatable_alumnos'
         ]);
         break;
-    case 'deleteDiplomaMultiple':
+    case 'deleteDiploma':
         $diploma = $_POST['diploma'];
         $alumno = $_POST['student'];
-        $course->deleteDiplomaMultiple($diploma, $alumno);
+        $course->deleteDiploma($diploma, $alumno);
         echo json_encode([
             'growl'     => true,
             'message'   => 'Se ha eliminado el documento',
