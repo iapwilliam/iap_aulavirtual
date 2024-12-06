@@ -900,7 +900,7 @@ class Course extends Subject
 			array('db'	=> 'user.userId', 			'dt'	=> 'id'),
 			array('db'	=> 'user.controlNumber',	'dt' 	=> 'controlNumber'),
 			array('db'	=> 'user.password',			'dt' 	=> 'password'),
-			array('db' 	=> 'CONCAT(user.names, " ", user.lastNamePaterno, " ", user.lastNameMaterno)', 	'dt' => 'nombre'),
+			array('db' 	=> 'CONCAT(TRIM(user.names), " ", TRIM(user.lastNamePaterno), " ", TRIM(user.lastNameMaterno))', 	'dt' => 'nombre'),
 			array('db'	=> "(SELECT COUNT(*) FROM diplomas_alumnos WHERE diplomas_alumnos.alumno_id = user.userId AND diplomas_alumnos.diploma_id = {$_POST['diploma']})", 'dt'	=> 'existe'),
 			array(
 				'db' => 'user.userId',
