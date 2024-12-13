@@ -21,7 +21,7 @@
                     <div class="col-lg-4 mx-auto">
                         <div class="row d-flex justify-content-center">
                             <div class="brand-logo">
-                                <img src="{$WEB_ROOT}/images/logos/Logo_3.png" width="300px">
+                                <img src="{$WEB_ROOT}/images/logos/logo-humanismo.webp" width="300px">
                             </div>
                         </div>
                         <div class="auth-form-light text-left p-5" style="box-shadow: 0px 2px 7px 7px #D2D2D2;">
