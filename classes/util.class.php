@@ -1579,7 +1579,7 @@ class Util extends ErrorLms
 
 	public function estados()
 	{
-		$sql = "SELECT * FROM municipalities GROUP BY cve_ent";
+		$sql = "SELECT * FROM sepomex GROUP BY id_estado ORDER BY estado";
 		$this->DBErp()->setQuery($sql);
 		$resultado = $this->DBErp()->GetResult();
 		return $resultado;
@@ -1587,7 +1587,7 @@ class Util extends ErrorLms
 
 	public function municipios($estado)
 	{
-		$sql = "SELECT * FROM municipalities WHERE cve_ent = '{$estado}' GROUP BY cve_mun ORDER BY nom_mun";
+		$sql = "SELECT * FROM sepomex WHERE id_estado = '{$estado}' GROUP BY id_municipio ORDER BY municipio";
 		$this->DBErp()->setQuery($sql);
 		$resultado = $this->DBErp()->GetResult();
 		return $resultado;
@@ -1595,7 +1595,7 @@ class Util extends ErrorLms
 
 	public function localidades($estado, $municipio)
 	{
-		$sql = "SELECT * FROM municipalities WHERE cve_ent = '{$estado}' AND cve_mun = {$municipio} GROUP BY nom_loc ORDER BY nom_loc ASC";
+		$sql = "SELECT * FROM sepomex WHERE id_estado = '{$estado}' AND id_municipio = {$municipio} GROUP BY id_localidad ORDER BY municipio";
 		$this->DBErp()->setQuery($sql);
 		$resultado = $this->DBErp()->GetResult();
 		return $resultado;
@@ -1665,5 +1665,42 @@ class Util extends ErrorLms
 		$encrypted = substr($data, $ivlen); // Extraer el texto cifrado
 
 		return openssl_decrypt($encrypted, $cipher, $key, 0, $iv);
+	}
+
+	public function validateFields($data, $rules, $messages = [])
+	{
+		$errors = [];
+
+		foreach ($rules as $field => $fieldRules) {
+			$value = $data[$field] ?? '';
+
+			foreach ($fieldRules as $rule => $param) {
+				// Mensajes personalizados o por defecto
+				$message = isset($messages[$field][$rule])
+					? $messages[$field][$rule]
+					: ([
+						'required' => "Por favor, no se olvide de poner {$field}.",
+						'email' => "Por favor, ingrese un correo electrónico válido.",
+						'min' => "El campo {$field} debe tener al menos {$param} caracteres.",
+						'max' => "El campo {$field} no debe superar los {$param} caracteres.",
+					][$rule] ?? "Error en el campo {$field}.");
+				// Validaciones
+				if ($rule === 'required' && empty($value)) {
+					$errors[$field] = $message;
+					break; // No validar más reglas si el campo es requerido y está vacío
+				}
+				if ($rule === 'email' && !empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+					$errors[$field] = $message;
+				}
+				if ($rule === 'min' && strlen($value) < $param) {
+					$errors[$field] = $message;
+				}
+				if ($rule === 'max' && strlen($value) > $param) {
+					$errors[$field] = $message;
+				}
+			}
+		}
+
+		return $errors;
 	}
 }

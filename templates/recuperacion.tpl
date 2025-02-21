@@ -21,7 +21,7 @@
                             <div class="auth-form-light text-left p-5">
                                 <div class="row d-flex justify-content-center">
                                     <div class="brand-logo">
-                                        <img src="{$WEB_ROOT}/images/logos/Logo_3.png" width="200px">
+                                        <img src="{$WEB_ROOT}/images/logos/logo-humanismo.webp" width="200px">
                                     </div>
                                     <h4>Recuperación de Datos de Acceso</h4>
                                     <h6 class="font-weight-light text-center">Ingresa el correo electrónico con el que te diste de alta, por ese medio te enviaremos tus datos de acceso.</h6>

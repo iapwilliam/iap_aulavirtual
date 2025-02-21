@@ -1,10 +1,10 @@
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <a class="navbar-brand brand-logo" href="{$WEB_ROOT}">
-            <img src="{$WEB_ROOT}/images/logos/Logo_3.png" alt="IAP Chiapas" class="img-fluid" />
+            <img src="{$WEB_ROOT}/images/logos/logo-humanismo.webp" alt="IAP Chiapas" class="img-fluid" />
         </a>
         <a class="navbar-brand brand-logo-mini" href="{$WEB_ROOT}">
-            <img src="{$WEB_ROOT}/images/logos/iconIap.png" alt="IAP Chiapas" class="img-fluid" />
+            <img src="{$WEB_ROOT}/images/logos/logo-humanismo-cuadrado.webp" alt="IAP Chiapas" class="img-fluid" />
         </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-stretch">

@@ -1211,6 +1211,8 @@ switch ($opcion) {
 		}
 		if ($email == '') {
 			$errors['email'] = "Por favor, no se olvide de poner el correo electrónico.";
+		} elseif (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			$errors['email'] = "Por favor, no se olvide de poner un correo electrónico válido.";
 		}
 		if ($phone == '') {
 			$errors['mobile'] = "Por favor, no se olvide de el número de celular.";
@@ -1410,6 +1412,52 @@ switch ($opcion) {
 			}
 		}
 		break;
+	case 'formAddStudent':
+		$estados = $student->EnumerateEstados();
+		$smarty->assign("estados", $estados);
+		echo json_encode([
+			'modal'	=> true,
+			'html'	=> $smarty->fetch(DOC_ROOT . "/templates/forms/new/add-student.tpl")
+		]);
+		break;
+	case 'addStudentAdmin':
+		$inputData = [
+			'nombre' 			=> strip_tags($_POST['nombre']),
+			'apellido_paterno' 	=> strip_tags($_POST['apellido_paterno']),
+			'apellido_materno' 	=> strip_tags($_POST['apellido_materno']),
+			'correo' 			=> $_POST['correo'],
+			'password' 			=> $_POST['password'],
+			'telefono' 			=> $_POST['telefono'],
+			'estado' 			=> intval($_POST['estado']),
+			'municipio' 		=> intval($_POST['municipio']),
+			'dependencia' 		=> intval($_POST['dependencia']),
+			'cargo' 			=> intval($_POST['cargo']),
+		];
+
+		$validationRules = [
+			'nombre' 			=> ['required' => true],
+			'apellido_paterno' 	=> ['required' => true],
+			'apellido_materno' 	=> ['required' => true],
+			'correo' 			=> ['required' => true, 'correo' => true],
+			'password' 			=> ['required' => true, 'min' => 6],
+			'telefono' 			=> ['required' => true, 'max' => 10],
+			'estado' 			=> ['required' => true],
+			'municipio' 		=> ['required' => true],
+			'dependencia' 		=> ['required' => true],
+			'cargo' 			=> ['required' => true],
+		];
+
+		$errors = $util->validateFields($inputData, $validationRules);
+
+		if (!empty($errors)) {
+			header('HTTP/1.1 422 Unprocessable Entity');
+			header('Content-Type: application/json; charset=UTF-8');
+			echo json_encode([
+				'errors'    => $errors
+			]);
+			exit;
+		}
+
 	default:
 		echo "Petición desconocida";
 		break;
