@@ -27,13 +27,6 @@
                     <label for="creditos">Créditos</label>
                     <input type="number" name="creditos" id="creditos" class="form-control" value="1" maxlength="2" />
                 </div>
-                <div class="col-md-2 form-group">
-                    <label for="tipo">¿Es parte de la currícula?</label>
-                    <select class="form-control" name="tipo" id="tipo">
-                        <option value="1">Sí</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
             </div>
             <div class="row">
                 <div class="form-group col-md-12">
