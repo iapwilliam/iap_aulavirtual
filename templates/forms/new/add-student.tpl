@@ -26,13 +26,18 @@
                 <span class="invalid-feedback"></span>
             </div>
             <div class="col-md-4 form-group">
+                <label>Contraseña<span class="text-danger">*</span></label>
+                <input class="form-control" id="password" name="password">
+                <span class="invalid-feedback"></span>
+            </div>
+            <div class="col-md-4 form-group">
                 <label>Teléfono<span class="text-danger">*</span></label>
                 <input class="form-control" id="telefono" name="telefono">
                 <span class="invalid-feedback"></span>
             </div>
             <div class="col-md-4 form-group">
                 <label>Estado<span class="text-danger">*</span></label>
-                <select class="form-control" id="estado" name="estado" onchange="ciudad_dependenciat();">
+                <select class="form-control" id="estado" name="estado" onchange="getMunicipios();">
                     <option value="">--Seleccione el estado--</option>
                     {foreach from=$estados item=item}
                         <option value="{$item.id_estado}">{$item.estado}</option>
@@ -42,12 +47,31 @@
             </div>
             <div class="col-md-4 form-group">
                 <label>Municipio<span class="text-danger">*</span></label>
-                <select class="form-control" id="municipio" name="municipio"></select>
+                <select class="form-control" id="municipio" name="municipio">
+                    <option value="">--Seleccione el municipio--</option>
+                </select>
                 <span class="invalid-feedback"></span>
             </div>
             <div class="col-md-4 form-group">
                 <label>Dependencia<span class="text-danger">*</span></label>
-                <select class="form-control" id="dependencia" name="dependencia"></select>
+                <select class="form-control" id="dependencia" name="dependencia">
+                    <option value="">--Seleccione una dependencia--</option>
+                    {foreach from=$dependencias item=item}
+                        <option value="{$item.id}">{$item.nombre}</option>
+                    {/foreach}
+                    <option value="otro">OTRO</option>
+                </select>
+                <span class="invalid-feedback"></span>
+            </div>
+            <div class="col-md-4 form-group d-none" id="opcion_otros">
+                <label>Otra dependencia<span class="text-danger">*</span></label>
+                <input class="form-control" id="otros" name="otros"
+                    placeholder="Escribe aquí el nombre de la dependencia...">
+                <span class="invalid-feedback"></span>
+            </div>
+            <div class="col-md-4 form-group">
+                <label>Área<span class="text-danger">*</span></label>
+                <input class="form-control" id="area" name="area">
                 <span class="invalid-feedback"></span>
             </div>
             <div class="col-md-4 form-group">

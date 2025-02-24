@@ -1414,24 +1414,40 @@ switch ($opcion) {
 		break;
 	case 'formAddStudent':
 		$estados = $student->EnumerateEstados();
+		$dependencias = $util->getDependencias();
 		$smarty->assign("estados", $estados);
+		$smarty->assign("dependencias", $dependencias);
 		echo json_encode([
 			'modal'	=> true,
 			'html'	=> $smarty->fetch(DOC_ROOT . "/templates/forms/new/add-student.tpl")
 		]);
 		break;
 	case 'addStudentAdmin':
+		$nombre =  strip_tags($_POST['nombre']);
+		$apellido_paterno = strip_tags($_POST['apellido_paterno']);
+		$apellido_materno = strip_tags($_POST['apellido_materno']);
+		$correo = $_POST['correo'];
+		$password = $_POST['password'];
+		$telefono = str_replace(" ", "", trim($_POST['telefono']));
+		$estado = intval($_POST['estado']);
+		$municipio = intval($_POST['municipio']);
+		$dependencia = $_POST['dependencia'];
+		$cargo = strip_tags($_POST['cargo']);
+		$otros = strip_tags($_POST['otros']);
+		$area = strip_tags($_POST['area']);
 		$inputData = [
-			'nombre' 			=> strip_tags($_POST['nombre']),
-			'apellido_paterno' 	=> strip_tags($_POST['apellido_paterno']),
-			'apellido_materno' 	=> strip_tags($_POST['apellido_materno']),
-			'correo' 			=> $_POST['correo'],
-			'password' 			=> $_POST['password'],
-			'telefono' 			=> $_POST['telefono'],
-			'estado' 			=> intval($_POST['estado']),
-			'municipio' 		=> intval($_POST['municipio']),
-			'dependencia' 		=> intval($_POST['dependencia']),
-			'cargo' 			=> intval($_POST['cargo']),
+			'nombre' 			=> $nombre,
+			'apellido_paterno' 	=> $apellido_paterno,
+			'apellido_materno' 	=> $apellido_materno,
+			'correo' 			=> $correo,
+			'password' 			=> $password,
+			'telefono' 			=> $telefono,
+			'estado' 			=> $estado,
+			'municipio' 		=> $municipio,
+			'dependencia' 		=> $dependencia,
+			'cargo' 			=> $cargo,
+			'otros'				=> $otros,
+			'area'				=> $area
 		];
 
 		$validationRules = [
@@ -1445,6 +1461,8 @@ switch ($opcion) {
 			'municipio' 		=> ['required' => true],
 			'dependencia' 		=> ['required' => true],
 			'cargo' 			=> ['required' => true],
+			'otros'				=> ['required_if' => ['dependencia', 'otro']],
+			'area'				=> ['required' => true]
 		];
 
 		$errors = $util->validateFields($inputData, $validationRules);
@@ -1458,6 +1476,49 @@ switch ($opcion) {
 			exit;
 		}
 
+		$student->setName($nombre);
+		$student->setLastNamePaterno($apellido_paterno);
+		$student->setLastNameMaterno($apellido_materno);
+		$student->setEmail($correo);
+		$student->setPassword($password);
+		$student->setPhone($telefono);
+		$student->setControlNumber();
+		if ($dependencia != "otro") {
+			$where = "AND id = {$dependencia}";
+			$dataDependencia = $util->getDependencias($where);
+			$dependencia = $dataDependencia['nombre'];
+		} else {
+			$dependencia = $otros;
+		}
+		$student->setWorkplace($dependencia);
+		$student->setWorkplacePosition($cargo);
+		$student->setState($estado);
+		$student->setCity($municipio);
+		$student->setWorkplaceArea($area);
+		$response = $student->save();
+		if ($response['status']) {
+			$student->setUserId($response['status']);
+			$activeCourses = $course->getCourses("AND course.finalDate >= NOW()");
+			$smarty->assign('activeCourses', $activeCourses);
+			$activeCoursesStudent = $student->getCourses("AND user_subject.alumnoId = {$response['status']}");
+			$smarty->assign("activeCourseStudent", $activeCoursesStudent);
+			$smarty->assign("student", $response['status']);
+
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'success',
+				'message'	=> 'Se ha dado de alta al usuario, ya puedes añadirlo a una currícula',
+				'modal'	=> true,
+				'html'	=> $smarty->fetch(DOC_ROOT . "/templates/new/student-curricula.tpl")
+			]);
+		} else {
+			echo json_encode([
+				'growl'		=> true,
+				'type'		=> 'danger',
+				'message'	=> $response['message'],
+			]);
+		}
+		break;
 	default:
 		echo "Petición desconocida";
 		break;

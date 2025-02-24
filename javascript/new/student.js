@@ -287,18 +287,29 @@ $("#datatable").DataTable({
 	]
 });
 
-function ciudad_dependenciat() {
-	var estadoId = $("#estadot").val();
+function getMunicipios() {
+	var estado = $("#estado").val();
 	$.ajax({
 		url: WEB_ROOT + '/ajax/new/dependencia-ciudadest.php',
 		type: "POST",
-		data: { type: "loadCities", estadoId: estadoId },
+		data: { type: "getMunicipios", estado: estado },
 		success: function (data) {
-			var splitResponse = data.split("[#]");
-			$('#Citypositiont').html(splitResponse[0]);
+			let response = JSON.parse(data);
+			$("#municipio").html("<option value=''>--Seleccione el municipio--</option>");
+			response.municipios.forEach(element => {
+				$("#municipio").append("<option value='" + element.id_municipio + "'>" + element.municipio + "</option>");
+			});
 		},
 		error: function () {
 			alert('Algo salio mal, compruebe su conexión a internet');
 		}
 	});
 }
+
+$("body").on("change", "#dependencia", function () {
+	if ($(this).val() == 'otro') {
+		$("#opcion_otros").removeClass("d-none");
+	} else {
+		$("#opcion_otros").addClass("d-none");
+	}
+});
