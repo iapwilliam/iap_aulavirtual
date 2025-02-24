@@ -90,20 +90,24 @@ class Module extends Course
 		$this->creditos = $value;
 	}
 
+	private $deleted_at;
+	public function setDeleted()
+	{
+		$this->deleted_at = date('Y-m-d H:m:s');
+	}
+
+	public function getDeleted()
+	{
+		return $this->deleted_at;
+	}
+
 	public function EnumerateById($id = null)
 	{
 		$this->Util()->DB()->setQuery("
 				SELECT * FROM subject_module
-				WHERE subjectId = '" . $id . "'
+				WHERE subjectId = '" . $id . "' AND deleted_at IS NULL
 				ORDER BY subject_module.semesterId ASC, subject_module.name ASC");
 		$result = $this->Util()->DB()->GetResult();
-		/*foreach($result as $key => $res)
-			{
-					
-				$this->Util()->DB()->setQuery("
-				SELECT COUNT(*) FROM subjectModule WHERE subjectId ='".$res["subjectId"]."'");
-				$result[$key]["modules"] = $this->Util()->DB()->GetSingle();
-			}*/
 		return $result;
 	}
 
@@ -172,22 +176,11 @@ class Module extends Course
 		return $result;
 	}
 
-	public function Info($id = null)
+	public function Info()
 	{
-		//creamos la cadena de seleccion
-		$sql = "SELECT 
-						* 
-					FROM
-						subject_module
-					WHERE
-							subjectModuleId='" . $this->subjectModuleId . "'";
-		//configuramos la consulta con la cadena de actualizacion
+		$sql = "SELECT * FROM subject_module WHERE subjectModuleId='" . $this->subjectModuleId . "'";
 		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y obtenemos el resultado
 		$result = $this->Util()->DB()->GetRow();
-		if ($result)
-			$result = $this->Util->EncodeRow($result);
-
 		return $result;
 	}
 
@@ -228,13 +221,13 @@ class Module extends Course
 					LEFT JOIN subject_module ON course_module.subjectModuleId = subject_module.subjectModuleId
 					LEFT JOIN	subject ON subject.subjectId = subject_module.subjectId	
 					LEFT JOIN	major ON major.majorId = subject.tipo	
-					WHERE courseModuleId='" . $this->courseModuleId . "'"; 
-		$this->Util()->DB()->setQuery($sql); 
-		$result = $this->Util()->DB()->GetRow(); 
-		$explodedInitialDate = explode("-", $result["initialDate"]); 
-		$date = mktime(0, 0, 0, $explodedInitialDate[1], $explodedInitialDate[2], intval($explodedInitialDate[0])); 
-		$result["name"] = $result["name"]; 
-		$result["week"] = date('W', $date); 
+					WHERE courseModuleId='" . $this->courseModuleId . "'";
+		$this->Util()->DB()->setQuery($sql);
+		$result = $this->Util()->DB()->GetRow();
+		$explodedInitialDate = explode("-", $result["initialDate"]);
+		$date = mktime(0, 0, 0, $explodedInitialDate[1], $explodedInitialDate[2], intval($explodedInitialDate[0]));
+		$result["name"] = $result["name"];
+		$result["week"] = date('W', $date);
 		$result["initialDate"] = $this->Util()->FormatDateBack($result["initialDate"]);
 		$result["finalDate"] = $this->Util()->FormatDateBack($result["finalDate"]);
 		$result["fechaContrato"] = $this->Util()->FormatDateBack($result["fechaContrato"]);
@@ -248,53 +241,7 @@ class Module extends Course
 		$result["methodologyDecoded"] = html_entity_decode($result["methodology"]);
 		$result["politicsDecoded"] = html_entity_decode($result["politics"]);
 		$result["evaluationDecoded"] = html_entity_decode($result["evaluation"]);
-		$result["bibliographyDecoded"] = html_entity_decode($result["bibliography"]);  
-		return $result;
-	}
-
-	public function Update($id = null)
-	{
-		if ($this->Util()->PrintErrors()) {
-			// si hay errores regresa false
-			return false;
-		}
-		//si no hay errores
-		//creamos la cadena de actualizacion
-		$sql = "UPDATE 
-						subject_module
-					SET
-						clave='" 	. $this->getClave() . "', 
-						name='" 	. $this->getName() . "',
-						welcomeText='" 	. $this->getWelcomeText() . "',
-						introduction='" 	. $this->getIntroduction() . "',
-						intentions='" 	. $this->getIntentions() . "',
-						objectives='" 	. $this->getObjectives() . "',
-						themes='" 	. $this->getThemes() . "',
-						scheme='" 	. $this->getScheme() . "',
-						methodology='" 	. $this->getMethodology() . "',
-						politics='" 	. $this->getPolitics() . "',
-						semesterId='" 	. $this->getSemesterId() . "',
-						evaluation='" 	. $this->getEvaluation() . "',
-						bibliography='" 	. $this->getBibliography() . "',
-						cost='" 	. $this->getCost() . "',
-						credits = '" . $this->creditos . "',
-						tipo = '" . $this->tipo . "'
-						WHERE 	subjectModuleId='" . $this->subjectModuleId . "'";
-		//configuramos la consulta con la cadena de actualizacion
-		$this->Util()->DB()->setQuery($sql);
-		//ejecutamos la consulta y guardamos el resultado, que sera el numero de columnas afectadas
-		$this->Util()->DB()->UpdateData();
-		$result = 1;
-		if ($result > 0) {
-			//si el resultado es mayor a cero, se actualizo el registro con exito
-			$result = true;
-			$this->Util()->setError(90002, 'complete', 'El curso se ha actualizado correctamente');
-		} else {
-			//si el resultado es cero, no se pudo modificar el registro...se regresa false
-			$result = false;
-			$this->Util()->setError(90011, 'error', "No se pudo modificar el curso");
-		}
-		$this->Util()->PrintErrors();
+		$result["bibliographyDecoded"] = html_entity_decode($result["bibliography"]);
 		return $result;
 	}
 
@@ -850,9 +797,9 @@ class Module extends Course
 		$row = $this->Util()->DB()->GetRow();
 		if ($row['estatus'] == "eliminado") {
 			$sql = "UPDATE chat SET deleted_at = NOW() WHERE chatId = '" . $chatId . "'";
-		}else{
-			$sql = "UPDATE chat SET estatus='eliminado', updated_at = NOW() WHERE chatId = '" . $chatId . "'" ;
-		} 
+		} else {
+			$sql = "UPDATE chat SET estatus='eliminado', updated_at = NOW() WHERE chatId = '" . $chatId . "'";
+		}
 		$this->Util()->DB()->setQuery($sql);
 		$this->Util()->DB()->UpdateData();
 
@@ -870,22 +817,6 @@ class Module extends Course
 		$this->Util()->DB()->UpdateData();
 
 		return true;
-	}
-
-
-
-	public function materiaActivas($chatId)
-	{
-		// $sql = "SELECT 
-		// *
-		// FROM
-		// course_module
-		// WHERE
-		// chatId = ".$chatId."";
-		// $this->Util()->DB()->setQuery($sql);
-		// $result = $this->Util()->DB()->GetRow();
-
-		// return ;
 	}
 
 	public function actualizaALeido($chatId)
@@ -1105,5 +1036,30 @@ class Module extends Course
 		$this->Util()->DB()->setQuery($sql);
 		$total = $this->Util()->DB()->GetSingle();
 		return $total;
+	}
+
+	function update()
+	{
+		$fields = [
+			'clave' 		=> $this->getClave(),
+			'name'			=> $this->getName(),
+			'welcomeText'	=> $this->getWelcomeText(),
+			'introduction'	=> $this->getIntroduction(),
+			'intentions'	=> $this->getIntentions(),
+			'objectives'	=> $this->getObjectives(),
+			'themes'		=> $this->getThemes(),
+			'scheme'		=> $this->getScheme(),
+			'methodology'	=> $this->getMethodology(),
+			'politics'		=> $this->getPolitics(),
+			'evaluation'	=> $this->getEvaluation(),
+			'bibliography'	=> $this->getBibliography(),
+			'deleted_at'	=> $this->getDeleted()
+		];
+		$updateQuery = $this->Util()->DB()->generateUpdateQuery($fields);
+		$sql = "UPDATE subject_module SET $updateQuery WHERE subjectModuleId = {$this->getSubjectModuleId()}";
+		$this->Util()->DB()->setQuery($sql);
+		$this->Util()->DB()->UpdateData();
+		$resultado['status'] = true;
+		return $resultado;
 	}
 }

@@ -1438,7 +1438,7 @@ class Subject extends Main
 			array('db' => 'major.name', 		'dt' => 'tipo'),
 			array('db' => 'subject.clave',		'dt' => 'clave'),
 			array('db' => 'subject.name',  		'dt' => 'nombre'),
-			array('db' => '(SELECT COUNT(*) FROM subject_module WHERE subjectId = subject.subjectId)',  'dt' => 'modulos'),
+			array('db' => '(SELECT COUNT(*) FROM subject_module WHERE subjectId = subject.subjectId AND deleted_at IS NULL)',  'dt' => 'modulos'),
 			array(
 				'db' => 'subjectId', 'dt' => 'acciones',
 				'formatter' => function ($d, $row) {
@@ -1463,8 +1463,7 @@ class Subject extends Main
 						</a>";
 				}
 			)
-		);
-
+		); 
 		return SSP::complex($_POST, $table, $primaryKey, $columns);
 	}
 
