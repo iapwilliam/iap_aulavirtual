@@ -20080,5 +20080,9 @@ dl li {
   background-color: #5b5d61;
   padding: 10px;
   border-radius: 10px;
-  color: #fff; 
+  color: #fff;
+}
+
+.card-body.iframe iframe {
+  width: 100%;
 }
