@@ -19248,7 +19248,7 @@ dl li {
   -ms-transition: width 0.25s ease, background 0.25s ease;
 }
 
-.sidebar .nav {
+.sidebar>.nav {
   overflow: hidden;
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
