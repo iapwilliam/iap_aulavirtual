@@ -19237,7 +19237,7 @@ dl li {
 .sidebar {
   background-image: url("../../../images/OIP.jpg");
   min-height: calc(100vh - 70px);
-  background: #30835cc9;
+  background-color: #30835cc9;
   font-family: 'Lato', sans-serif;
   padding: 0;
   width: 260px;
