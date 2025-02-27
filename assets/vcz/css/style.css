@@ -19257,6 +19257,7 @@ dl li {
   -ms-flex-direction: column;
   flex-direction: column;
   margin-bottom: 60px;
+  background-color: #30835cd4;
 }
 
 .sidebar .nav .nav-item {
