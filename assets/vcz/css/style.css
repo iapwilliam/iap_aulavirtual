@@ -18634,7 +18634,7 @@ dl li {
 /* Navbar */
 .navbar {
   font-family: 'Lato', sans-serif;
-  background: #73B760;
+  background: #30835c;
   transition: background 0.25s ease;
   -webkit-transition: background 0.25s ease;
   -moz-transition: background 0.25s ease;
@@ -19235,6 +19235,7 @@ dl li {
 
 /* Sidebar */
 .sidebar {
+  background-image: url("https://th.bing.com/th/id/OIP.3-PH9cOxTHqEFqUsgMu9zwHaHa?rs=1&pid=ImgDetMain");
   min-height: calc(100vh - 70px);
   background: #73B760;
   font-family: 'Lato', sans-serif;
