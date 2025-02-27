@@ -19235,9 +19235,9 @@ dl li {
 
 /* Sidebar */
 .sidebar {
-  background-image: url("https://th.bing.com/th/id/OIP.3-PH9cOxTHqEFqUsgMu9zwHaHa?rs=1&pid=ImgDetMain");
+  background-image: url("../../../images/OIP.jpg");
   min-height: calc(100vh - 70px);
-  background: #73B760;
+  background: #30835cc9;
   font-family: 'Lato', sans-serif;
   padding: 0;
   width: 260px;
