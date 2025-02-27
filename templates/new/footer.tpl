@@ -4,7 +4,8 @@
             {$smarty.now|date_format:"%Y"} &copy; Instituto de Administraci&oacute;n P&uacute;blica del Estado de
             Chiapas, A.C.
         </span>
-        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Desarrollo Tecnológico</span>
+        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Departamento de Desarrollo de
+            Sistemas - Dirección de Innovación Tecnológica</span>
     </div>
 </footer>
 

@@ -55,12 +55,12 @@
                                                 </div>
                                                 <div class="col-md-8 text-center">
                                                     {if $subject.icon eq ''}
-                                                        <img src="{$WEB_ROOT}/images/logos/Logo_3.png" alt="IAP Chiapas"
+                                                        <img src="{$WEB_ROOT}/images/logos/logo-humanismo.webp" alt="IAP Chiapas"
                                                             style="width: 250px !important; height: auto !important; border-radius: 0 !important;" />
                                                     {else}
                                                         <img src="{$WEB_ROOT}/images/new/modulos/{$subject.icon}" alt="IAP Chiapas"
                                                             style="width: 300px !important; height: auto !important; border-radius: 0 !important;">
-                                                    {/if}<br /> 
+                                                    {/if}<br />
                                                     {* INGRESAR AL MODULO *}
                                                     {if $User.type == "student"}
                                                         {if  $timestamp < $subject.initialDateStamp}
