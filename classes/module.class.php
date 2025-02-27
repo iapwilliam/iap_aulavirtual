@@ -678,7 +678,7 @@ class Module extends Course
 
 	public function EnumerateInbox()
 	{
-		$filtro = "AND deleted_at IS NULL";
+		$filtro = "AND chat.deleted_at IS NULL";
 		if ($this->statusIn) {
 			$filtro .= " and c.estatus = '" . $this->statusIn . "'";
 		}
@@ -750,7 +750,6 @@ class Module extends Course
 					WHERE
 						1 " . $filtro . " order by chatId DESC";
 		}
-		// echo $sql;
 		$this->Util()->DB()->setQuery($sql);
 		$result = $this->Util()->DB()->GetResult();
 
