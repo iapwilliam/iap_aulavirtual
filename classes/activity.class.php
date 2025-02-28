@@ -1053,7 +1053,7 @@ class Activity extends Module
 			array('db' => 'homework.path',  		'dt' => 'tarea', 'formatter' => function ($db, $row) {
 				$html = "";
 				if ($row['tarea'] != "") {
-					$html .= "<a href='" . WEB_ROOT . "/download.php?file=homework/" . $row['tarea'] . "'>";
+					$html .= "<a target='_blank' href='" . WEB_ROOT . "/download.php?file=homework/" . $row['tarea'] . "'>";
 					$html .= $row['nombre'] != "" ? $row['nombre'] : "Tarea";
 					$html .= "</a>";
 					$User = $_SESSION['User'];
