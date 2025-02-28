@@ -772,6 +772,7 @@ switch ($_POST["type"]) {
 
 			$email = $dataStudent['email'];
 			$nombre = $dataStudent['names'] . " " . $dataStudent['lastNamePaterno'] . " " . $dataStudent['lastNameMaterno'];
+			$password = $dataStudent['password'];
 			$sendmail = new SendMail;
 			$details_body = array(
 				"email" => $dataStudent["controlNumber"],

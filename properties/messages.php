@@ -42,7 +42,9 @@ $message[3]["body"] = "
 	
 	Tu datos para ingresar al sistema son los siguientes
 	<b>Usuario:</b> |email|
-	<b>Contrase&ntilde;a del Sistema:</b>	|password|";
+	<b>Contrase&ntilde;a del Sistema:</b>	|password|
+	<b>Sitio:<a href='https://aulavirtual.iapchiapas.edu.mx/'>https://aulavirtual.iapchiapas.edu.mx/</a></b>
+	";
 
 
 $message[4]["subject"] = "Boleta de Calificaciones Disponible | Instituto de Administración Pública del Estado de Chiapas";
