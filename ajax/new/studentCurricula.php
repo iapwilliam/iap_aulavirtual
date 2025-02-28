@@ -3,12 +3,9 @@
 include_once('../../init.php');
 include_once('../../config.php');
 include_once(DOC_ROOT . '/libraries.php');
+include_once(DOC_ROOT . '/properties/messages.php');
 
 session_start();
-// echo 'lled';
-// echo '<pre>'; print_r($_SESSION['User']);
-// echo '<pre>'; print_r($_POST);
-// exit;
 switch ($_POST["type"]) {
 	case "Student":
 
@@ -769,7 +766,24 @@ switch ($_POST["type"]) {
 			$student->setUserId($studentId);
 			$student->setFoto("{}");
 			$student->addUserCourse();
+			$dataStudent = $student->GetInfo();
+
 			$dataCourse = $student->getCourses("AND user_subject.courseId = {$courseId} AND user_subject.alumnoId = {$studentId}");
+
+			$email = $dataCourse['email'];
+			$nombre = $dataStudent['names'] . " " . $dataStudent['lastNamePaterno'] . " " . $dataStudent['lastNameMaterno'];
+			$sendmail = new SendMail;
+			$details_body = array(
+				"email" => $dataStudent["controlNumber"],
+				"password" => $password,
+				"module" => $dataCourse['major_name'][0] . " - " . $dataCourse['subject_name'][0]
+			);
+			$details_subject = array();
+			$attachment = array();
+			$fileName = array();
+			$sendmail->Prepare($message[3]["subject"], $message[3]["body"], $details_body, $details_subject, $email, $nombre);
+
+
 			$student->setSubjectId($dataCourse[0]['subjectId']);
 			$student->AddAcademicHistory('alta', 'A', 1);
 			$activeCoursesStudent = $student->getCourses("AND user_subject.alumnoId = {$studentId}");

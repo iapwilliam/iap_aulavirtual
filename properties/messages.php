@@ -42,12 +42,7 @@ $message[3]["body"] = "
 	
 	Tu datos para ingresar al sistema son los siguientes
 	<b>Usuario:</b> |email|
-	<b>Contrase&ntilde;a del Sistema:</b>	|password|
-
-	Nota:
-	
-	Para mejor la experiencia de navegación en nuestro Sistema de Educación en Línea, te recomendamos utilizar el navegador Chrome así como también consultar el manual del alumno que se encuentra disponible en el siguiente enlace:
-	<a href='https://iapchiapas.edu.mx/manual_alumno.pdf'>www.iapchiapas.edu.mx/manual_alumno.pdf</a>";
+	<b>Contrase&ntilde;a del Sistema:</b>	|password|";
 
 
 $message[4]["subject"] = "Boleta de Calificaciones Disponible | Instituto de Administración Pública del Estado de Chiapas";

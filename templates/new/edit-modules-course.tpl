@@ -8,13 +8,6 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Acciones
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item"
-                    href="{$WEB_ROOT}/graybox.php?page=add-calificacion&id={$myModule.courseModuleId}&auxTpl=admin"
-                    data-target="#ajax" data-toggle="modal">
-                    <i class="fas fa-graduation-cap"></i> Acta de Calificaciones
-                </a>
-            </div>
         </div>
     </div>
     <div class="card-body">
