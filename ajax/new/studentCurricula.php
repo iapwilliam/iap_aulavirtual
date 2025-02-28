@@ -770,7 +770,7 @@ switch ($_POST["type"]) {
 
 			$dataCourse = $student->getCourses("AND user_subject.courseId = {$courseId} AND user_subject.alumnoId = {$studentId}");
 
-			$email = $dataCourse['email'];
+			$email = $dataStudent['email'];
 			$nombre = $dataStudent['names'] . " " . $dataStudent['lastNamePaterno'] . " " . $dataStudent['lastNameMaterno'];
 			$sendmail = new SendMail;
 			$details_body = array(
