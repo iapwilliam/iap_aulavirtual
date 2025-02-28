@@ -55,7 +55,7 @@
                     <div class="form-group col-md-4">
                         <label for="estadot">Estado:</label>
                         <div id="Statepositiont">
-                            <select id="estadot" name="estadot" onChange="ciudad_dependenciat();" class="form-control">
+                            <select id="estado" name="estadot" onChange="getMunicipios();" class="form-control">
                                 <option value="">Selecciona tu Estado</option>
                                 {foreach from=$estados item=estado}
                                     <option value="{$estado.id_estado}">
@@ -67,18 +67,16 @@
                         </div>
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="ciudadt"> Municipio:</label>
-                        <div id="Citypositiont">
-                            <select id="ciudadt" name="ciudadt" class="form-control">
-                                <option value="0">Selecciona tu Ciudad</option>
-                            </select>
-                        </div>
+                        <label for="municipio"> Municipio:</label>
+                        <select id="municipio" name="ciudadt" class="form-control">
+                            <option value="0">Selecciona tu Ciudad</option>
+                        </select>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="curricula">Prográma académico</label>
                         <select name="curricula" id="curricula" class="form-control">
                             <option value="">--Selecciona el programa académico al que te quieres
-                            registrar--</option>
+                                registrar--</option>
                             {foreach from=$activeCourses item=item}
                                 <option value="{$item.courseId}">{$item.major_name} - {$item.subject_name} -
                                     {$item.group}

@@ -1,57 +1,50 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
-    $('#btnAddStudent').click(function() {
+    $('#btnAddStudent').click(function () {
         AddStudentRegister();
     });
 
-    $("#pais").change(function(){ estado_dependencia();});
-    $("#estado").change(function(){ ciudad_dependencia();});
-    $("#paist").change(function(){ estado_dependenciat();});
-    $("#estadot").change(function(){ ciudad_dependenciat();});
+    $("#pais").change(function () { estado_dependencia(); });
+    $("#estado").change(function () { ciudad_dependencia(); });
+    $("#paist").change(function () { estado_dependenciat(); });
+    $("#estadot").change(function () { ciudad_dependenciat(); });
 });
 
 
-function LoadCities()
-{
+function LoadCities() {
     var idState = $("stateId").value;
 
 
 
 }
 //combo lugar de trabajo
-function estado_dependenciat()
-{
+function estado_dependenciat() {
     var paisId = $("#paist").val();
     $.ajax({
-        url : WEB_ROOT+'/ajax/new/dependencia-estadot.php',
+        url: WEB_ROOT + '/ajax/new/dependencia-estadot.php',
         type: "POST",
-        data : {type: "loadCities",  paisId: paisId},
-        success: function(data)
-        {
+        data: { type: "loadCities", paisId: paisId },
+        success: function (data) {
             var splitResponse = data.split("[#]");
             $('#Statepositiont').html(splitResponse[0]);
         },
-        error: function ()
-        {
+        error: function () {
             alert('Algo salio mal, compruebe su conexión a internet');
         }
     });
 }
 
-function ciudad_dependenciat()
-{
+function ciudad_dependenciat() {
     var estadoId = $("#estadot").val();
     $.ajax({
-        url : WEB_ROOT+'/ajax/new/dependencia-ciudadest.php',
+        url: WEB_ROOT + '/ajax/new/dependencia-ciudadest.php',
         type: "POST",
-        data : {type: "loadCities",  estadoId: estadoId},
-        success: function(data)
-        {
+        data: { type: "loadCities", estadoId: estadoId },
+        success: function (data) {
             var splitResponse = data.split("[#]");
             $('#Citypositiont').html(splitResponse[0]);
         },
-        error: function ()
-        {
+        error: function () {
             alert('Algo salio mal, compruebe su conexión a internet');
         }
     });
@@ -64,98 +57,108 @@ function ciudad_dependenciat()
 
 
 ////////// combox de usurio
-function estado_dependencia()
-{
+function estado_dependencia() {
     var paisId = $("#pais").val();
     $.ajax({
-        url : WEB_ROOT+'/ajax/new/dependencia-estado.php',
+        url: WEB_ROOT + '/ajax/new/dependencia-estado.php',
         type: "POST",
-        data : {type: "loadCities",  paisId: paisId},
-        success: function(data)
-        {
+        data: { type: "loadCities", paisId: paisId },
+        success: function (data) {
             var splitResponse = data.split("[#]");
             $('#Stateposition').html(splitResponse[0]);
         },
-        error: function ()
-        {
+        error: function () {
             alert('Algo salio mal, compruebe su conexión a internet');
         }
     });
 }
 
-function ciudad_dependencia()
-{
+function ciudad_dependencia() {
     var estadoId = $("#estado").val();
     $.ajax({
-        url : WEB_ROOT+'/ajax/new/dependencia-ciudades.php',
+        url: WEB_ROOT + '/ajax/new/dependencia-ciudades.php',
         type: "POST",
-        data : {type: "loadCities",  estadoId: estadoId},
-        success: function(data)
-        {
+        data: { type: "loadCities", estadoId: estadoId },
+        success: function (data) {
             var splitResponse = data.split("[#]");
             $('#Cityposition').html(splitResponse[0]);
         },
-        error: function ()
-        {
+        error: function () {
             alert('Algo salio mal, compruebe su conexión a internet');
         }
     });
 }
 
 
-function AddStudentRegister()
-{
+function AddStudentRegister() {
     //alert("hola");
     $.ajax({
-        url : WEB_ROOT+'/ajax/student.php',
+        url: WEB_ROOT + '/ajax/student.php',
         type: "POST",
-        data :  $('#addStudentForm').serialize(),
-		beforeSend: function(){		
-			$("#addStudent").hide();
-			$("#loader").html(LOADER3);
-		},
-        success: function(data)
-        {
-			$("#loader").html('');
-			 var splitResponse = data.split("[#]");
-			if($.trim(splitResponse[0]) == "ok"){
-				ShowStatus($(splitResponse[1]));
-				CloseFview();
+        data: $('#addStudentForm').serialize(),
+        beforeSend: function () {
+            $("#addStudent").hide();
+            $("#loader").html(LOADER3);
+        },
+        success: function (data) {
+            $("#loader").html('');
+            var splitResponse = data.split("[#]");
+            if ($.trim(splitResponse[0]) == "ok") {
+                ShowStatus($(splitResponse[1]));
+                CloseFview();
                 $('#tblContent').html(splitResponse[2]);
-				setTimeout("recargarPage()",5000);
-			}else{
-				$("#addStudent").show();
-				ShowStatusPopUp($(splitResponse[1]));
-			}	
-			// $("#loader").html('');
+                setTimeout("recargarPage()", 5000);
+            } else {
+                $("#addStudent").show();
+                ShowStatusPopUp($(splitResponse[1]));
+            }
+            // $("#loader").html('');
             // var splitResponse = data.split("[#]");
             // if(splitResponse[0] == "fail")
             // {
-                // ShowStatusPopUp($(splitResponse[1]));
+            // ShowStatusPopUp($(splitResponse[1]));
             // }
             // else
             // {
-                // ShowStatus($(splitResponse[1]));
-				// CloseFview();
-                // $('#tblContent').html(splitResponse[2]);
-				// setTimeout("recargarPage()",5000);
+            // ShowStatus($(splitResponse[1]));
+            // CloseFview();
+            // $('#tblContent').html(splitResponse[2]);
+            // setTimeout("recargarPage()",5000);
 
-				
+
             // }
         },
         // error: function ()
         // {
-            // alert('En breve recibirás un correo con la confirmación de tu registro, favor de verificar en tu bandeja de correo no deseado');
+        // alert('En breve recibirás un correo con la confirmación de tu registro, favor de verificar en tu bandeja de correo no deseado');
         // }
     });
 
 
 }
 
-function recargarPage()
-{
-	WEB_ROOTDoc = WEB_ROOT+'/login';
-	$(location).attr('href',WEB_ROOTDoc);
+function recargarPage() {
+    WEB_ROOTDoc = WEB_ROOT + '/login';
+    $(location).attr('href', WEB_ROOTDoc);
+}
+
+function getMunicipios() {
+    var estado = $("#estado").val();
+    $.ajax({
+        url: WEB_ROOT + '/ajax/new/dependencia-ciudadest.php',
+        type: "POST",
+        data: { type: "getMunicipios", estado: estado },
+        success: function (data) {
+            let response = JSON.parse(data);
+            $("#municipio").html("<option value=''>--Seleccione el municipio--</option>");
+            response.municipios.forEach(element => {
+                $("#municipio").append("<option value='" + element.id_municipio + "'>" + element.municipio + "</option>");
+            });
+        },
+        error: function () {
+            alert('Algo salio mal, compruebe su conexión a internet');
+        }
+    });
 }
 
 

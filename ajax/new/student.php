@@ -236,6 +236,7 @@ switch ($opcion) {
 		$student->setWorkplacePosition($_POST['workplacePosition']);
 		$student->setState($state);
 		$student->setCity($city);
+		$student->setFoto("{}");
 		$response = $student->save();
 		if ($response['status']) {
 			$details_body = array(
