@@ -777,7 +777,7 @@ switch ($_POST["type"]) {
 			$details_body = array(
 				"email" => $dataStudent["controlNumber"],
 				"password" => $password,
-				"module" => $dataCourse['major_name'][0] . " - " . $dataCourse['subject_name'][0]
+				"module" => $dataCourse[0]['major_name'] . " - " . $dataCourse[0]['subject_name']
 			);
 			$details_subject = array();
 			$attachment = array();
