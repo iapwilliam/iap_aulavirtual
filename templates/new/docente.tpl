@@ -15,8 +15,10 @@
     </nav>
 </div>
 <div class="row">
-    <div class="col-md-2">
-        {include file="new/student-menu.tpl"}
+    <div class="col-md-3">
+        <div id="sidebarStudent">
+            {include file="new/student-menu.tpl"}
+        </div>
     </div>
     <div class="col-md-9">
         <div class="row">

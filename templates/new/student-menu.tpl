@@ -7,7 +7,7 @@
     {*<div class="card-header text-center">
         {$User['nombreCompleto']}
     </div>*}
-    <ul class="list-group list-group-flush bg-gradient-iap">
+    <ul class="list-group list-group-flush">
         <a href="{$WEB_ROOT}" class="list-group-item list-group-item-action text-white">
             <b>Menú Principal <i class="fas fa-th-large float-right"></i></b>
         </a>
