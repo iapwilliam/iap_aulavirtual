@@ -1,69 +1,70 @@
 <?php
-	if($_POST)
-	{
-		$module->setSubjectModuleId($_GET['id']);
-		$module->setSubjectId($_POST['subjectId']);
-		$module->setClave(strtoupper($_POST['frmClave']));
-		$module->setName(strtoupper($_POST['frmName']));
-		$module->setWelcomeText($_POST['welcomeText']);
-		$module->setIntroduction($_POST['introduction']);
-		$module->setIntentions($_POST['intentions']);
-		$module->setObjectives($_POST['objectives']);
-		$module->setThemes($_POST['themes']);
-		$module->setScheme($_POST['scheme']);
-		$module->setMethodology($_POST['methodology']);
-		$module->setPolitics($_POST['politics']);
-		$module->setEvaluation($_POST['evaluation']);
-		$module->setBibliography($_POST['bibliography']);
-		$module->setSemesterId($_POST['semesterId']);
-		$module->setCreditos($_POST['creditos']);
-		$module->setTipo($_POST['tipo']);
-		$module->Update();
-		$url = WEB_ROOT . "/edit-modules-course/id/{$_POST['curso']}";
-		if($_POST['urlBack']){
-			$url = $_POST['urlBack'];
-		}
+if ($_POST) {
+	$moduleId = $_POST['module'];
+	$subjectModuleId = $_POST['subjectModule'];
+	$name = strip_tags($_POST['name']);
+	$code = strip_tags($_POST['code']);
+	$semesterId = intval($_POST['semesterId']);
+	$welcomeText = strip_tags($_POST['welcomeText']);
+	$introduction = strip_tags($_POST['introduction']);
+	$intentions = strip_tags($_POST['intentions']);
+	$objectives = strip_tags($_POST['objectives']);
+	$methodology = strip_tags($_POST['methodology']);
+	$politics = strip_tags($_POST['politics']);
+	$themes = strip_tags($_POST['themes']);
+	$scheme = strip_tags($_POST['scheme']);
+	$evaluation = strip_tags($_POST['evaluation']);
+	$bibliography = strip_tags($_POST['bibliography']);
+	if (empty($name)) {
+		$errors['name'] = "No se olvide de poner el nombre.";
+	}
+	if (empty($code)) {
+		$errors['code'] = "No se olvide de poner la clave.";
+	}
+	if (!empty($errors)) {
+		header('HTTP/1.1 422 Unprocessable Entity');
+		header('Content-Type: application/json; charset=UTF-8');
 		echo json_encode([
-			'growl'		=>true, 
-			'type'		=>'success',
-			'message'	=>'Cambios actualizados',
-			'duracion'	=>3000,
-			'location'	=>$url
-		]); 
+			'errors'    => $errors
+		]);
 		exit;
 	}
+	$module->setSubjectModuleId($subjectModuleId);
+	$module->setName($name);
+	$module->setClave($code);
+	$module->setSemesterId($semesterId);
+	$module->setWelcomeText($welcomeText);
+	$module->setIntroduction($introduction);
+	$module->setIntentions($intentions);
+	$module->setObjectives($objectives);
+	$module->setThemes($themes);
+	$module->setScheme($scheme);
+	$module->setMethodology($methodology);
+	$module->setPolitics($politics);
+	$module->setEvaluation($evaluation);
+	$module->setBibliography($bibliography);
+	$response = $module->update();
 
-	$module->setSubjectModuleId($_GET['id']);
-	$myModule = $module->Info();
-	$smarty->assign('post', $myModule);
 
-	//checar a que curriculas tengo permiso
-	if(in_array(2, $info["roles"]))
-	{
-		$smarty->assign('docente', 1);
-		$permisosDocente = $user->PermisosDocente();
-		if(!in_array($myModule["subjectModuleId"], $permisosDocente["subjectModule"]))
-		{
-			header("Location: ".WEB_ROOT);
-		}
+	$url = WEB_ROOT . "/edit-modules-course/id/{$moduleId}";
+	if ($_POST['urlBack']) {
+		$url = $_POST['urlBack'];
 	}
-	
-	$subject->setSubjectId($myModule["subjectId"]);
-	$mySubject = $subject->Info();
-	
-	$activity->setCourseModuleId($_GET["id"]);
-	$actividades = $activity->enumerateActivityModule();
-	$resources = $resource->enumerateResource($_GET["id"]);
-	$smarty->assign('subject', $mySubject);
+	echo json_encode([
+		'growl'		=> true,
+		'type'		=> 'success',
+		'message'	=> 'Cambios actualizados',
+		'duracion'	=> 3000,
+		'location'	=> $url
+	]);
+	exit;
+}
 
-	$smarty->assign('resources',$resources);
-	$smarty->assign('actividades',$actividades);
-	$smarty->assign('mnuMain','cursos');
-	$smarty->assign('mnuMain','cursos');
-	$smarty->assign('courseModuleId',$_GET['id']);
-	$smarty->assign('configMateria','si');
-	$smarty->assign('curso', $_GET['course']);
-	$smarty->assign('urlBack', $_GET['urlBack']);
-	$smarty->assign('url', WEB_ROOT . "/edit-modules-course/id/{$_GET['course']}");
-	//$smarty->assign('major',$major->Enumerate());	
-?>
+$module->setSubjectModuleId($_GET['id']);
+$myModule = $module->Info();
+$where = " AND subject.subjectId = {$myModule['subjectId']}";
+$subjectData = $subject->getSubjects($where)[0];
+$smarty->assign('module', $myModule);
+$smarty->assign('subject', $subjectData);
+$smarty->assign('subjectModuleId', $_GET['id']);
+$smarty->assign('moduleId', $_GET['module']);

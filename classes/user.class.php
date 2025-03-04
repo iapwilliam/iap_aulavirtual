@@ -945,7 +945,6 @@ class User extends Main
 				$accesos["subject"][] = $modulo["subjectId"];
 			}
 		}
-		//print_r($accesos);
 		return $accesos;
 	}
 
@@ -1159,16 +1158,16 @@ class User extends Main
 					$card['activo'] = $row['activo'];
 					$card['actualizado'] = $row['actualizado'];
 					$card['isLogged'] = true;
-					if (empty($row['avatar'])) { 
-						$json = json_decode($row['foto'], true);  
+					if (empty($row['avatar'])) {
+						$json = json_decode($row['foto'], true);
 						if (isset($json['googleId'])) {
 							$card['avatar'] = '<img src="https://www.googleapis.com/drive/v3/files/' . $json['googleId'] . '?alt=media&key=AIzaSyDPUxMMPT7P29XC9NTBKlMuR_34xWwt3UE" width="600" class="img-fluid"/>';
-						}else{
-							$card['avatar'] = '<img class="card-img-top" src="'.WEB_ROOT.'/images/logos/iap_logo.JPG">';
+						} else {
+							$card['avatar'] = '<img class="card-img-top" src="' . WEB_ROOT . '/images/logos/iap_logo.JPG">';
 						}
-					}else{
-						$card['avatar'] = '<img class="card-img-top" src="'.WEB_ROOT.'/alumnos/avatar/'.$row['avatar'].'" alt="" />';
-					} 
+					} else {
+						$card['avatar'] = '<img class="card-img-top" src="' . WEB_ROOT . '/alumnos/avatar/' . $row['avatar'] . '" alt="" />';
+					}
 					$card['bloqueado'] = $row['bloqueado'];
 					$_SESSION['User'] = $card;
 					$_SESSION["lastClick"] = time();

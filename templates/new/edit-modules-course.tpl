@@ -28,13 +28,12 @@
                     <h4>
                         Nombre del Módulo: <b>{$myModule.name}</b>
                         || <a
-                            href="{$WEB_ROOT}/edit-module/id/{$myModule.subjectModuleId}/course/{$myModule.courseModuleId}"
+                            href="{$WEB_ROOT}/edit-module/id/{$myModule.subjectModuleId}/module/{$myModule.courseModuleId}"
                             title="Editar Modulo" class="btn btn-success btn-sm">Editar Detalle</a>
-                        {if $User.perfil != "Docente"}
-                            || <a href="{$WEB_ROOT}/graybox.php?page=view-modules-course&id={$myModule.courseId}"
-                                title="Ver Modulos de Curso" data-target="#ajax" data-toggle="modal"
-                                class="btn btn-success btn-sm">Ver Otros Modulos</a>
-                        {/if}
+
+                        || <a href="{$WEB_ROOT}/graybox.php?page=view-modules-course&id={$myModule.courseId}"
+                            title="Ver Modulos de Curso" data-target="#ajax" data-toggle="modal"
+                            class="btn btn-success btn-sm">Ver Otros Modulos</a>
                     </h4>
                 </div>
             </div>
