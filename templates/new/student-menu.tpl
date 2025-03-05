@@ -2,7 +2,10 @@
     {if $myModule.icon ne ''}
         <img src="{$WEB_ROOT}/images/new/modulos/{$myModule.icon}" class="card-img-top" alt="" />
     {else}
-        <img src="{$WEB_ROOT}/images/logos/logo-humanismo.webp" class="card-img-top" alt="" />
+        <picture>
+            <source srcset="{$WEB_ROOT}/images/logos/logo-humanismo.webp" type="image/webp" class="card-img-top">
+            <img src="{$WEB_ROOT}/images/logos/logo-humanismo.png" alt="Logo Humanismo" class="card-img-top">
+        </picture>
     {/if}
     {*<div class="card-header text-center">
         {$User['nombreCompleto']}

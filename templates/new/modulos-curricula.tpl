@@ -55,8 +55,13 @@
                                                 </div>
                                                 <div class="col-md-8 text-center">
                                                     {if $subject.icon eq ''}
-                                                        <img src="{$WEB_ROOT}/images/logos/logo-humanismo.webp" alt="IAP Chiapas"
-                                                            style="width: 250px !important; height: auto !important; border-radius: 0 !important;" />
+                                                        <picture>
+                                                            <source srcset="{$WEB_ROOT}/images/logos/logo-humanismo.webp"
+                                                                type="image/webp" class="img-fluid">
+                                                            <img src="{$WEB_ROOT}/images/logos/logo-humanismo.png" alt="Logo Humanismo"
+                                                                class="img-fluid"
+                                                                style="width: 250px !important; height: auto !important; border-radius: 0 !important;">
+                                                        </picture>
                                                     {else}
                                                         <img src="{$WEB_ROOT}/images/new/modulos/{$subject.icon}" alt="IAP Chiapas"
                                                             style="width: 300px !important; height: auto !important; border-radius: 0 !important;">

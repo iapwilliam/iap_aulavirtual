@@ -1,10 +1,17 @@
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <a class="navbar-brand brand-logo" href="{$WEB_ROOT}">
-            <img src="{$WEB_ROOT}/images/logos/logo-humanismo.webp" alt="IAP Chiapas" class="img-fluid" />
+            <picture>
+                <source srcset="{$WEB_ROOT}/images/logos/logo-humanismo.webp" type="image/webp" class="img-fluid">
+                <img src="{$WEB_ROOT}/images/logos/logo-humanismo.png" alt="Logo Humanismo" class="img-fluid">
+            </picture>
         </a>
         <a class="navbar-brand brand-logo-mini" href="{$WEB_ROOT}">
-            <img src="{$WEB_ROOT}/images/logos/logo-humanismo-cuadrado.webp" alt="IAP Chiapas" class="img-fluid" />
+            <picture>
+                <source srcset="{$WEB_ROOT}/images/logos/logo-humanismo-cuadrado.webp" type="image/webp"
+                    class="img-fluid">
+                <img src="{$WEB_ROOT}/images/logos/logo-humanismo-cuadrado.png" alt="Logo Humanismo" class="img-fluid">
+            </picture>
         </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-stretch">
@@ -17,13 +24,15 @@
             {if isset($User)}
                 {if ($page eq 'homepage') and (($User.type eq 'Docente') or ($User.type eq 'student'))}
                     <li class="nav-item dropdown">
-                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                            data-toggle="dropdown">
                             <i class="far fa-bell fa-lg text-white"></i>
                             {if (count($announcements) > 0) or ($download) or (count($notificaciones) > 0)}
                                 <span class="count-symbol bg-danger"></span>
                             {/if}
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" style="max-height:250px; overflow: scroll;">
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                            aria-labelledby="notificationDropdown" style="max-height:250px; overflow: scroll;">
                             <h6 class="p-3 mb-0">Notificaciones</h6>
                             <div class="dropdown-divider"></div>
                             {if $User.type == 'student'}
@@ -66,7 +75,8 @@
                             {/foreach}
                             {if $type eq 'student'}
                                 {foreach from=$announcements item=item}
-                                    <a class="dropdown-item preview-item data-alert" data-title="{$item.title}" data-text="{$item.description}">
+                                    <a class="dropdown-item preview-item data-alert" data-title="{$item.title}"
+                                        data-text="{$item.description}">
                                         <div class="preview-thumbnail">
                                             <div class="preview-icon bg-success">
                                                 <i class="fas fa-bullhorn"></i>
@@ -92,9 +102,11 @@
                     </li>
                 {/if}
                 <li class="nav-item nav-profile dropdown">
-                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false"> 
+                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown"
+                        aria-expanded="false">
                         <div class="nav-profile-text">
-                            <p class="mb-1 text-black">{if $User.username}Bienvenido {$User.username} {/if}<span class="badge badge-dark rounded">{$fechaHoy}</span></p>
+                            <p class="mb-1 text-black">{if $User.username}Bienvenido {$User.username} {/if}<span
+                                    class="badge badge-dark rounded">{$fechaHoy}</span></p>
                         </div>
                     </a>
                     <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
@@ -114,7 +126,7 @@
                             <a class="dropdown-item" href="{$WEB_ROOT}/doc-docente">
                                 <i class="mdi mdi-file-document mr-2 text-success"></i>
                                 Documentos
-                            </a> 
+                            </a>
                         {/if}
                         {if $User.type == 'student'}
                             <a class="dropdown-item" href="{$WEB_ROOT}">
@@ -140,7 +152,8 @@
                 </a>
             </li>
         </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+            data-toggle="offcanvas">
             <i class="fas fa-bars text-white"></i>
         </button>
     </div>
