@@ -3,9 +3,6 @@
 include_once('init.php');
 include_once('config.php');
 include_once(DOC_ROOT . '/libraries.php');
-
-// print_r($_GET);
-// exit;
 if (!isset($_SESSION)) {
 	if ($_GET['page'] == "make-test") {
 		ini_set('session.gc_maxlifetime', 4600);
@@ -235,7 +232,6 @@ $pages = array(
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";
 }
-
 if (!isset($_SESSION['User'])) { //Si no existe sesión
 	if (!in_array($_GET['page'], [
 		'login',
@@ -249,17 +245,16 @@ if (!isset($_SESSION['User'])) { //Si no existe sesión
 		'registro-simulador',
 		'registro-gestion-gubernamental',
 		'verificar'
-	])) { //Y no está en estas páginas
+	])) { //Y no está en estas páginas 
 		header('Location: ' . WEB_ROOT . "/login"); //Lo mandamos al login
 	}
 } else { //Existe sesión
 	$User = $_SESSION['User'];
 	$student->setUserId($User["userId"]);
-	if ($_GET['page'] != "homepage") { //Si es distinto del homepage checamos los permisos
+	if ($_GET['page'] != "homepage" && $_GET['page'] != "login") { //Si es distinto del homepage checamos los permisos
 		include_once(DOC_ROOT . '/modules/user.php');
 	}
 }
-
 $smarty->assign('positionId', $User['positionId']);
 include_once(DOC_ROOT . '/modules/' . $_GET['page'] . '.php');
 $smarty->assign('page', $_GET['page']);
