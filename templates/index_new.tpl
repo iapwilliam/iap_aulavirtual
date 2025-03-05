@@ -89,7 +89,7 @@
 	<link rel="stylesheet" href="{$WEB_ROOT}/assets/vcz/vendor/css/vendor.bundle.base.css">
 	<link rel="stylesheet" href="{$WEB_ROOT}/assets/vcz/vendor/jodit/build/jodit.css">
 	<link rel="stylesheet" href="{$WEB_ROOT}/assets/vcz/vendor/flatpickr/flatpickr.min.css">
-	<link rel="stylesheet" href="{$WEB_ROOT}/assets/vcz/css/style.css">
+	<link rel="stylesheet" href="{$WEB_ROOT}/assets/vcz/css/style.css?v={uniqid()}">
 	<link rel="stylesheet" href="{$WEB_ROOT}/assets/vcz/vendor/fancybox/dist/jquery.fancybox.min.css">
 	<link rel="shortcut icon" href="{$WEB_ROOT}/images/logos/iconIap.png" />
 	{* End new styles *}
@@ -237,8 +237,8 @@
 				});
 			});
 		</script>
-	{/if} 
-	{if $User.type eq "student" and $page eq "homepage"} 
+	{/if}
+	{if $User.type eq "student" and $page eq "homepage"}
 		{if $User.announcement neq true && $referencia > 0}
 			<style>
 				.swal2-show {
@@ -251,7 +251,7 @@
 				}
 			</style>
 			<script>
-				Swal.fire({  
+				Swal.fire({
 					html: "{$mensaje}",
 					showCancelButton: false,
 					confirmButtonColor: '#58ff85',
