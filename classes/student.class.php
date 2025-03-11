@@ -2579,19 +2579,22 @@ class Student extends User
 				$sql = "INSERT INTO academic_history(subjectId, courseId, userId, semesterId, dateHistory, type, situation) VALUES('" . $this->subjectId . "', '" . $this->courseId . "', '" . $resultado['status'] . "', 1, '" . $date . "', 'alta', 'A')";
 				$this->Util()->DB()->setQuery($sql);
 				$this->Util()->DB()->InsertData();
+				$resultado['status'] = true;
 			}
 		} elseif ($this->courseId > 0) {
 			$this->setUserId($existe['userId']);
 			$sql = "SELECT * FROM user_subject WHERE courseId = {$this->courseId} AND alumnoId = {$existe['userId']}";
 			$this->Util()->DB()->setQuery($sql);
-			$existe = $this->Util()->DB()->getRow();
-			if ($existe) {
+			$existeEnCurso = $this->Util()->DB()->getRow();
+			if ($existeEnCurso) {
 				$resultado['status'] = 0;
 				$resultado['message'] = "El correo ya se encuentra en el curso.";
 			} else {
 				$this->updateStudent();
 				$this->addUserCourse();
 				$this->AddAcademicHistory('Alta', 'A', 1);
+				$resultado['status'] = true;
+				$resultado['usuario'] = $existe['controlNumber'];
 			}
 		} else {
 			$resultado['status'] = 0;

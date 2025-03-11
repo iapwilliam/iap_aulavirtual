@@ -242,11 +242,10 @@ switch ($opcion) {
 			$details_body = array(
 				'email'	=> $response['usuario'],
 				'password'	=> $password,
-				'major'		=> $dataCourse['major_name'],
-				'course'	=> $dataCourse['subject_name']
+				"module" => $dataCourse['major_name'] . " - " . $dataCourse['subject_name']
 			);
 			$details_subject = array();
-			$sendmail->Prepare($message[1]["subject"], $message[1]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
+			$sendmail->Prepare($message[3]["subject"], $message[13]["body"], $details_body, $details_subject, $email, $name . " " . $firstSurname . " " . $secondSurname);
 
 			echo json_encode([
 				'growl'		=> true,

@@ -782,7 +782,7 @@ switch ($_POST["type"]) {
 			$details_subject = array();
 			$attachment = array();
 			$fileName = array();
-			$sendmail->Prepare($message[3]["subject"], $message[3]["body"], $details_body, $details_subject, $email, $nombre);
+			$sendmail->Prepare($message[3]["subject"], $message[13]["body"], $details_body, $details_subject, $email, $nombre);
 
 
 			$student->setSubjectId($dataCourse[0]['subjectId']);

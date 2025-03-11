@@ -146,3 +146,37 @@ Gracias por inscribirte con nosotros. Estamos ansiosos por ayudarte a alcanzar t
 
 Atentamente,
 IAP Chiapas";
+
+$message[13]['body'] = '
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Correo de registro</title>
+</head>
+<body style="margin: 0; padding: 0; background-color:#c9f5e0; font-family: Arial, sans-serif;">
+    <div style="max-width: 600px; margin: 10px auto; background: #ffffff; border-radius: 12px;text-align: center; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <div style="background-color:rgb(36, 97, 61); padding: 20px; border-top-left-radius: 12px; border-top-right-radius: 12px;">
+            <img src="https://aulavirtual.iapchiapas.edu.mx/images/new/icons/email.png" alt="Icon" style="width: 40px;">
+        </div>
+        <div style="padding:10px 20px; color: #333333;">
+            <img src="https://aulavirtual.iapchiapas.edu.mx/images/logos/logo-humanismo.webp" alt="Logo" style="width: 250px; margin-bottom: 10px;">
+            <h3 style="color:#14764d;"><strong>Bienvenido al Instituto de Administración Pública del Estado de Chiapas.</strong></h3> 
+            <p style="color: #333333;">
+				Estamos muy agradecidos que nos hayas elegido. 
+				El módulo de tu elección es:
+				<b>|module|</b> 
+				Tu datos para ingresar al sistema son los siguientes
+				<b>Usuario:</b> |email|
+				<b>Contrase&ntilde;a del Sistema:</b>	|password|
+				<b>Sitio:<a href="https://aulavirtual.iapchiapas.edu.mx/">https://aulavirtual.iapchiapas.edu.mx/</a></b>
+			</p>
+        </div>
+        <div style="text-align:center; padding: 10px 20px; border-top: 1px solid #ddd;">
+            <span style="color: #333333;">Muchas gracias</span>
+            <a href="#" style="margin-top:15px; padding: 10px 15px; border-radius: 20px; text-decoration: none;">❤</a>
+        </div>
+    </div>
+</body>
+</html>
+';
