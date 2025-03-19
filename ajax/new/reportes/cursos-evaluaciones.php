@@ -8,15 +8,13 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 $curso = $_GET['course'];
-$modulo = $_GET['module'];
+$modulo = intval($_GET['module']);
  
 $cursos = $course->getCourses("AND course.courseId = {$curso}");
 
 foreach ($cursos as $key => $curso) {
     $cursos[$key]['registrados'] = $course->getStudents("AND user_subject.courseId = {$curso['courseId']}");
 }
-
-
 
 $spreadsheet = new Spreadsheet();
 
@@ -34,7 +32,12 @@ $ultimo_indice = count($cursos) - 1;
 foreach ($cursos as $key => $item) {
     $course->setCourseId($item['courseId']);
     $courseData = $course->getCourse();
-    $headings = $course->getHeadersActivities("AND course_module.courseId = {$item['courseId']} ORDER BY activity.resumen ASC");
+    $filterHeaders = "AND course_module.courseId = {$item['courseId']}";
+    if ($modulo != 0) {
+        $filterHeaders .= " AND course_module.courseModuleId = {$modulo}";
+    }
+    $filterHeaders .= " ORDER BY activity.resumen ASC";
+    $headings = $course->getHeadersActivities($filterHeaders);
     $students = $course->getStudents("AND user_subject.courseId = {$item['courseId']}");
     $sheet = $spreadsheet->getActiveSheet(); 
     $sheet->getDefaultColumnDimension()->setWidth(30);
@@ -61,11 +64,11 @@ foreach ($cursos as $key => $item) {
         foreach ($headings as $heading) {
             if ($heading['activityType'] == "Tarea") {
                 $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
-                $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : $data['countUpdate'])); 
+                $sheet->setCellValue("{$auxColumn}{$auxRow}", (!isset($data['homeworkId'])  ? "NO ENTREGÓ" : "ENTREGÓ")); 
             }
             if ($heading['activityType'] == "Examen") {
                 $data = $student->getActivityScore($heading['activityType'], "AND userId = {$students[$i]['userId']} AND activityId = {$heading['activityId']}");
-                $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['try'] : 0));
+                $sheet->setCellValue("{$auxColumn}{$auxRow}", ($data ? $data['ponderation'] : 0));
             }
             $auxColumn++;
         }
