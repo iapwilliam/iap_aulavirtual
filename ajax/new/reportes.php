@@ -41,5 +41,11 @@ switch ($_POST["opcion"]) {
             include_once('reportes/licenciaturas-evaluaciones.php');
         }
         break; 
-        
+    case 'cursos':
+        if ($_GET['tipo'] == 1) {
+            include_once('reportes/cursos.php');
+        } else {
+            include_once('reportes/cursos-evaluaciones.php');
+        }
+        break;
 }

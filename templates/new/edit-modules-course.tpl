@@ -188,9 +188,19 @@
     <div class="card-body text-center">
         <div class="btn-group btn-group-toggle">
             <a href="{$WEB_ROOT}/calification/id/{$myModule.courseModuleId}" target="_blank"
-                class="btn btn-outline-success">
+                class="btn btn-outline-success mr-2">
                 <i class="fas fa-tasks"></i> Ver Calificaciones
             </a>
+            <form action="{$WEB_ROOT}/ajax/new/reportes.php" method="GET" target="_blank">
+                <input type="hidden" name="opcion" value="cursos">
+                <input type="hidden" name="page" value="export-excel">
+                <input type="hidden" name="tipo" value="2">
+                <input type="hidden" name="course" value="{$myModule.courseId}">
+                <input type="hidden" name="module" value="{$myModule.courseModuleId}">
+                <button type="submit" class="btn btn-outline-success">
+                    <i class="fas fa-file-export"></i> Exportar Calificaciones
+                </button>
+            </form>
         </div>
     </div>
 </div>
