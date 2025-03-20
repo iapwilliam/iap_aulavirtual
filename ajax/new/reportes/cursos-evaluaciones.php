@@ -7,10 +7,16 @@ session_start();
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-$curso = $_GET['course'];
+$subject = intval($_GET['subject']);
+$curso = intval($_GET['course']) ?: intval($_GET['grupo']); 
 $modulo = intval($_GET['module']);
- 
-$cursos = $course->getCourses("AND course.courseId = {$curso}");
+$where = "";
+if ($subject != 0 && $curso == 0) {
+    $where = "AND course.subjectId = {$subject}";
+}else if($curso != 0) {
+    $where = "AND course.courseId = {$curso}";
+}
+$cursos = $course->getCourses("{$where}");
 
 foreach ($cursos as $key => $curso) {
     $cursos[$key]['registrados'] = $course->getStudents("AND user_subject.courseId = {$curso['courseId']}");

@@ -138,6 +138,9 @@
                         <li class="nav-item">
                             <a class="nav-link" style="white-space:normal;" href="{$WEB_ROOT}/reporte-gestion-gubernamental">Diplomado - Gestión Gubernamental</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="white-space:normal;" href="{$WEB_ROOT}/reporte-cursos">Cursos</a>
+                        </li>
                     </ul>
                 </div>
             </li>
