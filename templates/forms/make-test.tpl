@@ -114,7 +114,7 @@
 			<a href="{$WEB_ROOT}/view-modules-student/id/{$actividad.courseModuleId}" class="btn btn-primary">
 				<i class="fas fa-undo"></i> Regresar al Módulo
 			</a>
-			<a href="{$WEB_ROOT}/examen-respuestas/id/{$actividad.activityId}" class="btn btn-success">Ver respuestas</a>
+			<a href="{$WEB_ROOT}/examen-respuestas/id/{$actividad.activityId}/module/{$actividad.courseModuleId}" class="btn btn-success">Ver respuestas</a>
 			{if $access['intentos'] > 0}
 				<div class="py-3 text-center">
 					{$access['mensaje']}
