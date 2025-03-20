@@ -228,7 +228,8 @@ $pages = array(
 	'reporte-gestion-gubernamental',
 	'verificar',
 	'diplomas',
-	'reporte-cursos'
+	'reporte-cursos',
+	'examen-respuestas'
 );
 if (!in_array($_GET['page'], $pages) && $_GET['page'] != "logout") {
 	$_GET['page'] = "homepage";

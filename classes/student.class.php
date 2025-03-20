@@ -2895,4 +2895,11 @@ class Student extends User
 		$this->Util()->DB()->setQuery($sql);
 		return $this->Util()->DB()->GetResult();
 	}
+
+	public function getExamenRespuestas($where = "")
+	{
+		$sql = "SELECT activity_test.*, test_answers.answer as currentAnswer FROM test_answers INNER JOIN activity_test ON activity_test.testId = test_answers.answer_id WHERE 1 {$where}";
+		$this->Util()->DB()->setQuery($sql);
+		return $this->Util()->DB()->GetResult();
+	}
 }
